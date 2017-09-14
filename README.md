@@ -1,2 +1,3 @@
 # Terra-Coding
-# Team Member : JaeJunHa
+# Team Leader : JaeJunHa
+# Team Member : LeeSeungHwan
