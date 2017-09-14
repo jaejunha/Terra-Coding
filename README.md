@@ -4,4 +4,3 @@
 # Team Member : LeeKyungJae
 # Team Member : EomJunYoung
 # Team Member : JinPark
-mamamoo
