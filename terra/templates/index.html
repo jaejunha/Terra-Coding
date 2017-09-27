@@ -18,12 +18,10 @@
  </table>
  </center>
  <br>Please decorate this site
-	{% block content %}
-	<form method="POST">
+	<form action="core.html" method="POST">
 		{% csrf_token %}
-		{{ form.as_p}}
-		<button type="submit">save</button>
+		{{ form.as_p }}
+		<input type="submit" value="Submit"/>
 	</form>
-	{% endblock content %}
 </body>
 </html>
