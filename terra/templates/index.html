@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::T - HUB::</title>
+
+</head>
+<body>
+<center>
+ <table border="0">
+  <tr>
+   <th>
+     <a href="./core.html"><img src="{% static 'img/but_core.png' %}" width="80%" height="80%"></a>
+   </th>
+   <th>
+     <a href="./intro.html"><img src="{% static 'img/but_intro.png' %}" width="55%" height="55%"></a>
+   </th>
+  </tr>
+ </table>
+ </center>
+ <br>Please decorate this site
+	<form action="./core.html" method="POST">
+		{% csrf_token %}
+		<input id="id" type="text" placeholder="please enter ID" name="id" value="{{name}}">
+		        <br><input id="pwd" type="password" placeholder="please enter Password" name="pwd">
+		<input type="submit" value="Submit"/>
+	</form>
+</body>
+</html>
