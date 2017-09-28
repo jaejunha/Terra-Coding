@@ -4,6 +4,8 @@
 </head>
 <body>
 	<center><img src="./corevalue.png"></center>
-	<label id="test">{{ name }}</label>
+	{% if name is not None %}
+	<label id="test">Welcome {{ name }}!</label>
+	{% endif %}
 </body>
 </html>

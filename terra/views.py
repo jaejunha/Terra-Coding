@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from .models import *
 
 def intro(request):
@@ -12,9 +13,12 @@ def intro(request):
 def core(request):
 	if request.method == 'POST':
 		name = request.POST.get('id', '')
-	return render(request, 'terra/templates/core.html', {'name': name})
+		pwd = request.POST.get('pwd','')
+		if name =='root' and pwd=='1234':
+			return render(request, 'terra/templates/core.html', {'name': name})
+		else:
+			return HttpResponseRedirect(reverse('index'))
+	return render(request, 'terra/templates/core.html')
 
 def index(request):
-	if request.method == 'POST':
-		return HttpResponseRedirect('hello')
 	return render(request, 'terra/templates/index.html')
