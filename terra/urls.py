@@ -20,4 +20,5 @@ urlpatterns = [
 	url(r'^$',views.index, name='index'),
 	url(r'^intro', views.intro, name='intro'),
 	url(r'^core', views.core, name='core'),
+	url(r'^hello', views.core, name='core'),
 ]

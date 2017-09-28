@@ -2,9 +2,9 @@
 <html lang="en">
 {% load staticfiles %}
 <head>
-	<meta charset="utf-8">
-	<title>::T - HUB::</title>
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::T - HUB::</title>
+
 </head>
 <body>
 <center>
@@ -20,7 +20,7 @@
  </table>
  </center>
  <br>Please decorate this site
-	<form action="core.html" method="POST">
+	<form action="./core.html" method="POST">
 		{% csrf_token %}
 		{{ form.as_p }}
 		<input type="submit" value="Submit"/>
