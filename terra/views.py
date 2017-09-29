@@ -12,10 +12,6 @@ LOGIN = 'https://mb.ajou.ac.kr/mobile/login.json'
 USER = 'https://mb.ajou.ac.kr/mobile/M03/M03_010_010.es'
 PIC = 'http://job.ajou.ac.kr/office/Teacher/Per/PerPic.aspx?pid='
 
-def intro(request):
-	if request.method == 'GET':
-		return render(request, 'terra/templates/intro.html')
-
 def core(request):
 	try:
 		if request.session['sid']:

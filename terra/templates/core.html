@@ -2,33 +2,34 @@
 {% load staticfiles %}
 <html lang="en">
 <head>
-
 	<meta charset="utf-8">
-   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-   	<meta name="viewport" content="width=device-width, initial-scale=1">
-   	<meta name="description" content="">
-   	<meta name="author" content="">
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<style>
+		top{
+			background: #111111;
+			position: relative;
+			text-align: right;
+			line-height: 60px;
+			vertical-align: middle;
+			font-size: 24pt;
+			color:#dddddd;
+			border-radius: 5px;
+		}
+		banner {
+			position: relative;
+			width: 100%;
+			height: 0;
+		}
+	</style>
 	<title>:: Core Value::</title>
 </head>
 <body>
-	<center><img src="./corevalue.png"></center>
+	<div id="top">
+		<a href="">info</a>
+		<a href="/coding">coding</a>
+		<a href="">statistics</a>
+		<a href="">rank</a>
+	</div>
+	<img src="{% static 'img/banner.jpg' %}" id="banner">
 	<img src="{{ picture }}">
-	<form action="" method="POST">
-                {% csrf_token %}
-                <input type="submit" value="info"/>
-        </form>
-	<form action="/coding" method="POST">
-                {% csrf_token %}
-                <input type="submit" value="coding"/>
-	</form>
-	<form action="" method="POST">
-                {% csrf_token %}
-                <input type="submit" value="status"/>
-        </form>
-	<form action="" method="POST">
-                {% csrf_token %}
-                <input type="submit" value="rank"/>
-        </form>
 </body>
 </html>
