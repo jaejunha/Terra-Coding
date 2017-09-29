@@ -40,7 +40,7 @@ def printDir(request):
 	command = 'ls -l ' + dirName
 	result = Str2Ary_Newline(os.popen(command).read())
 	fileName = take_Filename_Only(result[1:])
-	return render(request, 'terra/templates/printDir.html', {'resultOfDir': result[1:], 'fileNames': fileName, 'dirName': dirName}) # Exception to first row
+	return render(request, 'coding/templates/printDir.html', {'resultOfDir': result[1:], 'fileNames': fileName, 'dirName': dirName}) # Exception to first row
 
 def Str2Ary_Newline(str_in):
 	out = []
