@@ -18,5 +18,5 @@ from django.conf.urls import include, url
 urlpatterns = [
 	url(r'^', include('intro.urls')),
 	url(r'^terra', include('terra.urls')),
-    url(r'^coding', include('coding.urls')),
+ 	url(r'^coding', include('coding.urls')),
 ]
