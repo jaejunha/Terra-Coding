@@ -13,11 +13,11 @@ from django.core.urlresolvers import reverse
 # Create your views here.
 def sourceView(request):
 	user_sel = _user_select
-	return render(request, 'terra/templates/sourceView.html', {'user_sel': user_sel})
+	return render(request, 'coding/templates/sourceView.html', {'user_sel': user_sel})
 
 def printDir(request):
 	global _view, _edit, _del, _use
-	HttpResponseRedirect('printDir')
+	#HttpResponseRedirect('printDir')
 	dirName = request.POST.get('dirName', '') # Get directory Name
 
 	'''<==[ when button is pushed ]==>'''

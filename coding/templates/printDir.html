@@ -8,7 +8,7 @@
 </head>
 
 <body>
-	<form action="./printDir.html" method="POST">
+	<form action="/coding/printDir.html" method="POST">
 		{% csrf_token %}
 		<input id="dirName" type="text" placeholder="any directory?" name="dirName">
 		<input type="submit" value="Submit"/>
@@ -34,7 +34,7 @@
 			</center>
     </td>
 		<td width=30% align="center">
-			<form action="./printDir.html" method="POST">
+			<form action="/coding/printDir.html" method="POST">
 				{% csrf_token %}
 				<input type="hidden" name="user_select" value="{{ result }}"/>
 				<input type="submit" name="view" value="view"/>

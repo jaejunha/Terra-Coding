@@ -18,4 +18,6 @@ from . import views
 
 urlpatterns = [
 	url(r'^$', views.printDir, name='printDir'),
+    url(r'^/printDir', views.printDir, name='sourceView'),
+    url(r'^/sourceView', views.sourceView, name='sourceView'),
 ]
