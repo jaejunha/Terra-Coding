@@ -19,9 +19,8 @@
   </tr>
  </table>
  </center>
-	{{name}}
  <br>Please decorate this site
-	<form action="terra/core.html" method="POST">
+	<form action="/terra/login" method="POST">
 		{% csrf_token %}
 		<input id="id" type="text" placeholder="please enter ID" name="id" value="{{name}}">
 		        <br><input id="pwd" type="password" placeholder="please enter Password" name="pwd">
