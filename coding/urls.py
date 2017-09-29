@@ -20,6 +20,6 @@ urlpatterns = [
 	url(r'^$', views.printDir, name='printDir'),
     url(r'^/printDir', views.printDir, name='sourceView'),
     url(r'^/sourceView', views.sourceView, name='sourceView'),
-    url(r'^/sourceEdit', views.sourceView, name='sourceEdit'),
-    url(r'^/sourceDel', views.sourceView, name='sourceDel'),
+    url(r'^/sourceEdit', views.sourceEdit, name='sourceEdit'),
+    url(r'^/sourceDel', views.sourceDel, name='sourceDel'),
 ]

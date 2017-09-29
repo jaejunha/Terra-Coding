@@ -60,15 +60,15 @@
 			<form action="/coding/sourceEdit.html" method="POST">
 				{% csrf_token %}
 				<input type="hidden" name="selected_file" value="{{ result }}"/>
-				<input type="hidden" name="dir_recurse" value="{{ dirNames }}"/>
+				<input type="hidden" name="dirNames" value="{{ dirNames }}"/>
 				<input type="submit" name="edit" value="edit"/>
 			</form>
 			<!-- Redirect to sourceDel -->
 			<form action="/coding/sourceDel.html" method="POST">
 				{% csrf_token %}
 				<input type="hidden" name="selected_file" value="{{ result }}"/>
-				<input type="hidden" name="dir_recurse" value="{{ dirNames }}"/>
-				<input type="submit" name="del" value="del"/>
+				<input type="hidden" name="dirNames" value="{{ dirNames }}"/>
+				<input type="submit" name="del" value="del" onclick="return confirm('Are you very very sure you want to delete? :)');"/>
 			</form>
 
 		</td>

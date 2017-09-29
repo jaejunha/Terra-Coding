@@ -7,9 +7,28 @@
 	<title>::Source Editor::</title>
 </head>
 <body>
-	<h1>
-<pre> {{ user_sel }} </pre>
-</h1>
+
+<cetner>
+	<font size=15 style="Arial" color="RED"> Editor service </font>
+	<br><br><br><br>
+</center>
+
+<!-- Redirect Edit Function  -->
+<form action="/coding/sourceEdit.html" method="POST">
+	{% csrf_token %}
+	<textarea rows="30%" cols="100%" name="edit_data">{{ file_data }}</textarea>
+	<input type="hidden" name="operation" value="Write"/>
+	<input type="submit" name="edit" value="Edit" onclick="return confirm('Are you sure want to edit? :)')"/>
+
+</form>
+
+<!-- Redirect Cancel  -->
+<form action="/coding/printDir.html" method="POST">
+	{% csrf_token %}
+	<input type="hidden" name="dirName" value="{{ returnPath }}"/>
+	<input type="submit" name="cancel" value="Cancel"/>
+</form>
+
 </body>
 
 </html>

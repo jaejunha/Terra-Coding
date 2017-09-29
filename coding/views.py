@@ -10,33 +10,42 @@ from os.path import abspath, dirname
 from subprocess import call
 from django.core.urlresolvers import reverse
 
+
+def sourceDel(request):
+	fileName = request.POST.get('selected_file', '')
+	dirName = request.POST.get('dirNames', '')
+	path = do_path_concatenation(fileName, dirName)
+
+	os.popen("rm -rf " + path)
+	return HttpResponseRedirect('printDir')
+
+def sourceEdit(request):
+	global editPath
+	operation = request.POST.get('operation', '')
+
+	if operation == 'Write':
+		edit_data = request.POST.get('edit_data', '')
+		f = open(editPath, 'w')
+		f.write(edit_data)
+		f.close()
+		return HttpResponseRedirect('printDir')
+	else:
+		fileName = request.POST.get('selected_file', '')
+		dirName = request.POST.get('dirNames', '')
+
+		editPath = do_path_concatenation(fileName, dirName)
+
+		f = open(editPath, 'r')
+		file_data = f.read()
+		f.close()
+
+		return render(request, 'coding/templates/sourceEdit.html', {'returnPath': dirName, 'file_data': file_data})
+
 def sourceView(request):
 
 	fileName = request.POST.get('selected_file', '')
 	dirName = request.POST.get('dirNames', '')
-
-	index = len(fileName) - 1
-	while index >= 0:
-		if fileName[index] == ' ':
-			break
-		index = index - 1
-	fileName = fileName[index+1:]
-
-	rootFlag = 0
-	if dirName[0] == '/':
-		rootFlag = 1
-
-	dirName_ary = dirName.split('/')
-	print dirName_ary
-	dirName = ''
-	if rootFlag == 1:
-		dirName = '/'
-
-	for _in in dirName_ary:
-		if _in != '':
-			dirName += (_in + '/')
-
-	viewPath = dirName + fileName
+	viewPath = do_path_concatenation(fileName, dirName)
 
 	'''
 	@ Author: InfiniteRegen
@@ -51,13 +60,12 @@ def sourceView(request):
 	return render(request, 'coding/templates/sourceView.html', {'viewPath': viewPath, 'file_data': file_data})
 
 def printDir(request):
-	#HttpResponseRedirect('printDir')
 
 	dirName = request.POST.get('dirName', '') # Get directory Name
 	command = 'ls -l ' + dirName
 	result = Str2Ary_Newline(os.popen(command).read())
 	fileName = take_Filename_Only(result[1:])
-	print '[@@@] ===> %s' % dirName
+
 	return render(request, 'coding/templates/printDir.html', {'resultOfDir': result[1:], 'fileNames': fileName, 'dirNames': dirName}) # Exception to first row
 
 def Str2Ary_Newline(str_in):
@@ -87,3 +95,32 @@ def take_Filename_Only(ary_in):
 			index = index - 1
 		out.append(_in[index:])
 	return out
+
+def do_path_concatenation(fileName, dirName):
+
+	if dirName == '':
+		dirName = './'
+
+	index = len(fileName) - 1
+	while index >= 0:
+		if fileName[index] == ' ':
+			break
+		index = index - 1
+	fileName = fileName[index+1:]
+
+	rootFlag = 0
+	if dirName[0] == '/':
+		rootFlag = 1
+
+	dirName_ary = dirName.split('/')
+	dirName = ''
+	if rootFlag == 1:
+		dirName = '/'
+
+	for _in in dirName_ary:
+		if _in != '':
+			dirName += (_in + '/')
+
+	path = dirName + fileName
+
+	return path
