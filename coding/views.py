@@ -12,11 +12,11 @@ from django.core.urlresolvers import reverse
 
 # Create your views here.
 def sourceView(request):
-	user_sel = _user_select
-	return render(request, 'coding/templates/sourceView.html', {'user_sel': user_sel})
+	output = take_Filename_Only(_user_select)
+	return render(request, 'coding/templates/sourceView.html', {'user_sel': output})
 
 def printDir(request):
-	global _view, _edit, _del, _use
+	global _view, _edit, _del, _use, _user_select
 	#HttpResponseRedirect('printDir')
 	dirName = request.POST.get('dirName', '') # Get directory Name
 
@@ -26,16 +26,15 @@ def printDir(request):
 	_del = request.POST.get('del', '')
 	_user_select = request.POST.get('user_select', '')
 
-	if _view == "view":
+	if _view:
 		return HttpResponseRedirect('sourceView')
 	elif _edit:
-		print '@@_eidt selected_@'
+		return HttpResponseRedirect('sourceEdit')
 	elif _del:
-		print '@@_del selected_@'
+		return HttpResponseRedirect('sourceDel')
 	else:
 		print '@@_BUTTON EXCEPTION ERROR!!_@'
 	'''<=[=========================]=>'''
-
 
 	command = 'ls -l ' + dirName
 	result = Str2Ary_Newline(os.popen(command).read())
@@ -63,7 +62,7 @@ def take_Filename_Only(ary_in):
 	index = 0
 	for _in in ary_in:
 		index = len(_in)
-		while len >= 0:
+		while index >= 0:
 			if _in[index-1] == ' ':
 				break
 			index = index - 1
