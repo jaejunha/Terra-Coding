@@ -1,0 +1,17 @@
+<!-- sourceView.html-->
+
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::Source Viewer::</title>
+</head>
+<body>
+
+<h1>
+  {% csrf_token %}
+<pre> {{ result }} </pre>
+</h1>
+
+</body>
+</html>

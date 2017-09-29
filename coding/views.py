@@ -10,13 +10,38 @@ from os.path import abspath, dirname
 from subprocess import call
 from django.core.urlresolvers import reverse
 
-
 def do_compile_c_language(request):
-	return HttpResponseRedirect('printDir')
+	fileName = request.POST.get('compile_file', '')
+	dirName = request.POST.get('dirNames', '')
+
+	path = do_path_concatenation(fileName, dirName)
+	result = os.popen("gcc -o main " + path).read() # executable file will be created in manage.py directory
+
+	if result == '': # which means error is none
+		result = 'successfully compiled'
+
+	return render(request, 'coding/templates/compile_res.html', {'result': result})
 
 def createNewFile(request):
-	return HttpResponseRedirect('printDir')
+	dirName = request.POST.get('dirName', '')
+	newFileName = request.POST.get('newFileName', '')
 
+	dirName = dirName.replace('\n', '')
+	dirName = dirName.replace('\r', '')
+
+	if newFileName == '':
+		newFileName = 'temp.c'
+
+	if dirName[-1] == '/':
+		path = dirName + newFileName
+	else:
+		path = dirName + '/' + newFileName
+
+	f = open(path, 'w')
+	f.write('')
+	f.close()
+
+	return HttpResponseRedirect('printDir')
 
 def sourceDel(request):
 	fileName = request.POST.get('selected_file', '')
@@ -54,10 +79,6 @@ def sourceView(request):
 	dirName = request.POST.get('dirNames', '')
 	viewPath = do_path_concatenation(fileName, dirName)
 
-	'''
-	@ Author: InfiniteRegen
-	@ Function: Get file information
-	'''
 	'''  MORE FUNCTION REQUIRED!!! -- only a file can be open..	'''
 	''' Text&img file's type'''
 	f = open(viewPath, 'r')
@@ -77,6 +98,20 @@ def printDir(request):
 		folderName = request.POST.get('folder', '')
 		folderName = do_path_concatenation(folderName, 'NULL')
 		dirName += '/' + folderName
+
+	elif operation == 'GoBack':
+		if dirName[-1] == '/':
+			dirName = dirName[:-1]
+
+		index = len(dirName) - 1
+		print index
+		while index > 0:
+			if dirName[index] == '/':
+				break
+			index = index - 1
+
+		dirName = dirName[:index]
+
 
 	command = 'ls -l ' + dirName
 	result = Str2Ary_Newline(os.popen(command).read())

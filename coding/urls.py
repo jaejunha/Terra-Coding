@@ -22,4 +22,6 @@ urlpatterns = [
     url(r'^/sourceView', views.sourceView, name='sourceView'),
     url(r'^/sourceEdit', views.sourceEdit, name='sourceEdit'),
     url(r'^/sourceDel', views.sourceDel, name='sourceDel'),
+    url(r'^/createNewFile', views.createNewFile, name='createNewFile'),
+    url(r'^/compile_res', views.do_compile_c_language, name='compile_res'),
 ]
