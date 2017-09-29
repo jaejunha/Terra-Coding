@@ -46,11 +46,9 @@ def login(request):
 			response = requests.post(LOGIN, data=data)
 			status = json.loads(response.text)['response']
 			if status == 'OK':
-				request.session.flush()
 				for c in response.cookies:
 					if c.name == 'JSESSIONID':
 						request.session['sid']=c.value
-				print(request.session['sid'])
 				return HttpResponseRedirect(reverse('core'))
 	return render(request, 'terra/templates/index.html', {'name': name})
 
