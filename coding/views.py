@@ -11,6 +11,13 @@ from subprocess import call
 from django.core.urlresolvers import reverse
 
 
+def do_compile_c_language(request):
+	return HttpResponseRedirect('printDir')
+
+def createNewFile(request):
+	return HttpResponseRedirect('printDir')
+
+
 def sourceDel(request):
 	fileName = request.POST.get('selected_file', '')
 	dirName = request.POST.get('dirNames', '')
@@ -61,7 +68,16 @@ def sourceView(request):
 
 def printDir(request):
 
+	operation = request.POST.get('operation', '')
 	dirName = request.POST.get('dirName', '') # Get directory Name
+	if dirName == '':
+		dirName = os.popen('pwd').read() # if input of directory is empty, set to current path
+
+	if operation == 'ReDirect':
+		folderName = request.POST.get('folder', '')
+		folderName = do_path_concatenation(folderName, 'NULL')
+		dirName += '/' + folderName
+
 	command = 'ls -l ' + dirName
 	result = Str2Ary_Newline(os.popen(command).read())
 	fileName = take_Filename_Only(result[1:])
@@ -108,19 +124,21 @@ def do_path_concatenation(fileName, dirName):
 		index = index - 1
 	fileName = fileName[index+1:]
 
-	rootFlag = 0
-	if dirName[0] == '/':
-		rootFlag = 1
+	if dirName != 'NULL':
+		rootFlag = 0
+		if dirName[0] == '/':
+			rootFlag = 1
 
-	dirName_ary = dirName.split('/')
-	dirName = ''
-	if rootFlag == 1:
-		dirName = '/'
+		dirName_ary = dirName.split('/')
+		dirName = ''
+		if rootFlag == 1:
+			dirName = '/'
 
-	for _in in dirName_ary:
-		if _in != '':
-			dirName += (_in + '/')
-
-	path = dirName + fileName
+		for _in in dirName_ary:
+			if _in != '':
+				dirName += (_in + '/')
+		path = dirName + fileName
+	else:
+		path = fileName
 
 	return path

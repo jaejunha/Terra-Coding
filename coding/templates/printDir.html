@@ -15,14 +15,18 @@
 	-->
 <font size=12 style="Arial"> DON'T view/edit/del </font>
 <font size=12 style="Arial" color="red">Directories</font>
-<font size=12 style="Arial"> please.<br>Threre are in maintenance.</font>
+<font size=12 style="Arial"> please.<br>Threre are in maintenance.<br></font>
+<br><br>
 
 	<!-- Most Top&Left ___ Directory Input form -->
+	<center><h1>*
 	<form action="/coding/printDir.html" method="POST">
 		{% csrf_token %}
-		<input type="text" placeholder="/root" name="dirName" value="/root">
+		<input type="text" placeholder="/root" name="dirName" value="{{ dirNames }}">
 		<input type="submit" value="SEARCH"/>
 	</form>
+	*</h1>
+ 	</center>
 
 	{% for result in resultOfDir %}
 	<table width="50%" align="center" border="5" cellpadding="0" cellspacing="0">
@@ -43,7 +47,12 @@
 		<!-- 2nd column ___ FileName -->
 		<td width=50% align="center">
 			<center>
-			<font size=3 style="Arial"> <pre>	{{ result }} </pre> </font>
+				<form action="/coding/printDir.html" method="POST">
+					{% csrf_token %}
+					<input type="hidden" name="operation" value="ReDirect"/>
+					<input type="hidden" name="dirName" value="{{ dirNames }}"/>
+					<input type="submit" name="folder" value="{{ result }}"/>
+				</form>
 			</center>
     </td>
 
