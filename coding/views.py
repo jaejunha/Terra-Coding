@@ -33,7 +33,7 @@ def printDir(request):
 	elif _del:
 		return HttpResponseRedirect('sourceDel')
 	else:
-		print '@@_BUTTON EXCEPTION ERROR!!_@'
+		print '@@_BUTTON EXCEPTION ERROR!!_@@'
 	'''<=[=========================]=>'''
 
 	command = 'ls -l ' + dirName
