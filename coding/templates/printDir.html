@@ -1,0 +1,50 @@
+<!-- printDir.html-->
+
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::T - HUB::</title>
+</head>
+
+<body>
+	<form action="./printDir.html" method="POST">
+		{% csrf_token %}
+		<input id="dirName" type="text" placeholder="any directory?" name="dirName">
+		<input type="submit" value="Submit"/>
+	</form>
+
+	{% for result in resultOfDir %}
+	<table width="50%" align="center" border="5" cellpadding="0" cellspacing="0">
+   <tr><td width=5% align="center"><center>
+			{% if result.0 == 'd' %}
+      <img style="vertical-align: bottom;" src="{% static 'ico/folder_ico.png' %}" width="100%" height="100%">
+			{% elif result.0 == '-' %}
+      <img style="display:block;" src="{% static 'ico/file_ico.png' %}" width="100%" height="100%">
+			{% elif result.0 == 'l' %}
+			<img style="display:block;" src="{% static 'ico/link_ico.png' %}" width="100%" height="100%">
+			{% endif %}
+		</center></td>
+		<td width=50% align="center">
+			<center>
+			<font size=3 style="Arial">
+				<pre>	{{ result }} </pre>
+			</a>
+			</font>
+			</center>
+    </td>
+		<td width=30% align="center">
+			<form action="./printDir.html" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="user_select" value="{{ result }}"/>
+				<input type="submit" name="view" value="view"/>
+				<input type="submit" name="edit" value="edit"/>
+				<input type="submit" name="del" value="del"/>
+			</form>
+		</td>
+   </tr>
+  </table>
+	{% endfor %}
+
+</body>
+</html>
