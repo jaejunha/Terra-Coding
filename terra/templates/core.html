@@ -14,10 +14,5 @@
 <body>
 	<center><img src="./corevalue.png"></center>
 	<img src="{{ picture }}">
-	{% if request.session.name %}
-	Welcome {{ request.session.name }}!
-	{% endif %}
-	{% block content %}
-	{% endblock %}
 </body>
 </html>
