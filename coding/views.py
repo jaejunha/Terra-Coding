@@ -10,36 +10,55 @@ from os.path import abspath, dirname
 from subprocess import call
 from django.core.urlresolvers import reverse
 
-# Create your views here.
 def sourceView(request):
-	output = take_Filename_Only(_user_select)
-	return render(request, 'coding/templates/sourceView.html', {'user_sel': output})
+
+	fileName = request.POST.get('selected_file', '')
+	dirName = request.POST.get('dirNames', '')
+
+	index = len(fileName) - 1
+	while index >= 0:
+		if fileName[index] == ' ':
+			break
+		index = index - 1
+	fileName = fileName[index+1:]
+
+	rootFlag = 0
+	if dirName[0] == '/':
+		rootFlag = 1
+
+	dirName_ary = dirName.split('/')
+	print dirName_ary
+	dirName = ''
+	if rootFlag == 1:
+		dirName = '/'
+
+	for _in in dirName_ary:
+		if _in != '':
+			dirName += (_in + '/')
+
+	viewPath = dirName + fileName
+
+	'''
+	@ Author: InfiniteRegen
+	@ Function: Get file information
+	'''
+	'''  MORE FUNCTION REQUIRED!!! -- only a file can be open..	'''
+	''' Text&img file's type'''
+	f = open(viewPath, 'r')
+	file_data = f.read()
+	f.close()
+
+	return render(request, 'coding/templates/sourceView.html', {'viewPath': viewPath, 'file_data': file_data})
 
 def printDir(request):
-	global _view, _edit, _del, _use, _user_select
 	#HttpResponseRedirect('printDir')
+
 	dirName = request.POST.get('dirName', '') # Get directory Name
-
-	'''<==[ when button is pushed ]==>'''
-	_view = request.POST.get('view', '')
-	_edit = request.POST.get('edit', '')
-	_del = request.POST.get('del', '')
-	_user_select = request.POST.get('user_select', '')
-
-	if _view:
-		return HttpResponseRedirect('sourceView')
-	elif _edit:
-		return HttpResponseRedirect('sourceEdit')
-	elif _del:
-		return HttpResponseRedirect('sourceDel')
-	else:
-		print '@@_BUTTON EXCEPTION ERROR!!_@@'
-	'''<=[=========================]=>'''
-
 	command = 'ls -l ' + dirName
 	result = Str2Ary_Newline(os.popen(command).read())
 	fileName = take_Filename_Only(result[1:])
-	return render(request, 'coding/templates/printDir.html', {'resultOfDir': result[1:], 'fileNames': fileName, 'dirName': dirName}) # Exception to first row
+	print '[@@@] ===> %s' % dirName
+	return render(request, 'coding/templates/printDir.html', {'resultOfDir': result[1:], 'fileNames': fileName, 'dirNames': dirName}) # Exception to first row
 
 def Str2Ary_Newline(str_in):
 	out = []

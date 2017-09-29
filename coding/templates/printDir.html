@@ -8,39 +8,69 @@
 </head>
 
 <body>
+	<!-- JAVASCRIPT WILL BE ADDED
+	<script>
+		alert(document.cookie);
+	</script>
+	-->
+<font size=12 style="Arial"> DON'T view/edit/del </font>
+<font size=12 style="Arial" color="red">Directories</font>
+<font size=12 style="Arial"> please.<br>Threre are in maintenance.</font>
+
+	<!-- Most Top&Left ___ Directory Input form -->
 	<form action="/coding/printDir.html" method="POST">
 		{% csrf_token %}
-		<input id="dirName" type="text" placeholder="any directory?" name="dirName">
-		<input type="submit" value="Submit"/>
+		<input type="text" placeholder="/root" name="dirName" value="/root">
+		<input type="submit" value="SEARCH"/>
 	</form>
 
 	{% for result in resultOfDir %}
 	<table width="50%" align="center" border="5" cellpadding="0" cellspacing="0">
-   <tr><td width=5% align="center"><center>
-			{% if result.0 == 'd' %}
-      <img style="vertical-align: bottom;" src="{% static 'ico/folder_ico.png' %}" width="100%" height="100%">
-			{% elif result.0 == '-' %}
-      <img style="display:block;" src="{% static 'ico/file_ico.png' %}" width="100%" height="100%">
-			{% elif result.0 == 'l' %}
-			<img style="display:block;" src="{% static 'ico/link_ico.png' %}" width="100%" height="100%">
-			{% endif %}
-		</center></td>
+	 <tr>
+		 <!-- 1st column ___ type icon -->
+		 <td width=5% align="center">
+			 <center>
+				{% if result.0 == 'd' %}
+	      	<img style="vertical-align: bottom;" src="{% static 'ico/folder_ico.png' %}" width="100%" height="100%">
+				{% elif result.0 == '-' %}
+	      	<img style="display:block;" src="{% static 'ico/file_ico.png' %}" width="100%" height="100%">
+				{% elif result.0 == 'l' %}
+					<img style="display:block;" src="{% static 'ico/link_ico.png' %}" width="100%" height="100%">
+				{% endif %}
+			</center>
+		 </td>
+
+		<!-- 2nd column ___ FileName -->
 		<td width=50% align="center">
 			<center>
-			<font size=3 style="Arial">
-				<pre>	{{ result }} </pre>
-			</a>
-			</font>
+			<font size=3 style="Arial"> <pre>	{{ result }} </pre> </font>
 			</center>
     </td>
+
+		<!-- 3rd column ___ Button Family -->
 		<td width=30% align="center">
-			<form action="/coding/printDir.html" method="POST">
+			<!-- Redirect to sourceView -->
+			<form action="/coding/sourceView.html" method="POST">
 				{% csrf_token %}
-				<input type="hidden" name="user_select" value="{{ result }}"/>
+				<input type="hidden" name="selected_file" value="{{ result }}"/>
+				<input type="hidden" name="dirNames" value="{{ dirNames }}"/>
 				<input type="submit" name="view" value="view"/>
+			</form>
+			<!-- Redirect to sourceEdit -->
+			<form action="/coding/sourceEdit.html" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="selected_file" value="{{ result }}"/>
+				<input type="hidden" name="dir_recurse" value="{{ dirNames }}"/>
 				<input type="submit" name="edit" value="edit"/>
+			</form>
+			<!-- Redirect to sourceDel -->
+			<form action="/coding/sourceDel.html" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="selected_file" value="{{ result }}"/>
+				<input type="hidden" name="dir_recurse" value="{{ dirNames }}"/>
 				<input type="submit" name="del" value="del"/>
 			</form>
+
 		</td>
    </tr>
   </table>
