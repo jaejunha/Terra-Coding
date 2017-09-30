@@ -18,6 +18,7 @@ from . import views
 
 urlpatterns = [
 	url(r'^$',views.index, name='index'),
-	url(r'^/core', views.core, name='core'),
-	url(r'^/login',views.login, name='login'),
+	url(r'^/login', views.login, name='login'),
+	url(r'^/check',views.check, name='check'),
+	url(r'^/out',views.out, name='out'),
 ]

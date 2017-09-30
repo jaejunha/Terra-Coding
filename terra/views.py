@@ -12,26 +12,29 @@ LOGIN = 'https://mb.ajou.ac.kr/mobile/login.json'
 USER = 'https://mb.ajou.ac.kr/mobile/M03/M03_010_010.es'
 PIC = 'http://job.ajou.ac.kr/office/Teacher/Per/PerPic.aspx?pid='
 
-def core(request):
+def index(request):
 	try:
 		if request.session['sid']:
 			cookies = {'JSESSIONID':request.session['sid']}
 			response = requests.get(USER, cookies=cookies)
 			soup = BeautifulSoup(response.text,'html.parser')
-			number = soup.find_all('td')[1].string
+			list = soup.find_all('td')
+			number = list[1].string
+			name = list[2].string
+			grade = list[3].string
+			school = list[4].string
+			major = list[5].string
+			phone = list[18].string
 			picture = 'http://job.ajou.ac.kr'+requests.get(PIC+number).text.split(' ')[2][5:].split('?')[0]
-#		for a in soup.find_all('td'):
-#			print(str(a))
-			return render(request, 'terra/templates/core.html', {'picture':picture})
+			context = {'number':number, 'name':name,'grade':grade,'school':school,'major':major,'phone':phone,'picture':picture}
+			return render(request, 'terra/templates/index.html', context)
 	except Exception:
-		print(request.session['sid'])
-
-		return render(request, 'terra/templates/core.html')
-
-def index(request):
-        return render(request, 'terra/templates/index.html')
+		return render(request, 'terra/templates/index.html')
 
 def login(request):
+        return render(request, 'terra/templates/login.html')
+
+def check(request):
 	name = ''
 	if request.method == 'POST':
 		name = request.POST.get('id', '')
@@ -45,6 +48,10 @@ def login(request):
 				for c in response.cookies:
 					if c.name == 'JSESSIONID':
 						request.session['sid']=c.value
-				return HttpResponseRedirect(reverse('core'))
-	return render(request, 'terra/templates/index.html', {'name': name})
+				return HttpResponseRedirect(reverse('index'))
+	return render(request, 'terra/templates/login.html', {'name': name})
 
+def out(request):
+	request.session.flush()
+	picture = ''
+	return HttpResponseRedirect(reverse('index'))
