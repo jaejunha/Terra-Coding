@@ -152,6 +152,12 @@ def do_path_concatenation(fileName, dirName):
 	if dirName == '':
 		dirName = './'
 
+	dirName = dirName.replace('\n', '')
+	dirName = dirName.replace('\r', '')
+
+	fileName = fileName.replace('\n', '')
+	fileName = fileName.replace('\r', '')
+
 	index = len(fileName) - 1
 	while index >= 0:
 		if fileName[index] == ' ':
