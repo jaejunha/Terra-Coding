@@ -7,27 +7,26 @@
 	<title>::T - HUB::</title>
 </head>
 
-<body bgcolor="#BDE4E3">
+<body bgcolor="#F2E0F7">
 	<!-- JAVASCRIPT WILL BE ADDED
 	<script>
 		alert(document.cookie);
 	</script>
 	-->
-
+	<center>
+	<form action="/terra" method="POST">
+		{% csrf_token %}
+		--><input type="submit" value="Go to main page"/><---
+	</form>
+	</center>
+	<br><br>
 	<!-- Most Top&Left ___ Directory Input form -->
 	<center>
-		<form action="/coding/printDir.html" method="POST">
-			{% csrf_token %}
-			<input type="hidden" name="operation" value="GoBack"/>
-			<input type="hidden" name="dirName" value="{{ dirNames }}"/>
-			<input type="submit" name="GoBack" value="Back Page"/>
-		</form>
 	<form action="/coding/printDir.html" method="POST">
 		{% csrf_token %}
 		<input type="text" placeholder="/root" name="dirName" value="{{ dirNames }}">
 		<input type="submit" value="SEARCH"/>
 	</form>
-
 
 	<!-- Create Newfile -->
 	<form action="/coding/createNewFile.html" method="POST">
@@ -37,7 +36,16 @@
 		<input type="text" placeholder="file name?" name="newFileName">
 		<input type="submit" value="New" onclick="return alert(' GOOD LUCK :)');"/>
 	</form>
- 	</center>
+
+
+	<form action="/coding/printDir.html" method="POST">
+		{% csrf_token %}
+		<input type="hidden" name="operation" value="GoBack"/>
+		<input type="hidden" name="dirName" value="{{ dirNames }}"/>
+		<input type="submit" name="GoBack" value="▲"/>
+	</form>
+	</center>
+
 
 	{% for result in resultOfDir %}
 	<table width="60%" align="center" border="5" cellpadding="0" cellspacing="0">

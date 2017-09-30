@@ -6,20 +6,24 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::Source Editor::</title>
 </head>
-<body>
+<body bgcolor="#848484">
 
-<cetner>
-	<font size=15 style="Arial" color="RED"> Editor service </font>
+<center>
+	<br><br>
+	<b><font size=17 style="Fantasy" color="#A9D0F5"> [ Editor service ] </font></b>
 	<br><br><br><br>
-</center>
 
+<b><font size=5 style="Fantasy" color="black">
+{{ returnPath }}
+</font></b>
+<br><br>
 <!-- Redirect Edit Function  -->
 <form action="/coding/sourceEdit.html" method="POST">
 	{% csrf_token %}
 	<textarea rows="30%" cols="100%" name="edit_data">{{ file_data }}</textarea>
 	<input type="hidden" name="operation" value="Write"/>
+	<br>
 	<input type="submit" name="edit" value="Edit" onclick="return confirm('Are you sure want to edit? :)')"/>
-
 </form>
 
 <!-- Redirect Cancel  -->
@@ -28,7 +32,7 @@
 	<input type="hidden" name="dirName" value="{{ returnPath }}"/>
 	<input type="submit" name="cancel" value="Cancel"/>
 </form>
-
+</center>
 </body>
 
 </html>

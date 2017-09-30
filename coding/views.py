@@ -71,7 +71,7 @@ def sourceEdit(request):
 		file_data = f.read()
 		f.close()
 
-		return render(request, 'coding/templates/sourceEdit.html', {'returnPath': dirName, 'file_data': file_data})
+		return render(request, 'coding/templates/sourceEdit.html', {'returnPath': editPath, 'file_data': file_data})
 
 def sourceView(request):
 
@@ -96,8 +96,7 @@ def printDir(request):
 
 	if operation == 'ReDirect':
 		folderName = request.POST.get('folder', '')
-		folderName = do_path_concatenation(folderName, 'NULL')
-		dirName += '/' + folderName
+		dirName = do_path_concatenation(folderName, dirName)
 
 	elif operation == 'GoBack':
 		if dirName[-1] == '/':
@@ -114,10 +113,12 @@ def printDir(request):
 
 
 	command = 'ls -l ' + dirName
-	result = Str2Ary_Newline(os.popen(command).read())
-	fileName = take_Filename_Only(result[1:])
+	#result = Str2Ary_Newline(os.popen(command).read())
+	result = os.popen(command).read()
+	result_ary = result.split('\n')
+	#fileName = take_Filename_Only(result_ary[1:])
 
-	return render(request, 'coding/templates/printDir.html', {'resultOfDir': result[1:], 'fileNames': fileName, 'dirNames': dirName}) # Exception to first row
+	return render(request, 'coding/templates/printDir.html', {'resultOfDir': result_ary[1:], 'dirNames': dirName}) # Exception to first row
 
 def Str2Ary_Newline(str_in):
 	out = []
@@ -140,6 +141,7 @@ def take_Filename_Only(ary_in):
 	index = 0
 	for _in in ary_in:
 		index = len(_in)
+		print index
 		while index >= 0:
 			if _in[index-1] == ' ':
 				break
@@ -149,23 +151,26 @@ def take_Filename_Only(ary_in):
 
 def do_path_concatenation(fileName, dirName):
 
+	'''<====[ EXCEPTION HANDLER ]====>'''
 	if dirName == '':
 		dirName = './'
-
 	dirName = dirName.replace('\n', '')
 	dirName = dirName.replace('\r', '')
-
 	fileName = fileName.replace('\n', '')
 	fileName = fileName.replace('\r', '')
+	'''<============================>'''
 
+	'''<====[ EXTRACT FILE NAME  ]====>'''
 	index = len(fileName) - 1
 	while index >= 0:
 		if fileName[index] == ' ':
 			break
 		index = index - 1
 	fileName = fileName[index+1:]
+	'''<============================>'''
 
-	if dirName != 'NULL':
+	'''<====[ EXTRACT DIRECTORY NAME ]====>'''
+	if dirName != 'NULL': # when dirName is NULL, Skip this procedure.
 		rootFlag = 0
 		if dirName[0] == '/':
 			rootFlag = 1
@@ -181,5 +186,6 @@ def do_path_concatenation(fileName, dirName):
 		path = dirName + fileName
 	else:
 		path = fileName
+	'''<============================>'''
 
 	return path
