@@ -12,6 +12,8 @@ LOGIN = 'https://mb.ajou.ac.kr/mobile/login.json'
 USER = 'https://mb.ajou.ac.kr/mobile/M03/M03_010_010.es'
 PIC = 'http://job.ajou.ac.kr/office/Teacher/Per/PerPic.aspx?pid='
 
+error_list = ["Enter the ID", "Enter the Password", "Please check your input"]
+
 def index(request):
 	try:
 		if request.session['sid']:
@@ -36,11 +38,16 @@ def login(request):
 
 def check(request):
 	name = ''
+	error = ''
 	if request.method == 'POST':
 		name = request.POST.get('id', '')
 		pwd = request.POST.get('pwd','')
 		cookies = ''
-		if name != '' and pwd !='':
+		if name == '':
+			error = error_list[0]
+		elif pwd == '':
+			error = error_list[1]
+		else:
 			data = {'id': name, 'passwd': pwd, 'rememberMe': 'N', 'platformType':'A', 'deviceToken':''}
 			response = requests.post(LOGIN, data=data)
 			status = json.loads(response.text)['response']
@@ -49,7 +56,9 @@ def check(request):
 					if c.name == 'JSESSIONID':
 						request.session['sid']=c.value
 				return HttpResponseRedirect(reverse('index'))
-	return render(request, 'terra/templates/login.html', {'name': name})
+			else:
+				error = error_list[2]
+	return render(request, 'terra/templates/login.html', {'name': name, 'error': error})
 
 def out(request):
 	request.session.flush()

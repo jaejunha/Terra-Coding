@@ -1,0 +1,17 @@
+@keyframes circle{
+                        from{
+                                transform: scale(0.1,0.1);
+                        }
+                        to{
+                                transform: scale(20,20);
+                        }
+                }
+@keyframes appear{
+                        40%{
+                                opacity: 0;
+                        }
+                        100%{
+                                opacity: 1;
+                        }
+                }
+

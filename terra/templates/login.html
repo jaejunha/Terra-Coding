@@ -3,17 +3,20 @@
 {% load staticfiles %}
 <head>
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
 	<style>
 		html{
 			height:100%;
+			width: 100%;
 		}
 		body{
 	                overflow-y:hidden;
                         overflow-x:hidden;
 			height:100%;
+			width: 100%;
 			margin:	0;
 		}
-		#before{
+		#simple{
 			position: absolute;	
 			left: 45%;
 			top: 40%;
@@ -27,7 +30,7 @@
 			animation-fill-mode: both;
 			z-index: -2;
 		}
-		#after{
+		#simple_error{
 			position: absolute;
                         left: -50%;
                         top: -50%;
@@ -48,10 +51,10 @@
 			height: 300px;
 			background: rgba( 255, 255, 255, 0.5 );
 			opacity: 0;
-			animation: expand 3s;
+			animation: appear 3s;
                         animation-fill-mode:both;
 		}
-		#fail{
+		#login_error{
 			position: relative;
                         top: 50%;
                         left: 50%;
@@ -62,47 +65,39 @@
                         background: rgba( 255, 255, 255, 0.5 );
                         opacity: 1;
 		}
-		@keyframes circle{
-			from{	
-				transform: scale(0.1,0.1);
-			}
-			to{
-				transform: scale(20,20);
-			}
+		#msg{
+			position: relative;
+			color: #ffffff;
 		}
-		@keyframes expand{
-			40%{	
-				opacity: 0;
-			}
-			100%{
-				opacity: 1;
-			}
+		#msg_error{
+			position: relative;
+			width: 400px;
+			color: #ff0000;
 		}
 	</style>
 	<title>::T - HUB::</title>
 
 </head>
 <body>
-	{% if name is None %}
-	<div id="before"></div>
+	{% if error is None %}
+	<div id="simple"></div>
 	<div id="login">
+	{% else %}
+	<div id="simple_error"></div>
+        <div id="login_error">
+	{% endif %}
                 <form action="/terra/check" method="POST">
-                        {% csrf_token %}
+	{%if error is None %}
+			<font id="msg">To use our web service, must login</font>
+	{% else %}
+			<font id="msg_error">{{ error }}</font>
+	{% endif %}
+			<br>
+			{% csrf_token %}
                         <input id="id" type="text" placeholder="please enter ID" name="id" value="{{name}}">
                         <br><input id="pwd" type="password" placeholder="please enter Password" name="pwd">
                         <br><input type="submit" value="Submit"/>
                 </form>
         </div>
-	{% else %}
-	<div id="after"></div>	
-	<div id="fail">
-		<form action="/terra/check" method="POST">
-			{% csrf_token %}
-			<input id="id" type="text" placeholder="please enter ID" name="id" value="{{name}}">
-			<br><input id="pwd" type="password" placeholder="please enter Password" name="pwd">
-			<br><input type="submit" value="Submit"/>
-		</form>
-	</div>
-	{% endif %}
 </body>
 </html>
