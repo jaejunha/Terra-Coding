@@ -4,9 +4,21 @@
 <head>
 	 <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
 	<meta charset="utf-8">
+	<script type="text/javascript">
+		function loadDiv(url){
+			var element=document.getElementById("content");
+			element.innerHTML="<iframe src=\""+url+"\" ></iframe>";				
+			}
+	</script>
 	<style>
+		html{
+			width:	100%;
+			height: 100%;
+		}
 		body{
 			margin:0;
+			width:	100%;
+			height: 100%;
 		}
 		#header{
 			color:#ffffff;
@@ -61,7 +73,7 @@
 			height: 0;
 		}
 	</style>
-	<title>:: Core Value::</title>
+	<title>::T - HUB::</title>
 </head>
 <body>
 	<div id="header" align="right">
@@ -79,9 +91,13 @@
 	</div>
 	<div id="top">
 		<a href="">Info</a>
-		<a href="/coding">Coding</a>	
+		<a href="javascript:parent.loadDiv('/coding');">Coding</a>	
 		<a href="">Statistics</a>			
 		<a href="">Rank</a>
+	</div>
+	<div id="content" style="width:100%; height:100%;">
+	<iframe src="terra/login" width="100%" height="100%">
+	</iframe>
 	</div>
 	{% if picture is None %}
 	<img src="{% static 'img/banner.jpg' %}" id="banner">
