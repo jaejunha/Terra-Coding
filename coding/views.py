@@ -15,7 +15,8 @@ def do_compile_c_language(request):
 	dirName = request.POST.get('dirNames', '')
 
 	path = do_path_concatenation(fileName, dirName)
-	result = os.popen("gcc -o main " + path).read() # executable file will be created in manage.py directory
+	result = os.popen("gcc -o main " + path + " 2> compile_message").read() # executable file will be created in manage.py directory
+	result = os.popen("cat compile_message").read() # show a error message
 
 	if result == '': # which means error is none
 		result = 'successfully compiled'
@@ -103,7 +104,6 @@ def printDir(request):
 			dirName = dirName[:-1]
 
 		index = len(dirName) - 1
-		print index
 		while index > 0:
 			if dirName[index] == '/':
 				break
