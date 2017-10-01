@@ -4,14 +4,33 @@
 {% load staticfiles %}
 <head>
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
-	<title>::Source Viewer::</title>
+	<title>::compile Result::</title>
 </head>
+
 <body>
 
-<h1>
-  {% csrf_token %}
+<center>
+<b><font size=15 style="Lucida Blackletter" color="#9FF781">
+[COMPILE RESULT]
+</font></b>
+
+<br><br><br>
+
+
+
+<br><br><br>
+
+{% if status == 'S' %}
+	<h1> compile status: <font color="Green">successful</font> </h1>
+{% elif status == 'F' %}
+	<h1> compile status: <font color="Red">failed</font> </h1>
+{% endif %}
+<hr color="red" width=100%>
+<font size=3 style="Lucida Blackletter">
 <pre> {{ result }} </pre>
-</h1>
+</font>
+<hr color="red" width=100%>
+</center>
 
 </body>
 </html>

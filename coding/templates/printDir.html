@@ -20,6 +20,7 @@
 	</form>
 	</center>
 	<br><br>
+
 	<!-- Most Top&Left ___ Directory Input form -->
 	<center>
 	<form action="/coding/printDir.html" method="POST">
@@ -36,16 +37,39 @@
 		<input type="text" placeholder="file name?" name="newFileName">
 		<input type="submit" value="New" onclick="return alert(' GOOD LUCK :)');"/>
 	</form>
+	<br><br><br>
 
-
+	<!-- Go to parent directory -->
 	<form action="/coding/printDir.html" method="POST">
 		{% csrf_token %}
 		<input type="hidden" name="operation" value="GoBack"/>
 		<input type="hidden" name="dirName" value="{{ dirNames }}"/>
 		<input type="submit" name="GoBack" value="▲"/>
 	</form>
-	</center>
 
+	<!-- Compile All C files on this Directory -->
+	<form action="/coding/compile_res.html" method="POST">
+		{% csrf_token %}
+		<input type="hidden" name="operation" value="ALL"/>
+		<input type="hidden" name="dirName" value="{{ dirNames }}"/>
+		<input type="hidden" name="allName" value="{{ resultOfDir }}"/>
+		<!--<input type="text" placeholder="file name?" name="newFileName">-->
+		<input type="submit" value="Complie this project as C"/>
+	</form>
+
+	<!-- Select project attribute -->
+	<form action="/coding/printDir.html" method="POST">
+		{% csrf_token %}
+	<select name="project_attribute" id="project_attribute" onchange="this.form.submit()">
+		<option value="ALL">ALL</option>
+    <option value="C_Lang">C</option>
+    <option value="Java_Lang">C++</option>
+    <option value="Python_Lang">Python</option>
+		<input type="hidden" name="dirName" value="{{ dirNames }}"/>
+		<input type="hidden" name="operation" value="categorization"/>
+	</select>
+	</form>
+	</center>
 
 	{% for result in resultOfDir %}
 	<table width="60%" align="center" border="5" cellpadding="0" cellspacing="0">
@@ -95,8 +119,9 @@
 			<!-- Redirect to complie -->
 			<form action="/coding/compile_res.html" method="POST">
 				{% csrf_token %}
+				<input type="hidden" name="operation" value="selected"/>
 				<input type="hidden" name="compile_file" value="{{ result }}"/>
-				<input type="hidden" name="dirNames" value="{{ dirNames }}"/>
+				<input type="hidden" name="dirName" value="{{ dirNames }}"/>
 				<input type="submit" name="complie" value="complie"/>
 			</form>
 			{% endif %}

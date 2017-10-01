@@ -10,18 +10,53 @@ from os.path import abspath, dirname
 from subprocess import call
 from django.core.urlresolvers import reverse
 
-def do_compile_c_language(request):
-	fileName = request.POST.get('compile_file', '')
-	dirName = request.POST.get('dirNames', '')
+def get_all_c_files_name(fileList):
+	output = []
 
-	path = do_path_concatenation(fileName, dirName)
-	result = os.popen("gcc -o main " + path + " 2> compile_message").read() # executable file will be created in manage.py directory
-	result = os.popen("cat compile_message").read() # show a error message
+	for fileName in fileList:
+		extension = os.path.splitext(fileName)[1]
+		if extension == '.c' or extension == '.h':
+			output.append(fileName)
+
+	return output
+
+def do_compile_c_language(request):
+	operation = request.POST.get('operation', '')
+	fileName = request.POST.get('compile_file', '')
+	dirName = request.POST.get('dirName', '')
+	path = ''
+	result = ''
+	status = ''
+
+	if dirName[-1] == '/':
+		dirName = dirName[:-1]
+
+	if operation == 'ALL': # Compile on a Project unit
+		command = 'ls -1 ' + dirName
+		allName = os.popen(command).read().split('\n')
+		fileName_c = get_all_c_files_name(allName)
+
+		for _file in fileName_c:
+			path += (' ' + dirName + '/' + _file)
+
+	elif operation == 'selected': # Compile on file unit
+		path = do_path_concatenation(fileName, dirName)
+		extension = os.path.splitext(path)[1]
+		if extension != '.c':
+			errMsg = "out of service format :)"
+			return render(request, 'coding/templates/compile_res.html', {'result': errMsg , 'status': 'F'})
+
+	gcc_compile_command = "gcc -o " + dirName + "/main " + path + " 2> " + dirName + "/compile_message"
+	result = os.popen(gcc_compile_command).read() # executable file will be created in manage.py directory
+	result = os.popen("cat " + dirName + "/compile_message").read() # show a error message
 
 	if result == '': # which means error is none
-		result = 'successfully compiled'
+		status = 'S'
+		result = os.popen(dirName + "/main").read()
+	else:
+		status = 'F'
 
-	return render(request, 'coding/templates/compile_res.html', {'result': result})
+	return render(request, 'coding/templates/compile_res.html', {'result': result, 'status': status})
 
 def createNewFile(request):
 	dirName = request.POST.get('dirName', '')
@@ -92,6 +127,7 @@ def printDir(request):
 
 	operation = request.POST.get('operation', '')
 	dirName = request.POST.get('dirName', '') # Get directory Name
+
 	if dirName == '':
 		dirName = os.popen('pwd').read() # if input of directory is empty, set to current path
 
@@ -108,32 +144,22 @@ def printDir(request):
 			if dirName[index] == '/':
 				break
 			index = index - 1
-
 		dirName = dirName[:index]
 
+	elif operation == 'categorization':
+		project_attr = request.POST.get('project_attribute', '')
+		if project_attr == 'C_Lang':
+			dirName = dirName.replace('\n', '')
+			dirName = dirName.replace('\r', '')
+			dirName += '/*.c'
 
-	command = 'ls -l ' + dirName
-	#result = Str2Ary_Newline(os.popen(command).read())
+	command = 'ls -lh ' + dirName
+
 	result = os.popen(command).read()
 	result_ary = result.split('\n')
 	#fileName = take_Filename_Only(result_ary[1:])
 
 	return render(request, 'coding/templates/printDir.html', {'resultOfDir': result_ary[1:], 'dirNames': dirName}) # Exception to first row
-
-def Str2Ary_Newline(str_in):
-	out = []
-	buff = []
-
-	for c in str_in:
-		if c == '\n':
-			out.append(''.join(buff))
-			buff = []
-		else:
-			buff.append(c)
-	else:
-		if buff:
-			out.append(''.join(buff))
-	return out
 
 def take_Filename_Only(ary_in):
 	out = []
