@@ -22,15 +22,17 @@ def index(request):
 			soup = BeautifulSoup(response.text,'html.parser')
 			list = soup.find_all('td')
 			number = list[1].string
-			name = list[2].string
-			grade = list[3].string
-			school = list[4].string
-			major = list[5].string
-			phone = list[18].string
-			picture = 'http://job.ajou.ac.kr'+requests.get(PIC+number).text.split(' ')[2][5:].split('?')[0]
-			context = {'number':number, 'name':name,'grade':grade,'school':school,'major':major,'phone':phone,'picture':picture}
-			return render(request, 'terra/templates/index.html', context)
-	except Exception:
+			request.session['number'] = number 
+			request.session['name']	= list[2].string
+			request.session['grade'] = list[3].string
+			request.session['school'] = list[4].string
+			request.session['marjor'] = list[5].string
+			request.session['phone'] = list[18].string
+			request.session['picture'] = 'http://job.ajou.ac.kr'+requests.get(PIC+number).text.split(' ')[2][5:].split('?')[0]
+			return render(request, 'terra/templates/index.html')
+	except Exception as e:
+		print(e)
+		request.session.flush()
 		return render(request, 'terra/templates/index.html')
 
 def login(request):

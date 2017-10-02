@@ -3,6 +3,6 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 
-def index(request):
+def statistics(request):
 	return render(request, 'statistics/templates/index.html')
 

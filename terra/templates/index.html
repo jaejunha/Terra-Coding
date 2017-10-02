@@ -72,7 +72,7 @@
 </head>
 <body>
 	<div id="header" align="right">
-		{% if picture is None %}
+		{% if request.session.picture is None %}
        		<a href="terra/login">login</a>
 		{% else %}
 		<a href="terra/out">logout</a>
@@ -90,19 +90,12 @@
 		<a href="javascript:loadDiv('/statistics');">Statistics</a>	
 		<a href="javascript:loadDiv('/rank');">Rank</a>
 	</div>
-	<div id="content" style="width:100%; height:100%;">
-	<iframe src="/info" width="100%" height="100%">
-	</iframe>
-	</div>
-	{% if picture is None %}
+	{% if request.session.picture is None %}
 	<img src="{% static 'img/banner.jpg' %}" id="banner">
 	{% else %}
-	<img src="{{ picture }}">
-	{{name}}
-	<br>{{number}}
-	<br>{{phone}}
-	<br>{{school}}
-	<br>{{major}}
+	<div id="content" style="width:100%; height:100%;">
+                <iframe src="/info" width="100%" height="100%"/>
+        </div>
 	{% endif %}	
 </body>
 </html>
