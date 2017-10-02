@@ -4,18 +4,8 @@
 <head>
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
+	<script type="text/javascript" src="{% static 'js/move.js' %}"></script>
 	<style>
-		html{
-			height:100%;
-			width: 100%;
-		}
-		body{
-	                overflow-y:hidden;
-                        overflow-x:hidden;
-			height:100%;
-			width: 100%;
-			margin:	0;
-		}
 		#simple{
 			position: absolute;	
 			left: 45%;
@@ -41,30 +31,6 @@
                         background: linear-gradient(#5a92b7, #6cc1a0 ) fixed;
                         z-index: -2;
 		}
-		#login{	
-			position: relative;
-			top: 50%;
-			left: 50%;
-			margin-top: -150px;
-			margin-left: -200px;
-			width: 400px; 
-			height: 300px;
-			background: rgba( 255, 255, 255, 0.5 );
-			opacity: 0;
-			animation: appear 3s;
-                        animation-fill-mode:both;
-		}
-		#login_error{
-			position: relative;
-                        top: 50%;
-                        left: 50%;
-                        margin-top: -150px;
-                        margin-left: -200px;
-                        width: 400px;
-                        height: 300px;
-                        background: rgba( 255, 255, 255, 0.5 );
-                        opacity: 1;
-		}
 		#msg{
 			position: relative;
 			color: #ffffff;
@@ -78,7 +44,11 @@
 	<title>::T - HUB::</title>
 
 </head>
-<body>
+<body onload="login_init();">
+	<div id="logo" style="position:absolute;">
+		<img  src="{% static 'favicon/T-HUB.png' %}" style="left:-10p;x">
+		<a style="position:relative;color:#ffffff;font-size:40pt;top:-25px;left:10px;">T-HUB</a>
+	</div>
 	{% if error is None %}
 	<div id="simple"></div>
 	<div id="login">
@@ -87,16 +57,17 @@
         <div id="login_error">
 	{% endif %}
                 <form action="/terra/check" method="POST">
-	{%if error is None %}
-			<font id="msg">To use our web service, must login</font>
-	{% else %}
-			<font id="msg_error">{{ error }}</font>
-	{% endif %}
-			<br>
+			Ajou Student
 			{% csrf_token %}
-                        <input id="id" type="text" placeholder="please enter ID" name="id" value="{{name}}">
+                        <br><input id="id" type="text" placeholder="please enter ID" name="id" value="{{name}}">
                         <br><input id="pwd" type="password" placeholder="please enter Password" name="pwd">
-                        <br><input type="submit" value="Submit"/>
+                        <br><input type="submit" value="Log In"/>
+			<br>
+			{%if error is None %}
+                       <font id="msg">To use our web service, must login</font>
+        		{% else %}
+                        <font id="msg_error">{{ error }}</font>
+        		{% endif %}
                 </form>
         </div>
 </body>

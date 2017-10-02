@@ -1,17 +1,45 @@
+html{
+	height:100%;
+        width: 100%;
+}
+body{
+	overflow-y:hidden;
+	overflow-x:hidden;
+	height:100%;
+	width: 100%;
+	margin: 0;
+}
+
+#login{
+        position: absolute;
+        width: 400px;
+        height: 300px;
+        background: rgba( 255, 255, 255, 0.3 );
+        opacity: 0;
+        animation: appear 3s;
+	animation-fill-mode:both;
+}
+#login_error{
+       	position: absolute;
+     	width: 400px;
+       	height: 300px;
+        background: rgba( 255, 255, 255, 0.3 );
+       	opacity: 1;
+}
 @keyframes circle{
-                        from{
-                                transform: scale(0.1,0.1);
-                        }
-                        to{
-                                transform: scale(20,20);
-                        }
-                }
+       	from{
+           	transform: scale(0.1,0.1);
+        }
+        to{
+             	transform: scale(20,20);
+       	}
+}
 @keyframes appear{
-                        40%{
-                                opacity: 0;
-                        }
-                        100%{
-                                opacity: 1;
-                        }
-                }
+       	40%{
+        	 opacity: 0;
+        }
+      	100%{
+             	opacity: 1;
+     	}
+}
 
