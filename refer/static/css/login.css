@@ -1,6 +1,6 @@
 html{
 	height:100%;
-        width: 100%;
+  width: 100%;
 }
 body{
 	overflow-y:hidden;
@@ -9,37 +9,87 @@ body{
 	width: 100%;
 	margin: 0;
 }
-
+#simple{
+	position: absolute;
+	left: 45%;
+	top: 40%;
+	width: 10%;
+	height: 20%;
+	overflow-y:hidden;
+	overflow-x:hidden;
+	border-radius: 50%;
+	background: linear-gradient(#5a92b7, #6cc1a0 ) fixed;
+	animation: circle 3s;
+	animation-fill-mode: both;
+	z-index: -2;
+}
+#simple_error{
+	position: absolute;
+	left: -50%;
+	top: -50%;
+	width: 200%;
+	height: 400%;
+	overflow-y:hidden;
+	overflow-x:hidden;
+	background: linear-gradient(#5a92b7, #6cc1a0 ) fixed;
+	z-index: -2;
+}
+#logo{
+	opacity: 0.9;
+}
 #login{
-        position: absolute;
-        width: 400px;
-        height: 300px;
-        background: rgba( 255, 255, 255, 0.3 );
-        opacity: 0;
-        animation: appear 3s;
+  position: absolute;
+  width: 400px;
+  height: 300px;
+  background: rgba( 255, 255, 255, 0.3 );
+  opacity: 0;
+  animation: appear 3s;
 	animation-fill-mode:both;
 }
 #login_error{
-       	position: absolute;
-     	width: 400px;
-       	height: 300px;
-        background: rgba( 255, 255, 255, 0.3 );
-       	opacity: 1;
+  position: absolute;
+  width: 400px;
+  height: 300px;
+  background: rgba( 255, 255, 255, 0.3 );
+  opacity: 1;
+}
+input {
+	margin-left: 	10px;
+	margin-bottom:5px;
+}
+#id, #pwd {
+	width:365px;
+	height: 30px;
+}
+#check{
+	margin-top: 10px;
+	width:380px;
+	height: 45px;
+}
+#msg{
+	margin: 10px;
+	position: relative;
+	color: #ffffff;
+}
+#msg_error{
+	margin: 10px;
+	position: relative;
+	width: 400px;
+	color: #ff0000;
 }
 @keyframes circle{
-       	from{
-           	transform: scale(0.1,0.1);
-        }
-        to{
-             	transform: scale(20,20);
-       	}
+  from{
+  	transform: scale(0.1,0.1);
+  }
+  	to{
+  	transform: scale(20,20);
+  }
 }
 @keyframes appear{
-       	40%{
-        	 opacity: 0;
-        }
-      	100%{
-             	opacity: 1;
-     	}
+  40%{
+   opacity: 0;
+  }
+  100%{
+   	opacity: 1;
+  }
 }
-

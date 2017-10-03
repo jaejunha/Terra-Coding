@@ -5,48 +5,12 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
 	<script type="text/javascript" src="{% static 'js/move.js' %}"></script>
-	<style>
-		#simple{
-			position: absolute;	
-			left: 45%;
-			top: 40%;
-			width: 10%;                              
- 			height: 20%; 
-			overflow-y:hidden; 
-			overflow-x:hidden;
- 			border-radius: 50%;
-			background: linear-gradient(#5a92b7, #6cc1a0 ) fixed;
-			animation: circle 3s; 
-			animation-fill-mode: both;
-			z-index: -2;
-		}
-		#simple_error{
-			position: absolute;
-                        left: -50%;
-                        top: -50%;
-                        width: 200%;
-                        height: 400%;
-                        overflow-y:hidden;
-                        overflow-x:hidden;
-                        background: linear-gradient(#5a92b7, #6cc1a0 ) fixed;
-                        z-index: -2;
-		}
-		#msg{
-			position: relative;
-			color: #ffffff;
-		}
-		#msg_error{
-			position: relative;
-			width: 400px;
-			color: #ff0000;
-		}
-	</style>
 	<title>::T - HUB::</title>
 
 </head>
 <body onload="login_init();">
 	<div id="logo" style="position:absolute;">
-		<img  src="{% static 'favicon/T-HUB.png' %}" style="left:-10p;x">
+		<img  src="{% static 'img/Logo.png' %}" style="left:-10px;">
 		<a style="position:relative;color:#ffffff;font-size:40pt;top:-25px;left:10px;">T-HUB</a>
 	</div>
 	{% if error is None %}
@@ -56,12 +20,13 @@
 	<div id="simple_error"></div>
         <div id="login_error">
 	{% endif %}
-                <form action="/terra/check" method="POST">
-			Ajou Student
+								<!--<br>Ajou Student-->
+								<br><div style="background:#ffffff;margin-left:10px;margin-bottom:15px;width:380px;height:45px;"></div>
+			          <form action="/terra/check" method="POST">
 			{% csrf_token %}
-                        <br><input id="id" type="text" placeholder="please enter ID" name="id" value="{{name}}">
+                        <input id="id" type="text" placeholder="please enter ID" name="id" value="{{name}}">
                         <br><input id="pwd" type="password" placeholder="please enter Password" name="pwd">
-                        <br><input type="submit" value="Log In"/>
+                        <br><input id="check" type="image" src="{% static 'img/login.png' %}"  onClick="login_init();">
 			<br>
 			{%if error is None %}
                        <font id="msg">To use our web service, must login</font>
