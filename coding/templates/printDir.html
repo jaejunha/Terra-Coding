@@ -71,18 +71,36 @@
 	</form>
 	</center>
 
-	{% for result in resultOfDir %}
+	{% for info in fileInfo %}
 	<table width="60%" align="center" border="5" cellpadding="0" cellspacing="0">
 	 <tr>
 		 <!-- 1st column ___ type icon -->
 		 <td width=5% align="center">
 			 <center>
-				{% if result.0 == 'd' %}
+				{% if info.0 == 'd' %}
 	      	<img style="vertical-align: bottom;" src="{% static 'ico/folder_ico.png' %}" width="100%" height="100%">
-				{% elif result.0 == '-' %}
-	      	<img style="display:block;" src="{% static 'ico/file_ico.png' %}" width="100%" height="100%">
-				{% elif result.0 == 'l' %}
-					<img style="display:block;" src="{% static 'ico/link_ico.png' %}" width="100%" height="100%">
+				{% elif info.0 == 'l' %}
+	      	<img style="display:block;" src="{% static 'ico/link_ico.png' %}" width="100%" height="100%">
+				{% else %}
+					{% if info.0 == '.py' %}
+					<img style="display:block;" src="{% static 'ico/py_ico.png' %}" width="100%" height="100%">
+					{% elif info.0 == '.c' %}
+					<img style="display:block;" src="{% static 'ico/c_ico.png' %}" width="100%" height="100%">
+					{% elif info.0 == '.cpp' %}
+					<img style="display:block;" src="{% static 'ico/cpp_ico.png' %}" width="100%" height="100%">
+					{% elif info.0 == '.h' %}
+					<img style="display:block;" src="{% static 'ico/header_ico.jpg' %}" width="100%" height="100%">
+					{% elif info.0 == '.pyc' %}
+					<img style="display:block;" src="{% static 'ico/pyc_ico.png' %}" width="100%" height="100%">
+					{% elif info.0 == '.sqlite3' %}
+					<img style="display:block;" src="{% static 'ico/sql_ico.png' %}" width="100%" height="100%">
+					{% elif info.0 == '.png' %}
+					<img style="display:block;" src="{% static 'ico/png_ico.jpg' %}" width="100%" height="100%">
+					{% elif info.0 == '.jpg' %}
+					<img style="display:block;" src="{% static 'ico/jpg_ico.png' %}" width="100%" height="100%">
+					{% else %}
+					<img style="display:block;" src="{% static 'ico/file_ico.png' %}" width="100%" height="100%">
+					{% endif %}
 				{% endif %}
 			</center>
 		 </td>
@@ -94,7 +112,7 @@
 					{% csrf_token %}
 					<input type="hidden" name="operation" value="ReDirect"/>
 					<input type="hidden" name="dirName" value="{{ dirNames }}"/>
-					<input type="submit" name="folder" value="{{ result }}"/>
+					<input type="submit" name="folder" value="{{ info.1 }}"/>
 				</form>
 			</center>
     </td>

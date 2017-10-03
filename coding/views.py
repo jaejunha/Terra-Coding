@@ -124,56 +124,73 @@ def sourceView(request):
 	return render(request, 'coding/templates/sourceView.html', {'viewPath': viewPath, 'file_data': file_data})
 
 def printDir(request):
+	fileType = []
 
 	operation = request.POST.get('operation', '')
-	dirName = request.POST.get('dirName', '') # Get directory Name
+	directoryName = request.POST.get('dirName', '') # Get directory Name
 
-	if dirName == '':
-		dirName = os.popen('pwd').read() # if input of directory is empty, set to current path
+	if directoryName == '':
+		directoryName = os.popen('pwd').read() # if input of directory is empty, set to current path
 
 	if operation == 'ReDirect':
 		folderName = request.POST.get('folder', '')
-		dirName = do_path_concatenation(folderName, dirName)
+		directoryName = do_path_concatenation(folderName, directoryName)
 
 	elif operation == 'GoBack':
-		if dirName[-1] == '/':
-			dirName = dirName[:-1]
+		if directoryName[-1] == '/':
+			directoryName = directoryName[:-1]
 
-		index = len(dirName) - 1
+		index = len(directoryName) - 1
 		while index > 0:
-			if dirName[index] == '/':
+			if directoryName[index] == '/':
 				break
 			index = index - 1
-		dirName = dirName[:index]
+		directoryName = directoryName[:index]
 
 	elif operation == 'categorization':
 		project_attr = request.POST.get('project_attribute', '')
 		if project_attr == 'C_Lang':
-			dirName = dirName.replace('\n', '')
-			dirName = dirName.replace('\r', '')
-			dirName += '/*.c'
+			directoryName = directoryName.replace('\n', '')
+			directoryName = directoryName.replace('\r', '')
+			directoryName += '/*.c'
 
-	command = 'ls -lh ' + dirName
+	command = 'ls -l ' + directoryName # for file type
+	result = os.popen(command).read().split('\n')[1:-1] # except first line(due to total info for ls command) & split by '\n'
+	for _type in result:
+		fileType.append(_type[0])
 
-	result = os.popen(command).read()
-	result_ary = result.split('\n')
-	#fileName = take_Filename_Only(result_ary[1:])
+	command = 'ls -1 ' + directoryName # for file name
+	fileName = os.popen(command).read().split('\n')[:-1]
 
-	return render(request, 'coding/templates/printDir.html', {'resultOfDir': result_ary[1:], 'dirNames': dirName}) # Exception to first row
+	fileInfo = make_file_info(fileType, fileName)
+	token = {'fileInfo': fileInfo, 'dirNames': directoryName}
+	return render(request, 'coding/templates/printDir.html', token)
 
-def take_Filename_Only(ary_in):
-	out = []
-	buff = []
-	index = 0
-	for _in in ary_in:
-		index = len(_in)
-		print index
-		while index >= 0:
-			if _in[index-1] == ' ':
-				break
-			index = index - 1
-		out.append(_in[index:])
-	return out
+def make_file_info(_fileType, _fileName):
+	output = [] # it would be 2D array --- [ [filetype_1, filename_1], [filetype_2, filename_2] ]
+	row = [] # [filetype, filename]
+
+	'''<====[ EXCEPTION HANDLER ]====>'''
+	if _fileType == '' or _fileName == '':
+		print '[#ERR] __make_file_info()__: filetype or filename is NULL'
+		return "ERR:NULL"
+	if len(_fileType) != len(_fileName):
+		print '[#ERR] __make_file_info()__: length of filetype and filename is not equal'
+		return "ERR:LENGTH"
+	'''<============================>'''
+
+	MAX = len(_fileType) - 1
+	for i in range(0, MAX):
+		if _fileType[i] == '-': # case of file
+			extension = os.path.splitext(_fileName[i])[1].lower()
+			row.append(extension)
+		else: # case of directory or other things
+			row.append(_fileType[i])
+		row.append(_fileName[i])
+		output.append(row)
+		row = []
+
+	return output
 
 def do_path_concatenation(fileName, dirName):
 
