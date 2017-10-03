@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '3w#7-s-&q#igi_9gfbr_3^&!hr1+unw0ei*tzf8k@_qa&orv!8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True 
+DEBUG = True
 
-ALLOWED_HOSTS = '*' 
+ALLOWED_HOSTS = '*'
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'terra.apps.TerraConfig',
+    'coding.apps.CodingConfig',
 ]
 
 MIDDLEWARE = [
@@ -118,7 +119,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATICFILES_DIRS = ( 
+STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, 'refer/static'),
 )
 

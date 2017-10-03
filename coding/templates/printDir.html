@@ -26,12 +26,22 @@
 	<!-- Create Newfile -->
 	<form action="/coding/createNewFile.html" method="POST">
 		{% csrf_token %}
-		<font size=5> create new file:</font>
-		<input type="hidden" name="directoryName" value="{{ dirName }}"/>
+		<input type="hidden" name="dirName" value="{{ dirName }}"/>
+		<input type="hidden" name="operation" value="file"/>
 		<input type="text" placeholder="file name?" name="fileName">
-		<input type="submit" value="New" onclick="return alert(' GOOD LUCK :)');"/>
+		<input type="submit" value="create file" onclick="return alert(' GOOD LUCK :)');"/>
 	</form>
 	<br><br><br>
+
+	<!-- Create NewFolder ===> EXTERMERLY DANGEROUS....
+	<form action="/coding/createNewFile.html" method="POST">
+		{% csrf_token %}
+		<input type="hidden" name="dirName" value="{{ dirName }}"/>
+		<input type="hidden" name="operation" value="directory"/>
+		<input type="text" placeholder="dir name?" name="fileName">
+		<input type="submit" value="create dir" onclick="return alert(' GOOD LUCK :)');"/>
+	</form>
+	<br><br><br> -->
 
 	<!-- Go to parent directory -->
 	<form action="/coding/printDir.html" method="POST">
@@ -55,9 +65,10 @@
 	<form action="/coding/printDir.html" method="POST">
 		{% csrf_token %}
 	<select name="project_attribute" id="project_attribute" onchange="this.form.submit()">
+		<option value="Select">Select</option>
 		<option value="ALL">ALL</option>
     <option value="C_Lang">C</option>
-    <option value="Java_Lang">C++</option>
+    <option value="CPP_LANG">C++</option>
     <option value="Python_Lang">Python</option>
 		<input type="hidden" name="dirName" value="{{ dirName }}"/>
 		<input type="hidden" name="operation" value="categorization"/>
@@ -131,7 +142,7 @@
 			</tr>
 			<tr>
 		 <!-- Redirect to a single unit complie -->
-		 {% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' %}
+		 {% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
 		 <form action="/coding/compile_res.html" method="POST">
 			 {% csrf_token %}
 			 <input type="hidden" name="operation" value="selected"/>
