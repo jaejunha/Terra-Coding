@@ -14,7 +14,7 @@
 	<br><br><br><br>
 
 <b><font size=5 style="Lucida Blackletter" color="black">
-{{ returnPath }}
+{{ directoryName }}
 </font></b>
 <br><br>
 <!-- Redirect Edit Function  -->
@@ -22,6 +22,8 @@
 	{% csrf_token %}
 	<textarea rows="30%" cols="100%" name="edit_data">{{ file_data }}</textarea>
 	<input type="hidden" name="operation" value="Write"/>
+	<input type="hidden" name="fileName" value="{{ fileName }}"/>
+	<input type="hidden" name="directoryName" value="{{ directoryName }}"/>
 	<br>
 	<input type="submit" name="edit" value="Edit" onclick="return confirm('Are you sure want to edit? :)')"/>
 </form>
@@ -29,7 +31,8 @@
 <!-- Redirect Cancel  -->
 <form action="/coding/printDir.html" method="POST">
 	{% csrf_token %}
-	<input type="hidden" name="dirName" value="{{ returnPath }}"/>
+	<input type="hidden" name="dirName" value="{{ directoryName }}"/>
+	<input type="hidden" name="operation" value="ReDirect"/>
 	<input type="submit" name="cancel" value="Cancel"/>
 </form>
 </center>

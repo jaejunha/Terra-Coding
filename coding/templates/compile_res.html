@@ -14,11 +14,14 @@
 [COMPILE RESULT]
 </font></b>
 
-<br><br><br>
+<br><br><br><br><br><br>
 
-
-
-<br><br><br>
+<form action="/coding/printDir.html" method="POST">
+	{% csrf_token %}
+	<input type="hidden" name="operation" value="ReDirect"/>
+	<input type="hidden" name="dirName" value="{{ directoryName }}"/>
+	<input type="submit" name="previous" value="previous page"/>
+</form>
 
 {% if status == 'S' %}
 	<h1> compile status: <font color="Green">successful</font> </h1>

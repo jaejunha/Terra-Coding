@@ -23,18 +23,12 @@
 
 	<!-- Most Top&Left ___ Directory Input form -->
 	<center>
-	<form action="/coding/printDir.html" method="POST">
-		{% csrf_token %}
-		<input type="text" placeholder="/root" name="dirName" value="{{ dirNames }}">
-		<input type="submit" value="SEARCH"/>
-	</form>
-
 	<!-- Create Newfile -->
 	<form action="/coding/createNewFile.html" method="POST">
 		{% csrf_token %}
 		<font size=5> create new file:</font>
-		<input type="hidden" name="dirName" value="{{ dirNames }}"/>
-		<input type="text" placeholder="file name?" name="newFileName">
+		<input type="hidden" name="directoryName" value="{{ dirName }}"/>
+		<input type="text" placeholder="file name?" name="fileName">
 		<input type="submit" value="New" onclick="return alert(' GOOD LUCK :)');"/>
 	</form>
 	<br><br><br>
@@ -43,7 +37,7 @@
 	<form action="/coding/printDir.html" method="POST">
 		{% csrf_token %}
 		<input type="hidden" name="operation" value="GoBack"/>
-		<input type="hidden" name="dirName" value="{{ dirNames }}"/>
+		<input type="hidden" name="dirName" value="{{ dirName }}"/>
 		<input type="submit" name="GoBack" value="▲"/>
 	</form>
 
@@ -51,7 +45,7 @@
 	<form action="/coding/compile_res.html" method="POST">
 		{% csrf_token %}
 		<input type="hidden" name="operation" value="ALL"/>
-		<input type="hidden" name="dirName" value="{{ dirNames }}"/>
+		<input type="hidden" name="dirName" value="{{ dirName }}"/>
 		<input type="hidden" name="allName" value="{{ resultOfDir }}"/>
 		<!--<input type="text" placeholder="file name?" name="newFileName">-->
 		<input type="submit" value="Complie this project as C"/>
@@ -65,7 +59,7 @@
     <option value="C_Lang">C</option>
     <option value="Java_Lang">C++</option>
     <option value="Python_Lang">Python</option>
-		<input type="hidden" name="dirName" value="{{ dirNames }}"/>
+		<input type="hidden" name="dirName" value="{{ dirName }}"/>
 		<input type="hidden" name="operation" value="categorization"/>
 	</select>
 	</form>
@@ -106,50 +100,48 @@
 		 </td>
 
 		<!-- 2nd column ___ FileName -->
-		<td width=50% align="center">
-			<center>
+		<td>
+				{% if info.0 == 'd' %}
 				<form action="/coding/printDir.html" method="POST">
 					{% csrf_token %}
 					<input type="hidden" name="operation" value="ReDirect"/>
-					<input type="hidden" name="dirName" value="{{ dirNames }}"/>
+					<input type="hidden" name="dirName" value="{{ dirName }}"/>
 					<input type="submit" name="folder" value="{{ info.1 }}"/>
 				</form>
-			</center>
+				{% else %}
+				<form action="/coding/sourceView.html" method="POST">
+					{% csrf_token %}
+					<input type="submit" name="fileName" value="{{ info.1 }}"/>
+					<input type="hidden" name="directoryName" value="{{ dirName }}"/>
+				</form>
+				{% endif %}
     </td>
 
 		<!-- 3rd column ___ Button Family -->
-		<td width=30% align="center">
-			<!-- Redirect to sourceView -->
-			{% if result.0 == '-' %}
-			<form action="/coding/sourceView.html" method="POST">
-				{% csrf_token %}
-				<input type="hidden" name="selected_file" value="{{ result }}"/>
-				<input type="hidden" name="dirNames" value="{{ dirNames }}"/>
-				<input type="submit" name="view" value="view"/>
-			</form>
-			<!-- Redirect to sourceEdit -->
-			<form action="/coding/sourceEdit.html" method="POST">
-				{% csrf_token %}
-				<input type="hidden" name="selected_file" value="{{ result }}"/>
-				<input type="hidden" name="dirNames" value="{{ dirNames }}"/>
-				<input type="submit" name="edit" value="edit"/>
-			</form>
-			<!-- Redirect to complie -->
-			<form action="/coding/compile_res.html" method="POST">
-				{% csrf_token %}
-				<input type="hidden" name="operation" value="selected"/>
-				<input type="hidden" name="compile_file" value="{{ result }}"/>
-				<input type="hidden" name="dirName" value="{{ dirNames }}"/>
-				<input type="submit" name="complie" value="complie"/>
-			</form>
-			{% endif %}
+		<td width=30%>
+			<table align="center" border="0" cellpadding="0" cellspacing="0">
 			<!-- Redirect to sourceDel -->
+			<tr>
 			<form action="/coding/sourceDel.html" method="POST">
 				{% csrf_token %}
-				<input type="hidden" name="selected_file" value="{{ result }}"/>
-				<input type="hidden" name="dirNames" value="{{ dirNames }}"/>
+				<input type="hidden" name="selected_file" value="{{ info.1 }}"/>
+				<input type="hidden" name="dirName" value="{{ dirName }}"/>
 				<input type="submit" name="del" value="del" onclick="return confirm('Are you very very sure you want to delete? :)');"/>
 			</form>
+			</tr>
+			<tr>
+		 <!-- Redirect to a single unit complie -->
+		 {% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' %}
+		 <form action="/coding/compile_res.html" method="POST">
+			 {% csrf_token %}
+			 <input type="hidden" name="operation" value="selected"/>
+			 <input type="hidden" name="fileName" value="{{ info.1 }}"/>
+			 <input type="hidden" name="dirName" value="{{ dirName }}"/>
+			 <input type="submit" name="compile" value="compile"/>
+		 </form>
+		 </tr>
+		 {% endif %}
+		</table>
 		</td>
    </tr>
   </table>

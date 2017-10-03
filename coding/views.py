@@ -3,12 +3,16 @@
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
 from .models import *
 
 import os
 from os.path import abspath, dirname
 from subprocess import call
 from django.core.urlresolvers import reverse
+
+FORBIDDEN_TEXT_EXTENSION = ['.pyc', '.sqlite3'] # may be white list is more efficient...
+ALLOWED_IMG_EXTENSION = ['.png', '.jpg']
 
 def get_all_c_files_name(fileList):
 	output = []
@@ -21,120 +25,126 @@ def get_all_c_files_name(fileList):
 	return output
 
 def do_compile_c_language(request):
-	operation = request.POST.get('operation', '')
-	fileName = request.POST.get('compile_file', '')
-	dirName = request.POST.get('dirName', '')
 	path = ''
 	result = ''
 	status = ''
+	operation = request.POST.get('operation', '')
+	fileName = request.POST.get('fileName', '')
+	directoryName = request.POST.get('dirName', '')
 
-	if dirName[-1] == '/':
-		dirName = dirName[:-1]
+	directoryName = nomalize_directory_path(directoryName)
 
 	if operation == 'ALL': # Compile on a Project unit
-		command = 'ls -1 ' + dirName
+		command = 'ls -1 ' + directoryName
 		allName = os.popen(command).read().split('\n')
 		fileName_c = get_all_c_files_name(allName)
-
 		for _file in fileName_c:
-			path += (' ' + dirName + '/' + _file)
+			path += (' ' + directoryName + _file)
 
-	elif operation == 'selected': # Compile on file unit
-		path = do_path_concatenation(fileName, dirName)
-		extension = os.path.splitext(path)[1]
+	elif operation == 'selected': # Compile on a file unit
+		extension = os.path.splitext(fileName)[1]
+		path = directoryName + fileName
 		if extension != '.c':
-			errMsg = "out of service format :)"
-			return render(request, 'coding/templates/compile_res.html', {'result': errMsg , 'status': 'F'})
+			token = {'result': "out of service format :)" , 'status': 'F'}
+			return render(request, 'coding/templates/compile_res.html', token)
 
-	gcc_compile_command = "gcc -o " + dirName + "/main " + path + " 2> " + dirName + "/compile_message"
+	gcc_compile_command = "gcc -o " + directoryName + "/main " + path + " 2> " + directoryName + "/compile_message"
 	result = os.popen(gcc_compile_command).read() # executable file will be created in manage.py directory
-	result = os.popen("cat " + dirName + "/compile_message").read() # show a error message
+	result = os.popen("cat " + directoryName + "/compile_message").read() # show a error message
 
 	if result == '': # which means error is none
 		status = 'S'
-		result = os.popen(dirName + "/main").read()
+		result = os.popen(directoryName + "/main").read()
 	else:
 		status = 'F'
 
-	return render(request, 'coding/templates/compile_res.html', {'result': result, 'status': status})
+	token = {'result': result, 'status': status, 'directoryName': directoryName}
+	return render(request, 'coding/templates/compile_res.html', token)
 
 def createNewFile(request):
-	dirName = request.POST.get('dirName', '')
-	newFileName = request.POST.get('newFileName', '')
+	directoryName = request.POST.get('directoryName', '')
+	fileName = request.POST.get('fileName', '')
 
-	dirName = dirName.replace('\n', '')
-	dirName = dirName.replace('\r', '')
+	directoryName = nomalize_directory_path(directoryName)
+	if fileName == '':
+		fileName = 'temp.c'
 
-	if newFileName == '':
-		newFileName = 'temp.c'
-
-	if dirName[-1] == '/':
-		path = dirName + newFileName
-	else:
-		path = dirName + '/' + newFileName
-
+	path = directoryName + fileName
 	f = open(path, 'w')
 	f.write('')
 	f.close()
 
-	return HttpResponseRedirect('printDir')
+	return sourceEdit(request)
 
 def sourceDel(request):
 	fileName = request.POST.get('selected_file', '')
-	dirName = request.POST.get('dirNames', '')
-	path = do_path_concatenation(fileName, dirName)
+	directoryName = request.POST.get('dirName', '')
+	directoryName = nomalize_directory_path(directoryName)
 
+	path = directoryName + fileName
 	os.popen("rm -rf " + path)
-	return HttpResponseRedirect('printDir')
+	return printDir(request)
 
 def sourceEdit(request):
-	global editPath
+	editpath = ''
+	fileName = request.POST.get('fileName', '')
+	directoryName = request.POST.get('directoryName', '')
 	operation = request.POST.get('operation', '')
+
+	directoryName = nomalize_directory_path(directoryName)
+	editPath = directoryName + fileName
 
 	if operation == 'Write':
 		edit_data = request.POST.get('edit_data', '')
 		f = open(editPath, 'w')
 		f.write(edit_data)
 		f.close()
-		return HttpResponseRedirect('printDir')
+		token = {'fileName': fileName, 'directoryName': directoryName}
+		return sourceView(request)
+
 	else:
-		fileName = request.POST.get('selected_file', '')
-		dirName = request.POST.get('dirNames', '')
-
-		editPath = do_path_concatenation(fileName, dirName)
-
 		f = open(editPath, 'r')
 		file_data = f.read()
 		f.close()
-
-		return render(request, 'coding/templates/sourceEdit.html', {'returnPath': editPath, 'file_data': file_data})
+		token = {'fileName': fileName, 'directoryName': directoryName, 'file_data': file_data}
+		return render(request, 'coding/templates/sourceEdit.html', token)
 
 def sourceView(request):
+	fileName = request.POST.get('fileName', '')
+	directoryName = request.POST.get('directoryName', '')
 
-	fileName = request.POST.get('selected_file', '')
-	dirName = request.POST.get('dirNames', '')
-	viewPath = do_path_concatenation(fileName, dirName)
+	directoryName = nomalize_directory_path(directoryName)
+	extension = os.path.splitext(fileName)[1]
+	viewPath = directoryName + fileName
 
-	'''  MORE FUNCTION REQUIRED!!! -- only a file can be open..	'''
-	''' Text&img file's type'''
+	for _compare in FORBIDDEN_TEXT_EXTENSION:
+		if _compare == extension:
+			token = {'file_data': "This is Raw format.... Mate :)", 'fileName': fileName, 'directoryName': directoryName, 'service_type': "raw"}
+			return render(request, 'coding/templates/sourceView.html', token)
+
+	for _compare in ALLOWED_IMG_EXTENSION:
+		if _compare == extension:
+			token = {'file_data': "NONE", 'viewPath': viewPath, 'fileName': fileName, 'directoryName': directoryName, 'service_type': "img"}
+			return render(request, 'coding/templates/sourceView.html', token)
+
+	viewPath = directoryName + fileName
 	f = open(viewPath, 'r')
 	file_data = f.read()
 	f.close()
 
-	return render(request, 'coding/templates/sourceView.html', {'viewPath': viewPath, 'file_data': file_data})
+	token = {'file_data': file_data, 'fileName': fileName, 'directoryName': directoryName, 'service_type': "text"}
+	return render(request, 'coding/templates/sourceView.html', token)
 
 def printDir(request):
 	fileType = []
 
 	operation = request.POST.get('operation', '')
 	directoryName = request.POST.get('dirName', '') # Get directory Name
-
-	if directoryName == '':
-		directoryName = os.popen('pwd').read() # if input of directory is empty, set to current path
+	directoryName = nomalize_directory_path(directoryName)
 
 	if operation == 'ReDirect':
 		folderName = request.POST.get('folder', '')
-		directoryName = do_path_concatenation(folderName, directoryName)
+		directoryName += folderName
 
 	elif operation == 'GoBack':
 		if directoryName[-1] == '/':
@@ -154,16 +164,16 @@ def printDir(request):
 			directoryName = directoryName.replace('\r', '')
 			directoryName += '/*.c'
 
-	command = 'ls -l ' + directoryName # for file type
+	command = 'ls -l ' + "'" + directoryName + "'"# for file type
 	result = os.popen(command).read().split('\n')[1:-1] # except first line(due to total info for ls command) & split by '\n'
 	for _type in result:
 		fileType.append(_type[0])
 
-	command = 'ls -1 ' + directoryName # for file name
+	command = 'ls -1 ' + "'" + directoryName + "'"# for file name
 	fileName = os.popen(command).read().split('\n')[:-1]
 
 	fileInfo = make_file_info(fileType, fileName)
-	token = {'fileInfo': fileInfo, 'dirNames': directoryName}
+	token = {'fileInfo': fileInfo, 'dirName': directoryName}
 	return render(request, 'coding/templates/printDir.html', token)
 
 def make_file_info(_fileType, _fileName):
@@ -179,7 +189,7 @@ def make_file_info(_fileType, _fileName):
 		return "ERR:LENGTH"
 	'''<============================>'''
 
-	MAX = len(_fileType) - 1
+	MAX = len(_fileType)
 	for i in range(0, MAX):
 		if _fileType[i] == '-': # case of file
 			extension = os.path.splitext(_fileName[i])[1].lower()
@@ -192,43 +202,11 @@ def make_file_info(_fileType, _fileName):
 
 	return output
 
-def do_path_concatenation(fileName, dirName):
-
-	'''<====[ EXCEPTION HANDLER ]====>'''
-	if dirName == '':
-		dirName = './'
-	dirName = dirName.replace('\n', '')
-	dirName = dirName.replace('\r', '')
-	fileName = fileName.replace('\n', '')
-	fileName = fileName.replace('\r', '')
-	'''<============================>'''
-
-	'''<====[ EXTRACT FILE NAME  ]====>'''
-	index = len(fileName) - 1
-	while index >= 0:
-		if fileName[index] == ' ':
-			break
-		index = index - 1
-	fileName = fileName[index+1:]
-	'''<============================>'''
-
-	'''<====[ EXTRACT DIRECTORY NAME ]====>'''
-	if dirName != 'NULL': # when dirName is NULL, Skip this procedure.
-		rootFlag = 0
-		if dirName[0] == '/':
-			rootFlag = 1
-
-		dirName_ary = dirName.split('/')
-		dirName = ''
-		if rootFlag == 1:
-			dirName = '/'
-
-		for _in in dirName_ary:
-			if _in != '':
-				dirName += (_in + '/')
-		path = dirName + fileName
-	else:
-		path = fileName
-	'''<============================>'''
-
-	return path
+def nomalize_directory_path(_dirName):
+	if _dirName == '': # PREVENT __EMPTY SET ERROR__
+		_dirName = os.popen('pwd').read()
+	if _dirName[-1] != '/': # PREVENT __DUPLICATED SLASH ERROR__
+		_dirName += '/'
+	_dirName = _dirName.replace('\n', '') # PRVENT __ENCODING ERROR__
+	_dirName = _dirName.replace('\r', '')
+	return _dirName
