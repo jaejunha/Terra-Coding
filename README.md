@@ -24,6 +24,8 @@
 >http://portal.ajou.ac.kr
 - Git chart
 >http://ghchart.rshah.org
+- Django reference
+>https://docs.djangoproject.com
 ---
 # Commit Record
 - 100 commit : **2017.10.01** by <img src="https://avatars1.githubusercontent.com/u/7951335?v=4&s=15"> <a href = "https://github.com/jaejunha"> jaejunha </a>
