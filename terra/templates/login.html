@@ -5,19 +5,21 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
 	<script type="text/javascript" src="{% static 'js/move.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/timeout.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
 	<title>::T - HUB::</title>
 	<script type="text/javascript">
 	    $(document).ready( function() {
 				{% if error is None %}
-				login_init('');
+				login_move('');
+				login_ani_timeout();
 				{% else %}
-				login_init('error');
+				login_move('error');
 				{% endif %}
 	    });
 	</script>
 </head>
-<body">
+<body>
 	<div id="logo" style="position:absolute;">
 		<img  src="{% static 'img/Logo.png' %}" style="left:-10px;">
 		<a style="position:relative;color:#ffffff;font-size:40pt;top:-25px;left:10px;">T-HUB</a>

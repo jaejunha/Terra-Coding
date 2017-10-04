@@ -1,4 +1,4 @@
-function login_init(error){
+function login_move(error){
 	var screenWidth = window.innerWidth;
 	var screenHeight = window.innerHeight;
 
