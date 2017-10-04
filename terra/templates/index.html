@@ -27,10 +27,10 @@
 			text-decoration: none;
 		}
 		#header > a:hover{
-                        text-decoration: underline;
-                }
+      text-decoration: underline;
+    }
 		#title {
-			float:left; 
+			float:left;
 			width:50%;
 		}
 		#title > font{
@@ -46,7 +46,7 @@
 			width:		50%;
 			float:		right;
 			text-align:	right;
-			line-height:	80px; 
+			line-height:	80px;
 			font-size:	24pt;
 			color:		#dddddd;
 		}
@@ -59,7 +59,7 @@
 			margin-right:	20px;
 		}
 		#top > a:hover{
-			text-decoration: underline; 
+			text-decoration: underline;
 			color: #aaaaaa;
 		}
 		banner {
@@ -72,13 +72,13 @@
 </head>
 <body>
 	<div id="header" align="right">
-		{% if request.session.picture is None %}
+		{% if request.session.number is None %}
        		<a href="terra/login">login</a>
 		{% else %}
 		<a href="terra/out">logout</a>
 		{% endif %}
 		|
-		<a>about us</a>	
+		<a href="javascript:loadDiv('terra/about');">about us</a>
 	</div>
 	<div id="title">
 		<img src="{% static 'favicon/T-HUB.png' %}" height="80px">
@@ -86,16 +86,16 @@
 	</div>
 	<div id="top">
 		<a href="javascript:loadDiv('/info');">Info</a>
-		<a href="javascript:loadDiv('/coding');">Coding</a>	
-		<a href="javascript:loadDiv('/statistics');">Statistics</a>	
+		<a href="javascript:loadDiv('/coding');">Coding</a>
+		<a href="javascript:loadDiv('/statistics');">Statistics</a>
 		<a href="javascript:loadDiv('/rank');">Rank</a>
 	</div>
-	{% if request.session.picture is None %}
+	{% if request.session.number is None %}
 	<img src="{% static 'img/banner.jpg' %}" id="banner">
 	{% else %}
 	<div id="content" style="width:100%; height:100%;">
                 <iframe src="/info" width="100%" height="100%"/>
         </div>
-	{% endif %}	
+	{% endif %}
 </body>
 </html>

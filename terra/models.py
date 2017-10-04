@@ -8,5 +8,6 @@ class User(models.Model):
     grade = models.SmallIntegerField()
     school = models.CharField(max_length=40)
     major = models.CharField(max_length=40)
+    picture = models.CharField(max_length=100)
     def __str__(self):
         return self.name

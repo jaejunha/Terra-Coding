@@ -23,13 +23,7 @@ def index(request):
 			list = soup.find_all('td')
 			number = list[1].string
 			request.session['number'] = number
-			request.session['name']	= list[2].string
-			request.session['grade'] = list[3].string[0]
-			request.session['school'] = list[4].string
-			request.session['major'] = list[5].string
-			request.session['phone'] = list[18].string
-			request.session['picture'] = 'http://job.ajou.ac.kr'+requests.get(PIC+number).text.split(' ')[2][5:].split('?')[0]
-			User(number=request.session['number'],name=request.session['name'],grade=request.session['grade'],school=request.session['school'],major=request.session['major']).save()
+			User(number=request.session['number'],name=list[2].string,grade=list[3].string[0],school=list[4].string,major=list[5].string,picture=('http://job.ajou.ac.kr'+(requests.get(PIC+number).text.split(' ')[2][5:].split('?')[0]))).save()
 			return render(request, 'terra/templates/index.html')
 	except Exception as e:
 		print(e)
@@ -38,6 +32,9 @@ def index(request):
 
 def login(request):
     return render(request, 'terra/templates/login.html')
+
+def about(request):
+	return render(request, 'terra/templates/about.html')
 
 def check(request):
 	name = ''
