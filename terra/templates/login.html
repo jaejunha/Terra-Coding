@@ -5,10 +5,19 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
 	<script type="text/javascript" src="{% static 'js/move.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
 	<title>::T - HUB::</title>
-
+	<script type="text/javascript">
+	    $(document).ready( function() {
+				{% if error is None %}
+				login_init('');
+				{% else %}
+				login_init('error');
+				{% endif %}
+	    });
+	</script>
 </head>
-<body onload="login_init();">
+<body">
 	<div id="logo" style="position:absolute;">
 		<img  src="{% static 'img/Logo.png' %}" style="left:-10px;">
 		<a style="position:relative;color:#ffffff;font-size:40pt;top:-25px;left:10px;">T-HUB</a>
@@ -18,7 +27,7 @@
 	<div id="login">
 	{% else %}
 	<div id="simple_error"></div>
-        <div id="login_error">
+  <div id="login_error">
 	{% endif %}
 								<!--<br>Ajou Student-->
 								<br><div style="background:#ffffff;margin-left:10px;margin-bottom:15px;width:380px;height:45px;"></div>

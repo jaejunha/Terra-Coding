@@ -35,9 +35,11 @@ body{
 	z-index: -2;
 }
 #logo{
+	left:-400px;
 	opacity: 0.9;
 }
 #login{
+	left:-400px;
   position: absolute;
   width: 400px;
   height: 300px;
@@ -47,6 +49,7 @@ body{
 	animation-fill-mode:both;
 }
 #login_error{
+	left:-400px;
   position: absolute;
   width: 400px;
   height: 300px;

@@ -1,7 +1,12 @@
-function login_init(){
+function login_init(error){
 	var screenWidth = window.innerWidth;
 	var screenHeight = window.innerHeight;
-	var login = document.getElementById('login');
+
+	if(error == ''){
+		var login = document.getElementById('login');
+	}else{
+		var login = document.getElementById('login_error');
+	}
 	var width = login.offsetWidth;
 	var height = login.offsetHeight;
 	var logo = document.getElementById('logo');

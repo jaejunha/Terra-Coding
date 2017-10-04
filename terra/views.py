@@ -37,7 +37,7 @@ def index(request):
 		return render(request, 'terra/templates/index.html')
 
 def login(request):
-        return render(request, 'terra/templates/login.html')
+    return render(request, 'terra/templates/login.html')
 
 def check(request):
 	name = ''
