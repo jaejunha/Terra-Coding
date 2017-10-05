@@ -3,6 +3,7 @@ html{
   width: 100%;
 }
 body{
+	font-family : 'Lucida grande';
 	overflow-y:hidden;
 	overflow-x:hidden;
 	height:100%;
