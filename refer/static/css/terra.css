@@ -48,16 +48,24 @@ body{
 }
 #top > a{
   position:	relative;
+	transform-origin: 0% 0%;
   top:		10px;
+  margin-right:	20px;
   text-decoration:none;
   color:		#cccccc;
-  margin-right:	20px;
 }
 #top > a:hover{
-  text-decoration: underline;
   color: #aaaaaa;
+  text-decoration:none;
 }
-#content, #banner {
+#selector{
+  position: absolute;
+	transform-origin: 0% 0%;
+  background: #cccccc;
+  height : 3px;
+  top: 117px;
+}
+#content {
   position: absolute;
 	transform-origin: 0% 0%;
   top: 120px;

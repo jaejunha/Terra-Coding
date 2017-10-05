@@ -7,6 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/terra.css' %}"/>
 	<script type="text/javascript" src="{% static 'js/loadDiv.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/move.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/menu.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
 	<script type="text/javascript">
 			$(window).resize(function (){
@@ -14,6 +15,9 @@
 		});
 			$(window).ready( function() {
 				terra_move();
+				{% if request.session.number %}
+				terra_menu(1);
+				{% endif %}
 			});
 	</script>
 	<title>::T - HUB::</title>
@@ -33,17 +37,27 @@
 		<font>Terra-Coding</font>
 	</div>
 	<div id="top">
-		<a href="javascript:loadDiv('/info');">Info</a>
-		<a href="javascript:loadDiv('/coding');">Coding</a>
-		<a href="javascript:loadDiv('/statistics');">Statistics</a>
-		<a href="javascript:loadDiv('/rank');">Rank</a>
+		{% if request.session.number is None %}
+		<a href="javascript:alert('login please');">Info</a>
+		<a href="javascript:alert('login please');">Coding</a>
+		<a href="javascript:alert('login please');">Statistics</a>
+		<a href="javascript:alert('login please');">Rank</a>
+		{% else %}
+		<a id ="info" href="javascript:terra_menu(1);">Info</a>
+		<a id ="coding" href="javascript:terra_menu(2);">Coding</a>
+		<a id = "statistics" href="javascript:terra_menu(3);">Statistics</a>
+		<a id="rank" href="javascript:terra_menu(4);">Rank</a>
+		{% endif %}
 	</div>
-	{% if request.session.number is None %}
-	<img id="banner" src="{% static 'img/banner.jpg' %}">
-	{% else %}
-	<div id="content">
-  	<iframe src="/info" width="100%" height="100%"/>
-  </div>
+	{% if request.session.number %}
+	<div id="selector"></div>
 	{% endif %}
+	<div id="content">
+	{% if request.session.number is None %}
+		<img id="banner" src="{% static 'img/banner.jpg' %}">
+	{% else %}
+  	<iframe src="/info" width="100%" height="100%"/>
+	{% endif %}
+	</div>
 </body>
 </html>
