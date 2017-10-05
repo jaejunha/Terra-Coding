@@ -97,10 +97,10 @@ def sourceEdit(request):
 	fileName = request.POST.get('fileName', '')
 	directoryName = request.POST.get('directoryName', '')
 	operation = request.POST.get('operation', '')
-
+	print '2@@@@@ %s' % fileName
 	directoryName = nomalize_directory_path(directoryName)
 	editPath = directoryName + fileName
-
+	print '2@@@@@ %s' % fileName
 	# __ ALTER CONTENTS OF FILE __START__#
 	if operation == 'Write':
 		edit_data = request.POST.get('edit_data', '')
@@ -115,7 +115,7 @@ def sourceEdit(request):
 		f = open(editPath, 'r')
 		file_data = f.read()
 		f.close()
-		token = {'dirName': fileName, 'directoryName': directoryName, 'file_data': file_data}
+		token = {'fileName': fileName, 'directoryName': directoryName, 'file_data': file_data}
 		return render(request, 'coding/templates/sourceEdit.html', token)
 
 def sourceDel(request):

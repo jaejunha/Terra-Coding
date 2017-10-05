@@ -25,15 +25,46 @@
 
 {% if status == 'S' %}
 	<h1> compile status: <font color="Green">successful</font> </h1>
+	<link type="text/css" rel="stylesheet" href="{% static 'css/coding/compile_box.css' %}" />
+
+	<div id="wrapper">
+	    <div id="menu">
+	        <p class="welcome">Welcome, <b></b></p>
+	        <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
+	        <div style="clear:both"></div>
+	    </div>
+	    <div id="chatbox">
+				<pre>{{ result }}</pre>
+			</div>
+	    <form name="message" action="">
+	        <input name="usermsg" type="text" id="usermsg" size="63" />
+	        <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
+	    </form>
+	</div>
+	<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+	-->
+	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+	<script type="text/javascript">
+	// jQuery Document
+	$(document).ready(function(){
+
+	});
+	$("#submitmsg").click(function(){
+		var clientmsg = $("#usermsg").val();
+		$.post("views.py", {text: clientmsg});
+		$("#usermsg").attr("value", "");
+		return false;
+	});
+	</script>
+
 {% elif status == 'F' %}
 	<h1> compile status: <font color="Red">failed</font> </h1>
+	<hr color="red" width=100%>
+	<font size=3 style="Lucida Blackletter">
+	<pre> {{ result }} </pre>
+	</font>
+	<hr color="red" width=100%>
+	</center>
 {% endif %}
-<hr color="red" width=100%>
-<font size=3 style="Lucida Blackletter">
-<pre> {{ result }} </pre>
-</font>
-<hr color="red" width=100%>
-</center>
-
 </body>
 </html>
