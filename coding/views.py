@@ -15,6 +15,7 @@ from django.core.urlresolvers import reverse
 FORBIDDEN_TEXT_EXTENSION = ['.pyc', '.sqlite3'] # may be white list is more efficient...
 ALLOWED_IMG_EXTENSION = ['.png', '.jpg']
 
+# TEST
 def printDir(request):
 	fileType = []
 
