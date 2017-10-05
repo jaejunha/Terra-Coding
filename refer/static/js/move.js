@@ -18,3 +18,7 @@ function login_move(error){
 	logo.style.left = (screenWidth-width)/2+'px';
 	logo.style.top = login.offsetTop-height/2.5+'px';
 }
+
+function terra_move(){
+	$('#top').css('left', $(window).width() - $('#top').width() +'px' );
+}

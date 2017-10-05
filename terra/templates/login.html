@@ -5,14 +5,21 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
 	<script type="text/javascript" src="{% static 'js/move.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/timeout.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/set.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
 	<title>::T - HUB::</title>
 	<script type="text/javascript">
-	    $(document).ready( function() {
+			$(window).resize(function (){
+			{% if error is None %}
+			login_move('');
+			{% else %}
+			login_move('error');
+			{% endif %}
+		});
+	    $(window).ready( function() {
 				{% if error is None %}
 				login_move('');
-				login_ani_timeout();
+				login_set();
 				{% else %}
 				login_move('error');
 				{% endif %}
@@ -26,9 +33,11 @@
 	</div>
 	{% if error is None %}
 	<div id="simple"></div>
+	{% endif %}
+	<div id="simple_base"></div>
+	{% if error is None %}
 	<div id="login">
 	{% else %}
-	<div id="simple_error"></div>
   <div id="login_error">
 	{% endif %}
 								<!--<br>Ajou Student-->
