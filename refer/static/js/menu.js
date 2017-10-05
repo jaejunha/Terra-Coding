@@ -4,8 +4,10 @@ function terra_menu(no){
       $(this).css('color','#aaaaaa');
     },
     function(){
-      if(no != '1')
+      if(no != 1)
         $(this).css('color','#cccccc');
+      else
+        $(this).css('color','#aaaaaa');
     }
   )
   $('#coding').hover(
@@ -13,8 +15,10 @@ function terra_menu(no){
       $(this).css('color','#aaaaaa');
     },
     function(){
-      if(no != '2')
+      if(no != 2)
         $(this).css('color','#cccccc');
+      else
+        $(this).css('color','#aaaaaa');
     }
   )
   $('#statistics').hover(
@@ -22,8 +26,10 @@ function terra_menu(no){
       $(this).css('color','#aaaaaa');
     },
     function(){
-      if(no != '3')
+      if(no != 3)
         $(this).css('color','#cccccc');
+      else
+        $(this).css('color','#aaaaaa');
     }
   )
   $('#rank').hover(
@@ -31,8 +37,10 @@ function terra_menu(no){
       $(this).css('color','#aaaaaa');
     },
     function(){
-      if(no != '4')
+      if(no != 4)
         $(this).css('color','#cccccc');
+      else
+        $(this).css('color','#aaaaaa');
     }
   )
   if(no == 1){
