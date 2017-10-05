@@ -1,0 +1,53 @@
+<!-- sourceView.html-->
+
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::Source Viewer::</title>
+</head>
+
+<body bgcolor="#A4A4A4">
+
+<center>
+<b><font size=15 style="Lucida Blackletter" color="#9FF781">
+[Source View]
+</font></b>
+
+<br><br><br>
+
+<font size=4 style="Lucida Blackletter" color="#8258FA">
+	 <pre> Directory --- {{ viewPath }}</pre>
+</font>
+
+
+<br><br><br>
+
+<form action="/coding/printDir.html" method="POST">
+	{% csrf_token %}
+	<input type="hidden" name="operation" value="ReDirect"/>
+	<input type="hidden" name="dirName" value="{{ directoryName }}"/>
+	<input type="submit" name="previous" value="previous page"/>
+</form>
+
+{% if service_type == 'text' %}
+<form action="/coding/sourceEdit.html" method="POST">
+	{% csrf_token %}
+	<input type="hidden" name="fileName" value="{{ fileName }}"/>
+	<input type="hidden" name="directoryName" value="{{ directoryName }}"/>
+	<input type="submit" name="edit" value="edit"/>
+</form>
+{% endif %}
+</center>
+
+<hr color="red" width=100%>
+{% if service_type == 'text' %}
+<font size=3 style="Lucida Blackletter"> <pre> {{ file_data }} </pre> </font>
+{% elif service_type == 'img' %}
+<img style="vertical-align: bottom;" src="{{ directoryName|add:fileName }}" width="30%" height="30%">
+{% else %}
+<font size=3 style="Lucida Blackletter" color="RED"> <pre> {{ file_data }} </pre> </font>
+{% endif %}
+<hr color="red" width=100%>
+</body>
+</html>

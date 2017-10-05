@@ -1,0 +1,39 @@
+<!-- sourceView.html-->
+
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::compile Result::</title>
+</head>
+
+<body>
+
+<center>
+<b><font size=15 style="Lucida Blackletter" color="#9FF781">
+[COMPILE RESULT]
+</font></b>
+
+<br><br><br><br><br><br>
+
+<form action="/coding/printDir.html" method="POST">
+	{% csrf_token %}
+	<input type="hidden" name="operation" value="ReDirect"/>
+	<input type="hidden" name="dirName" value="{{ directoryName }}"/>
+	<input type="submit" name="previous" value="previous page"/>
+</form>
+
+{% if status == 'S' %}
+	<h1> compile status: <font color="Green">successful</font> </h1>
+{% elif status == 'F' %}
+	<h1> compile status: <font color="Red">failed</font> </h1>
+{% endif %}
+<hr color="red" width=100%>
+<font size=3 style="Lucida Blackletter">
+<pre> {{ result }} </pre>
+</font>
+<hr color="red" width=100%>
+</center>
+
+</body>
+</html>
