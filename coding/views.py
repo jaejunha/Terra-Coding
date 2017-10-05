@@ -115,7 +115,7 @@ def sourceEdit(request):
 		f = open(editPath, 'r')
 		file_data = f.read()
 		f.close()
-		token = {'fileName': fileName, 'directoryName': directoryName, 'file_data': file_data}
+		token = {'dirName': fileName, 'directoryName': directoryName, 'file_data': file_data}
 		return render(request, 'coding/templates/sourceEdit.html', token)
 
 def sourceDel(request):
@@ -125,7 +125,7 @@ def sourceDel(request):
 
 	path = directoryName + fileName
 	os.popen("rm -rf " + "'" + path + "'")
-	return printDir(request)
+	return HttpResponseRedirect('/coding/printDir.html')
 
 def createNewFile(request):
 	directoryName = request.POST.get('dirName', '')
@@ -143,6 +143,10 @@ def createNewFile(request):
 		f.write('')
 		f.close()
 
+	elif operation == 'upload':
+		status = do_file_upload(request, directoryName)
+		return printDir(request)
+
 	'''elif operation == 'directory': ===> EXTERMERLY DANGEROUS
 		if fileName == '':
 			fileName = '_temp_'
@@ -152,6 +156,7 @@ def createNewFile(request):
 		os.popen('mkdir ' + path)
 		request.POST['operation'] = ''
 		return printDir(request)'''
+
 	return sourceEdit(request)
 
 def do_compile_c_language(request):
@@ -257,6 +262,20 @@ def get_all_c_files_name(fileList):
 			output.append(fileName)
 
 	return output
+
+def do_file_upload(req, _directoryName):
+    if req.method == 'POST':
+        if 'file' in req.FILES:
+            file = req.FILES['file']
+            filename = file._name
+
+            fp = open('%s/%s' % (_directoryName, filename) , 'wb')
+            for chunk in file.chunks():
+                fp.write(chunk)
+            fp.close()
+            return "S"
+
+    return "F"
 
 '''
 def check_user_directory(obj):

@@ -16,7 +16,7 @@
 	<center>
 	<form action="/terra" method="POST">
 		{% csrf_token %}
-		--><input type="submit" value="Go to main page"/><---
+		==><input type="submit" value="Go to main page"/><==
 	</form>
 	</center>
 	<br><br>
@@ -32,6 +32,15 @@
 		<input type="submit" value="create file" onclick="return alert(' GOOD LUCK :)');"/>
 	</form>
 	<br><br><br>
+
+	<!-- Upload Newfile -->
+	<form action="/coding/createNewFile.html" method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+  	File: <input type="file" name="file"/>
+				 <input type="hidden" name="dirName" value="{{ dirName }}"/>
+				 <input type="hidden" name="operation" value="upload"/>
+         <input type="submit" value="UPLOAD" />
+  </form>
 
 	<!-- Create NewFolder ===> EXTERMERLY DANGEROUS....
 	<form action="/coding/createNewFile.html" method="POST">
