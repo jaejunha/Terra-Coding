@@ -51,6 +51,14 @@ body{
 		opacity: 0;
 	}
 }
+@keyframes disappear2{
+  0%{
+		opacity: 1;
+  }
+	100%{
+		opacity: 0;
+	}
+}
 @keyframes appear{
   0%{
 		opacity: 0;
