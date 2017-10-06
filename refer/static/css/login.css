@@ -37,7 +37,13 @@ body{
 	z-index: -2;
 }
 #logo{
+	position: absolute;
+	transform-origin: 0% 0%;
+	margin-left:auto;
+	margin-right:auto;
+	text-align: center;
 	left:-400px;
+	width : 400px;
 	opacity: 0.9;
 }
 #login{

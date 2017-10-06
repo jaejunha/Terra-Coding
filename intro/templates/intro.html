@@ -4,14 +4,28 @@
 <head>
 	<meta charset="utf-8">
 	<title>::T - HUB::</title>
-	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/intro.css' %}"/>
+	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/move.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/timeout.js' %}"></script>
+	<script type="text/javascript">
+		$(window).ready( function() {
+			intro_move();
+			intro_timeout();
+		});
+		$(window).resize(function (){
+			intro_move();
+		});
+	</script>
 </head>
 <body>
-This is intro page
-<form action="terra" method="POST">
-                {% csrf_token %}
-                <input type="submit" value="go main"/>
-        </form>
-
+	<div id="gradation"></div>
+	<img id="developer" src="{%static 'img/developer.png'%}"></div>
+	<form action="terra" method="POST">
+    	{% csrf_token %}
+			<input id="logo" type="image" src="{% static 'img/Logo.png' %}">
+	</form>
+	<div id="copy">Copyright ⓒ 2017 by Terra-Coding, Inc. All right reserved.</div>
 </body>
 </html>

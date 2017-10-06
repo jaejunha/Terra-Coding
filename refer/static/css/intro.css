@@ -1,0 +1,64 @@
+html{
+	height:100%;
+  width: 100%;
+  background: #000000;
+}
+body{
+  font-family : 'Lucida grande';
+	overflow-y:hidden;
+	overflow-x:hidden;
+	height:100%;
+	width: 100%;
+	margin: 0;
+}
+#developer{
+    position: absolute;
+  	transform-origin: 0% 0%;
+    width:  300px;
+    height: 250px;
+}
+#gradation{
+  width:  100%;
+  height: 100%;
+  opacity: 0.4;
+  background: radial-gradient(#cccccc, #000000);
+  z-index: -1;
+}
+#logo{
+  position: absolute;
+	transform-origin: 0% 0%;
+  width: 200px;
+  height:200px;
+  left: -200px;
+  top: -200px;
+  opacity: 0;
+}
+#copy{
+  position: absolute;
+	transform-origin: 0% 0%;
+  color: #cccccc;
+  font-size: 10pt;
+  width: 100%;
+  text-align: center;
+  margin: auto;
+  opacity: 0;
+}
+@keyframes disappear{
+  0%{
+		opacity: 0.4;
+  }
+	100%{
+		opacity: 0;
+	}
+}
+@keyframes appear{
+  0%{
+		opacity: 0;
+  }
+  50%{
+		opacity: 1;
+  }
+	100%{
+		opacity: 0;
+	}
+}

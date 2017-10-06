@@ -62,7 +62,7 @@ body{
 #selector{
   position: absolute;
 	transform-origin: 0% 0%;
-  background: #cccccc;
+  background: #aaaaaa;
   height : 3px;
   top: 117px;
 }
