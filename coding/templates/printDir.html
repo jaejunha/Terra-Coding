@@ -3,9 +3,10 @@
 <html lang="en">
 {% load staticfiles %}
 <head>
+	<link rel="stylesheet" href="{% static 'css/coding/directory_list.css' %}">
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::T - HUB::</title>
-</head>
+	</head>
 
 <body bgcolor="#F2E0F7">
 	<!-- JAVASCRIPT WILL BE ADDED
@@ -52,14 +53,6 @@
 	</form>
 	<br><br><br> -->
 
-	<!-- Go to parent directory -->
-	<form action="/coding/printDir.html" method="POST">
-		{% csrf_token %}
-		<input type="hidden" name="operation" value="GoBack"/>
-		<input type="hidden" name="dirName" value="{{ dirName }}"/>
-		<input type="submit" name="GoBack" value="▲"/>
-	</form>
-
 	<!-- Compile All C files on this Directory -->
 	<form action="/coding/compile_res.html" method="POST">
 		{% csrf_token %}
@@ -85,38 +78,58 @@
 	</form>
 	</center>
 
-	{% for info in fileInfo %}
-	<table width="60%" align="center" border="5" cellpadding="0" cellspacing="0">
-	 <tr>
+	<table class="container">
+		<thead>
+			<tr>
+				<th><h1>Type</h1></th>
+				<th><h1>Name</h1></th>
+				<th><h1>Date</h1></th>
+				<th><h1>Function</h1></th>
+			</tr>
+		</thead>
+		<tr>
+			<td><img style="width: 70px; height: auto;" src="{% static 'ico/upper_arrow.png' %}"></td>
+			<td>
+				<form action="/coding/printDir.html" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="operation" value="GoBack"/>
+				<input type="hidden" name="dirName" value="{{ dirName }}"/>
+				<input type="submit" name="GoBack" value="../" class="INVISIBLE_BUTTON"/>
+			</form>
+		  </td>
+			<td>NONE</td>
+			<td>GO TO PARENT DIRECTORY</td>
+		</tr>
+		{% for info in fileInfo %}
+		<tbody>
+		<tr>
 		 <!-- 1st column ___ type icon -->
-		 <td width=5% align="center">
-			 <center>
+		 <td class="IMG_TD">
 				{% if info.0 == 'd' %}
-	      	<img style="vertical-align: bottom;" src="{% static 'ico/folder_ico.png' %}" width="100%" height="100%">
+	      	<img style="width: 70px; height: auto;" src="{% static 'ico/folder_ico.png' %}">
 				{% elif info.0 == 'l' %}
-	      	<img style="display:block;" src="{% static 'ico/link_ico.png' %}" width="100%" height="100%">
+	      	<img style="width: 70px; height: auto;" src="{% static 'ico/link_ico.png' %}">
 				{% else %}
 					{% if info.0 == '.py' %}
-					<img style="display:block;" src="{% static 'ico/py_ico.png' %}" width="100%" height="100%">
+					<img style="width: 70px; height: auto;" src="{% static 'ico/py_ico.png' %}">
 					{% elif info.0 == '.c' %}
-					<img style="display:block;" src="{% static 'ico/c_ico.png' %}" width="100%" height="100%">
+					<img style="width: 70px; height: auto;" src="{% static 'ico/c_ico.png' %}">
 					{% elif info.0 == '.cpp' %}
-					<img style="display:block;" src="{% static 'ico/cpp_ico.png' %}" width="100%" height="100%">
+					<img style="width: 70px; height: auto;" src="{% static 'ico/cpp_ico.png' %}">
 					{% elif info.0 == '.h' %}
-					<img style="display:block;" src="{% static 'ico/header_ico.jpg' %}" width="100%" height="100%">
+					<img style="width: 70px; height: auto;" src="{% static 'ico/header_ico.jpg' %}">
 					{% elif info.0 == '.pyc' %}
-					<img style="display:block;" src="{% static 'ico/pyc_ico.png' %}" width="100%" height="100%">
+					<img style="width: 70px; height: auto;" src="{% static 'ico/pyc_ico.png' %}">
 					{% elif info.0 == '.sqlite3' %}
-					<img style="display:block;" src="{% static 'ico/sql_ico.png' %}" width="100%" height="100%">
+					<img style="width: 70px; height: auto;" src="{% static 'ico/sql_ico.png' %}">
 					{% elif info.0 == '.png' %}
-					<img style="display:block;" src="{% static 'ico/png_ico.jpg' %}" width="100%" height="100%">
+					<img style="width: 70px; height: auto;" src="{% static 'ico/png_ico.jpg' %}">
 					{% elif info.0 == '.jpg' %}
-					<img style="display:block;" src="{% static 'ico/jpg_ico.png' %}" width="100%" height="100%">
+					<img style="width: 70px; height: auto;" src="{% static 'ico/jpg_ico.png' %}">
 					{% else %}
-					<img style="display:block;" src="{% static 'ico/file_ico.png' %}" width="100%" height="100%">
+					<img style="width: 70px; height: auto;" src="{% static 'ico/file_ico.png' %}">
 					{% endif %}
 				{% endif %}
-			</center>
 		 </td>
 
 		<!-- 2nd column ___ FileName -->
@@ -126,30 +139,31 @@
 					{% csrf_token %}
 					<input type="hidden" name="operation" value="ReDirect"/>
 					<input type="hidden" name="dirName" value="{{ dirName }}"/>
-					<input type="submit" name="folder" value="{{ info.1 }}"/>
+					<input type="submit" name="folder" value="{{ info.1 }}" class="INVISIBLE_BUTTON"/>
 				</form>
 				{% else %}
 				<form action="/coding/sourceView.html" method="POST">
 					{% csrf_token %}
-					<input type="submit" name="fileName" value="{{ info.1 }}"/>
+					<input type="submit" name="fileName" value="{{ info.1 }}" class="INVISIBLE_BUTTON"/>
 					<input type="hidden" name="directoryName" value="{{ dirName }}"/>
 				</form>
 				{% endif %}
     </td>
-
-		<!-- 3rd column ___ Button Family -->
-		<td width=30%>
+		<!-- 3rd column ___ DATE -->
+		<td>
+				NONE
+		</td>
+		<!-- 4th column ___ Button Family -->
+		<td>
 			<table align="center" border="0" cellpadding="0" cellspacing="0">
 			<!-- Redirect to sourceDel -->
-			<tr>
 			<form action="/coding/sourceDel.html" method="POST">
 				{% csrf_token %}
 				<input type="hidden" name="selected_file" value="{{ info.1 }}"/>
 				<input type="hidden" name="dirName" value="{{ dirName }}"/>
-				<input type="submit" name="del" value="del" onclick="return confirm('Are you very very sure you want to delete? :)');"/>
+				<input class="DEL_BUTTON" type="submit" name="del" value="DELETE" onclick="return confirm('Are you very very sure you want to delete? :)');"/>
 			</form>
-			</tr>
-			<tr>
+		&nbsp;&nbsp;
 		 <!-- Redirect to a single unit complie -->
 		 {% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
 		 <form action="/coding/compile_res.html" method="POST">
@@ -157,15 +171,16 @@
 			 <input type="hidden" name="operation" value="selected"/>
 			 <input type="hidden" name="fileName" value="{{ info.1 }}"/>
 			 <input type="hidden" name="dirName" value="{{ dirName }}"/>
-			 <input type="submit" name="compile" value="compile"/>
+			 <input class="COMPILE_BUTTON" type="submit" name="compile" value="COMPILE"/>
 		 </form>
-		 </tr>
 		 {% endif %}
 		</table>
 		</td>
    </tr>
+ 	 </tbody>
+	 	{% endfor %}
   </table>
-	{% endfor %}
+
 
 </body>
 </html>
