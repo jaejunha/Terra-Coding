@@ -15,6 +15,8 @@ PIC = 'http://job.ajou.ac.kr/office/Teacher/Per/PerPic.aspx?pid='
 error_list = ["Enter the ID", "Enter the Password", "Please check your input"]
 
 def index(request):
+	if request.POST.get('intro','')=='1':
+		return render(request, 'terra/templates/index.html',{'intro':'1'})
 	try:
 		if request.session['sid']:
 			cookies = {'JSESSIONID':request.session['sid']}

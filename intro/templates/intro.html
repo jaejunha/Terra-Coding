@@ -25,6 +25,7 @@
 	<form action="terra" method="POST">
     	{% csrf_token %}
 			<input id="logo" type="image" src="{% static 'img/Logo_big.png' %}">
+			<input id="intro" name="intro" type="hidden" value="1">
 	</form>
 	<div id="copy">Copyright ⓒ 2017 by Terra-Coding, Inc. All right reserved.</div>
 </body>
