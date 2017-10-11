@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="{% static 'js/loadDiv.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/move.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/menu.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/intro.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
 	<script type="text/javascript">
 			$(window).resize(function (){
@@ -15,8 +16,12 @@
 		});
 			$(window).ready( function() {
 				terra_move();
-				{% if request.session.number %}
-				terra_menu(1);
+				{% if intro %}
+					index_intro();
+				{% else %}
+					{% if request.session.number %}
+					terra_menu(1);
+					{% endif %}
 				{% endif %}
 			});
 	</script>
@@ -54,13 +59,11 @@
 	{% endif %}
 	<div id="content">
 	{% if request.session.number is None %}
-		<img id="banner" src="{% static 'img/banner.jpg' %}">
+		<img id="banner" src="{% static 'img/banner.jpg' %}" width="100%">
 	{% else %}
   	<iframe src="/info" width="100%" height="100%" frameborder="0"/>
 	{% endif %}
 	</div>
-	{% if intro %}
-		<div id="screen"></div>
-	{% endif %}
+	<div id="screen"></div>
 </body>
 </html>
