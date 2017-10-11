@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from coding.models import ProjectInfo
+from django.db import connection
+import pymysql
 
 import hashlib
 import os
@@ -22,7 +24,7 @@ def printDir(request):
 	directoryName = request.POST.get('dirName', '')
 	directoryName = nomalize_directory_path(directoryName)
 	#check_user_directory(request)
-
+	#ttt()
 	# __ REDIRECT BETWEEN DIRECTORIES __START__#
 	if operation == 'ReDirect':
 		folderName = request.POST.get('folder', '')
@@ -277,6 +279,29 @@ def do_file_upload(req, _directoryName):
 
     return "F"
 
+def testFucn():
+	print 'test\n'
+	a = ProjectInfo.objects.raw('SELECT * FROM coding_projectinfo')
+	#a = ProjectInfo.objects.raw("INSERT INTO coding_projectinfo VALUES ('123', '456', '789')")
+	for _a in a:
+		print _a
+	return
+
+def ttt():
+	conn = pymysql.connect(host='localhost', user='root', password='1234',
+	                       db='testDB', charset='utf8')
+	curs = conn.cursor()
+
+	sql = "select * from users"
+	curs.execute(sql)
+
+	rows = curs.fetchall()
+	for _row in rows:
+		print(_row)     # 전체 rows
+
+	conn.close()
+
+	return
 '''
 def check_user_directory(obj):
 	_query = ''
