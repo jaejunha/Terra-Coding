@@ -99,10 +99,10 @@ def sourceEdit(request):
 	fileName = request.POST.get('fileName', '')
 	directoryName = request.POST.get('directoryName', '')
 	operation = request.POST.get('operation', '')
-	print '2@@@@@ %s' % fileName
+
 	directoryName = nomalize_directory_path(directoryName)
 	editPath = directoryName + fileName
-	print '2@@@@@ %s' % fileName
+
 	# __ ALTER CONTENTS OF FILE __START__#
 	if operation == 'Write':
 		edit_data = request.POST.get('edit_data', '')
@@ -144,6 +144,12 @@ def createNewFile(request):
 		f = open(path, 'w')
 		f.write('')
 		f.close()
+
+		post = request.POST.copy()
+		post['fileName'] = fileName
+		post['directoryName'] = directoryName
+		request.POST = post
+		print request.POST['fileName']
 
 	elif operation == 'upload':
 		status = do_file_upload(request, directoryName)
