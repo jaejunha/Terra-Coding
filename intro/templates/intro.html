@@ -11,6 +11,8 @@
 	<script type="text/javascript" src="{% static 'js/timeout.js' %}"></script>
 	<script type="text/javascript">
 		$(window).ready( function() {
+		var myVid=document.getElementById("video1");
+		myVid.currentTime = 3.5;
 			intro_move();
 			intro_timeout();
 		});
@@ -20,8 +22,7 @@
 	</script>
 </head>
 <body>
-	<div id="gradation"></div>
-	<img id="developer" src="{%static 'img/developer.png'%}"></div>
+	<video id="video1" src="{%static 'atom.mp4'%}" autoplay></video>
 	<form action="terra" method="POST">
     	{% csrf_token %}
 			<input id="logo" type="image" src="{% static 'img/Logo_big.png' %}">
