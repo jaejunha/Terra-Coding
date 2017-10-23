@@ -45,13 +45,13 @@
 		{% if request.session.number is None %}
 		<a href="javascript:alert('login please');">Info</a>
 		<a href="javascript:alert('login please');">Coding</a>
-		<a href="javascript:alert('login please');">Statistics</a>
-		<a href="javascript:alert('login please');">Rank</a>
+		<a href="javascript:alert('login please');">VDB</a>
+		<a href="javascript:alert('login please');">Feedback</a>
 		{% else %}
 		<a id ="info" href="javascript:terra_menu(1);">Info</a>
 		<a id ="coding" href="javascript:terra_menu(2);">Coding</a>
-		<a id = "statistics" href="javascript:terra_menu(3);">Statistics</a>
-		<a id="rank" href="javascript:terra_menu(4);">Rank</a>
+		<a id = "statistics" href="javascript:terra_menu(3);">VDB</a>
+		<a id="rank" href="javascript:terra_menu(4);">Feedback</a>
 		{% endif %}
 	</div>
 	{% if request.session.number %}

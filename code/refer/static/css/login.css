@@ -42,50 +42,50 @@ body{
 	margin-left:auto;
 	margin-right:auto;
 	text-align: center;
-	left:-400px;
-	width : 400px;
+	left:-450px;
+	width : 450px;
 	opacity: 0.9;
 }
 #login{
-	left:-400px;
+	left:-450px;
   position: absolute;
-  width: 400px;
-  height: 300px;
+  width: 450px;
+  height: 350px;
   background: rgba( 255, 255, 255, 0.3 );
   opacity: 0;
   animation: appear 3s;
 	animation-fill-mode:both;
 }
 #login_error{
-	left:-400px;
+	left:-450px;
   position: absolute;
-  width: 400px;
-  height: 300px;
+  width: 450px;
+  height: 350px;
   background: rgba( 255, 255, 255, 0.3 );
   opacity: 1;
 }
 input {
-	margin-left: 	10px;
-	margin-bottom:5px;
+	margin-left: 	35px;
+	margin-bottom:10px;
 }
 #id, #pwd {
 	width:365px;
 	height: 30px;
 }
 #check{
-	margin-top: 10px;
+	margin-top: 20px;
 	width:380px;
 	height: 45px;
 }
 #msg{
-	margin: 10px;
+	margin: 35px;
 	position: relative;
 	color: #ffffff;
 }
 #msg_error{
-	margin: 10px;
+	margin: 35px;
 	position: relative;
-	width: 400px;
+	width: 450px;
 	color: #ff0000;
 }
 @keyframes circle{
