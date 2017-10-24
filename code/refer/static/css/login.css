@@ -64,9 +64,38 @@ body{
   background: rgba( 255, 255, 255, 0.3 );
   opacity: 1;
 }
+
+#login_label{
+	background:#dcecec;
+	margin-top:20px;
+	margin-left:35px;
+	margin-bottom:25px;
+	width:380px;
+	height:55px;
+	display: table;
+	text-align:center;
+}
+
+#login_label div{
+	color: #bbbbbb;
+	font-size: 15pt;
+	vertical-align:middle;
+	display:table-cell;
+}
+
+#login_label div img{
+	margin-right: 10px;
+	width: 15pt;
+	height: 15pt;
+}
+
+form {
+	text-align: center;
+}
+
 input {
-	margin-left: 	35px;
 	margin-bottom:10px;
+	display: inline-block;
 }
 #id, #pwd {
 	width:365px;
