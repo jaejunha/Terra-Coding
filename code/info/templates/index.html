@@ -2,16 +2,35 @@
 {% load staticfiles %}
 <html lang="en">
 <head>
-	 <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
+ 	<link rel="stylesheet" type="text/css" href="{% static 'css/info.css' %}"/>
 	<meta charset="utf-8">
 	<title>::T - HUB::</title>
 </head>
 <body>
-	<img src="{{ picture }}">
-  	{{name}}
-    <br>{{number}}
-    <br>{{school}}
-		<br>{{grade}}
-    <br>{{major}}
+	<div id="left">
+		<span>Info</span>
+		<div id="menu">
+		<a>
+			<div>menu1</div>
+		</a>
+		<a>
+		<div>menu2</div>
+		</a>
+		<a>
+		<div>menu3</div>
+		</a>
+	</div>
+	</div>
+	<div id="inner_content">
+
+		<img id="picture" src="{{ picture }}">
+			{{name}}
+			<br>{{number}}
+			<br>{{school}}
+			<br>{{grade}}
+			<br>{{major}}
+
+	</div>
 </body>
 </html>

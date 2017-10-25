@@ -1,4 +1,5 @@
 function loadDiv(url){
-	var element=document.getElementById("content");
-        element.innerHTML="<iframe src=\""+url+"\" width=\"100%\" height=\"100%\" frameborder=\"0\"></iframe>";                          
+	$('#content').load(url);
+	$('#content').css('box-shadow','0px 4px 2px 0px silver inset');
+	$('#content').css('background','#E4E9EC');
 }
