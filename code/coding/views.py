@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 #from __future__ import unicode_literals
 
+# DJANGO FAMILY
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from coding.models import ProjectInfo
+from django.core.urlresolvers import reverse
 from django.db import connection
-import pymysql
 
+from coding.models import ProjectInfo
+
+# DEFAULT FAMILY
+import pymysql
 import hashlib
 import os
 from os.path import abspath, dirname
 from subprocess import call
-from django.core.urlresolvers import reverse
 
 FORBIDDEN_TEXT_EXTENSION = ['.pyc', '.sqlite3'] # may be white list is more efficient...
 ALLOWED_IMG_EXTENSION = ['.png', '.jpg']
@@ -252,6 +255,28 @@ def make_file_info(_fileType, _fileName, _filter):
 
 	return output
 
+'''
+@INCOMPLETE FUNCTION
+function: just once called for user's directory information
+@
+'''
+def init():
+	# check user's information
+	# if there is user's information then set session of user's directory
+
+	return
+
+def auth_directory_jump(_REQUEST_):
+	# using _SESSION INFORMATION_
+	# you can distinguish wheter user is registered.
+	# so algorithm will be below..
+	'''
+	LOGIN STATUS = REQUEST_FOR_MEMBER_TB(_REQUEST_.id)
+	if( LOGIN STATUS == true ):
+		get_user_directory
+	'''
+	return
+
 def nomalize_directory_path(_dirName):
 	if _dirName == '': # PREVENT __EMPTY SET ERROR__
 		_dirName = os.popen('pwd').read()
@@ -298,13 +323,16 @@ def ttt():
 	                       db='testDB', charset='utf8')
 	curs = conn.cursor()
 
-	sql = "select * from users"
-	curs.execute(sql)
+	for i in range(1,100):
+		sql = "insert into users values ('%s', '%s', '%s')" % (i,i,i)
+		try:
+		    curs.execute(sql)
+		except curs.Error, e:
+			print "MySQL Error: %s" % e
 
-	rows = curs.fetchall()
-	for _row in rows:
-		print(_row)     # 전체 rows
 
+	conn.commit()
+	curs.close()
 	conn.close()
 
 	return

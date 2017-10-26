@@ -5,6 +5,11 @@
 <head>
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::Source Viewer::</title>
+
+	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
 </head>
 
 <body bgcolor="#A4A4A4">
@@ -30,6 +35,7 @@
 	<input type="submit" name="previous" value="previous page"/>
 </form>
 
+
 {% if service_type == 'text' %}
 <form action="/coding/sourceEdit.html" method="POST">
 	{% csrf_token %}
@@ -42,12 +48,13 @@
 
 <hr color="red" width=100%>
 {% if service_type == 'text' %}
-<font size=3 style="Lucida Blackletter"> <pre> {{ file_data }} </pre> </font>
+<pre><code class="C">{{ file_data }} </code></pre>
 {% elif service_type == 'img' %}
 <img style="vertical-align: bottom;" src="{{ directoryName|add:fileName }}" width="30%" height="30%">
 {% else %}
 <font size=3 style="Lucida Blackletter" color="RED"> <pre> {{ file_data }} </pre> </font>
 {% endif %}
 <hr color="red" width=100%>
+
 </body>
 </html>
