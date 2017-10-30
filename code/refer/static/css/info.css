@@ -2,27 +2,6 @@ body{
   margin: 0px;
 }
 
-#left{
-  width: 200px;
-  float: left;
-  text-align: center;
-  margin-top: 20px;
-}
-
-#left span{
-font-size: 20pt;
-color: #555555;
-}
-#menu{
-  margin-top: 20px;
-}
-#menu a div{
-  margin-bottom: 5px;
-  width: 200px;
-  line-height: 60px;
-  background: #C2C7CA;
-}
-
 #inner_content{
   float: left;
   margin: 20px;
