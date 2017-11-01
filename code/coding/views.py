@@ -9,6 +9,8 @@ from django.core.urlresolvers import reverse
 from django.db import connection
 
 from coding.models import ProjectInfo
+from django.views.decorators.csrf import csrf_exempt
+
 
 # DEFAULT FAMILY
 import pymysql
@@ -20,9 +22,9 @@ from subprocess import call
 FORBIDDEN_TEXT_EXTENSION = ['.pyc', '.sqlite3'] # may be white list is more efficient...
 ALLOWED_IMG_EXTENSION = ['.png', '.jpg']
 
+@csrf_exempt
 def printDir(request):
 	fileType = []
-
 	operation = request.POST.get('operation', '')
 	directoryName = request.POST.get('dirName', '')
 	directoryName = nomalize_directory_path(directoryName)
@@ -67,8 +69,10 @@ def printDir(request):
 		fileInfo = make_file_info(fileType, fileName, 'NULL')
 
 	token = {'fileInfo': fileInfo, 'dirName': directoryName}
+	print directoryName
 	return render(request, 'coding/templates/printDir.html', token)
 
+@csrf_exempt
 def sourceView(request):
 	fileName = request.POST.get('fileName', '')
 	directoryName = request.POST.get('directoryName', '')
@@ -97,6 +101,7 @@ def sourceView(request):
 	token = {'file_data': file_data, 'fileName': fileName, 'directoryName': directoryName, 'service_type': "text"}
 	return render(request, 'coding/templates/sourceView.html', token)
 
+@csrf_exempt
 def sourceEdit(request):
 	editpath = ''
 	fileName = request.POST.get('fileName', '')

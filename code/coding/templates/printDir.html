@@ -1,11 +1,24 @@
 <!-- printDir.html-->
-
+<!DOCTYPE html>
 <html lang="en">
 {% load staticfiles %}
 <head>
 	<link rel="stylesheet" href="{% static 'css/coding/directory_list.css' %}">
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::T - HUB::</title>
+	<style>
+	a{
+	  text-decoration: none;
+	  font-family: 'Open Sans', sans-serif;
+	  font-weight: normal;
+	  font-size: 1em;
+	  color:#A7A1AE;
+	  padding:5px 15px;
+	  background:transparent;
+	  border:0 none;
+	  cursor:pointer;
+	}
+	</style>
 	</head>
 
 <body bgcolor="#F2E0F7">
@@ -128,13 +141,23 @@
 
 		<!-- 2nd column ___ FileName -->
 		<td>
+
+			<script type="text/javascript">
+<!--
+function sch_submit(){
+var load_url = '/coding/printDir';
+$('#content').load(load_url,{
+dirName : '{{dirName}}{{info.1}}',
+operation : 'ReDirect'
+}
+);
+}
+//-->
+</script>
 				{% if info.0 == 'd' %}
-				<form action="/coding/printDir.html" method="POST">
-					{% csrf_token %}
 					<input type="hidden" name="operation" value="ReDirect"/>
 					<input type="hidden" name="dirName" value="{{ dirName }}"/>
-					<input type="submit" name="folder" value="{{ info.1 }}" class="INVISIBLE_BUTTON"/>
-				</form>
+					<a href="javascript:sch_submit()">{{info.1}}</a>
 				{% else %}
 				<form action="/coding/sourceView.html" method="POST">
 					{% csrf_token %}
