@@ -11,7 +11,6 @@ from django.db import connection
 from coding.models import ProjectInfo
 from django.views.decorators.csrf import csrf_exempt
 
-
 # DEFAULT FAMILY
 import pymysql
 import hashlib
@@ -27,13 +26,14 @@ def printDir(request):
 	fileType = []
 	operation = request.POST.get('operation', '')
 	directoryName = request.POST.get('dirName', '')
-	directoryName = nomalize_directory_path(directoryName)
-	#check_user_directory(request)
-	#ttt()
+	directoryName = nomalize_directory_path(request, directoryName)
+
 	# __ REDIRECT BETWEEN DIRECTORIES __START__#
 	if operation == 'ReDirect':
 		folderName = request.POST.get('folder', '')
 		directoryName += folderName
+		#print '[printDir] directoryName --> %s' % directoryName
+		#auth_directory_jump(request, directoryName)
 
 	# __ GO TO PARENT DIRECTORY __START__#
 	elif operation == 'GoBack':
@@ -69,7 +69,6 @@ def printDir(request):
 		fileInfo = make_file_info(fileType, fileName, 'NULL')
 
 	token = {'fileInfo': fileInfo, 'dirName': directoryName}
-	print directoryName
 	return render(request, 'coding/templates/printDir.html', token)
 
 @csrf_exempt
@@ -77,7 +76,7 @@ def sourceView(request):
 	fileName = request.POST.get('fileName', '')
 	directoryName = request.POST.get('directoryName', '')
 
-	directoryName = nomalize_directory_path(directoryName)
+	directoryName = nomalize_directory_path(request, directoryName)
 	extension = os.path.splitext(fileName)[1]
 	viewPath = directoryName + fileName
 
@@ -108,7 +107,7 @@ def sourceEdit(request):
 	directoryName = request.POST.get('directoryName', '')
 	operation = request.POST.get('operation', '')
 
-	directoryName = nomalize_directory_path(directoryName)
+	directoryName = nomalize_directory_path(request, directoryName)
 	editPath = directoryName + fileName
 
 	# __ ALTER CONTENTS OF FILE __START__#
@@ -131,7 +130,7 @@ def sourceEdit(request):
 def sourceDel(request):
 	fileName = request.POST.get('selected_file', '')
 	directoryName = request.POST.get('dirName', '')
-	directoryName = nomalize_directory_path(directoryName)
+	directoryName = nomalize_directory_path(request, directoryName)
 
 	path = directoryName + fileName
 	os.popen("rm -rf " + "'" + path + "'")
@@ -142,7 +141,7 @@ def createNewFile(request):
 	fileName = request.POST.get('fileName', '')
 	operation = request.POST.get('operation', '')
 
-	directoryName = nomalize_directory_path(directoryName)
+	directoryName = nomalize_directory_path(request, directoryName)
 
 	if operation == 'file':
 		if fileName == '':
@@ -182,7 +181,7 @@ def do_compile_c_language(request):
 	operation = request.POST.get('operation', '')
 	fileName = request.POST.get('fileName', '')
 	directoryName = request.POST.get('dirName', '')
-	directoryName = nomalize_directory_path(directoryName)
+	directoryName = nomalize_directory_path(request, directoryName)
 
 	# __ COMPILE PER PROJECT UNIT __START__#
 	if operation == 'ALL':
@@ -260,31 +259,45 @@ def make_file_info(_fileType, _fileName, _filter):
 
 	return output
 
-'''
-@INCOMPLETE FUNCTION
-function: just once called for user's directory information
-@
-'''
-def init():
-	# check user's information
-	# if there is user's information then set session of user's directory
+def auth_directory_jump(request, _in_Current):
+
+	currentDir = _in_Current
+	rootDirectory = os.popen('pwd').read() + '/' + 'userDirectory' + '/' + request.session['Directory'] # except '/' of
+	rootDirectory = rootDirectory.replace('\n', '')
+	rootDirectory = rootDirectory.replace('\r', '')
+
+	dirList = currentDir.split('/')
+	dirList = ' '.join(dirList).split()
+
+	currentDir = ''
+	index = 0
+	totalLen = len(dirList) - 1
+	while index < totalLen:
+		currentDir = currentDir + '/' + dirList[index]
+		if dirList[index] == 'userDirectory':
+			index = index + 1
+			currentDir = currentDir + '/' + dirList[index]
+			break
+
+		index = index + 1
+
+	print '[auth_directory_jump] current %s' % currentDir
+	print '[auth_directory_jump] root %s' % rootDirectory
+
+	print 'asdasdasdsad'
+	if currentDir == rootDirectory:
+		print '[auth_directory_jump] good'
+	else:
+		print '[auth_directory_jump] bad'
 
 	return
 
-def auth_directory_jump(_REQUEST_):
-	# using _SESSION INFORMATION_
-	# you can distinguish wheter user is registered.
-	# so algorithm will be below..
-	'''
-	LOGIN STATUS = REQUEST_FOR_MEMBER_TB(_REQUEST_.id)
-	if( LOGIN STATUS == true ):
-		get_user_directory
-	'''
-	return
-
-def nomalize_directory_path(_dirName):
+def nomalize_directory_path(request, _dirName):
 	if _dirName == '': # PREVENT __EMPTY SET ERROR__
-		_dirName = os.popen('pwd').read()
+		if request.session['Directory'] == '':
+			return os.popen('pwd').read() + '/' + 'userDirectory'
+		else:
+			_dirName = os.popen('pwd').read() + "/userDirectory/" + request.session['Directory']
 	if _dirName[-1] != '/': # PREVENT __DUPLICATED SLASH ERROR__
 		_dirName += '/'
 	_dirName = _dirName.replace('\n', '') # PRVENT __ENCODING ERROR__

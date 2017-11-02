@@ -8,6 +8,9 @@ from .models import *
 from bs4 import BeautifulSoup
 import requests, json
 
+import hashlib # be used for Directory Name Hashing because of basic level security
+import os # be used for popen
+
 LOGIN = 'https://mb.ajou.ac.kr/mobile/login.json'
 USER = 'https://mb.ajou.ac.kr/mobile/M03/M03_010_010.es'
 PIC = 'http://job.ajou.ac.kr/office/Teacher/Per/PerPic.aspx?pid='
@@ -54,6 +57,7 @@ def check(request):
 			response = requests.post(LOGIN, data=data)
 			status = json.loads(response.text)['response']
 			if status == 'OK':
+				checkUserDirectory(request)
 				for c in response.cookies:
 					if c.name == 'JSESSIONID':
 						request.session['sid']=c.value
@@ -66,3 +70,17 @@ def out(request):
 	request.session.flush()
 	picture = ''
 	return HttpResponseRedirect(reverse('index'))
+
+def checkUserDirectory(request):
+	hash_object = hashlib.sha1(request.POST.get('id', ''))
+	hex_dig = hash_object.hexdigest()
+	request.session['Directory'] = hex_dig
+
+	result = os.popen("ls -1 userDirectory | grep "+hex_dig).read()
+	result = result.replace('\n', '')
+	result = result.replace('\r', '')
+
+	if result != hex_dig:
+		os.popen("mkdir userDirectory/" + hex_dig)
+		
+	return
