@@ -7,7 +7,7 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::T - HUB::</title>
 	<style>
-	a{
+	#content a{
 	  text-decoration: none;
 	  font-family: 'Open Sans', sans-serif;
 	  font-weight: normal;
@@ -19,6 +19,32 @@
 	  cursor:pointer;
 	}
 	</style>
+	<script>
+	function view_printDir(op,url,dir,file){
+		if(op == 'categorization'){
+			var sel = document.getElementById("project_attribute");
+			var val = sel.options[sel.selectedIndex].value+'';
+			$('#content').load(url,{
+				dirName : dir,
+				operation : op,
+				project_attribute : val
+			});
+		}
+		else{
+			$('#content').load(url,{
+				dirName : dir,
+				operation : op,
+				folder : file
+			});
+		}
+	}
+	function view_sourceView(url,dir,file){
+			$('#content').load(url,{
+				fileName : file,
+				directoryName : dir
+			});
+	}
+	</script>
 	</head>
 
 <body bgcolor="#F2E0F7">
@@ -71,18 +97,13 @@
 	</form>
 
 	<!-- Select project attribute -->
-	<form action="/coding/printDir.html" method="POST">
-		{% csrf_token %}
-	<select name="project_attribute" id="project_attribute" onchange="this.form.submit()">
+	<select name="project_attribute" id="project_attribute" onchange="view_printDir('categorization','/coding/printDir','{{dirName}}','')">
 		<option value="Select">Select</option>
 		<option value="ALL">ALL</option>
     <option value="C_Lang">C</option>
     <option value="CPP_LANG">C++</option>
     <option value="Python_Lang">Python</option>
-		<input type="hidden" name="dirName" value="{{ dirName }}"/>
-		<input type="hidden" name="operation" value="categorization"/>
 	</select>
-	</form>
 	</center>
 
 	<table class="container">
@@ -97,12 +118,7 @@
 		<tr>
 			<td><img style="width: 70px; height: auto;" src="{% static 'ico/upper_arrow.png' %}"></td>
 			<td>
-				<form action="/coding/printDir.html" method="POST">
-				{% csrf_token %}
-				<input type="hidden" name="operation" value="GoBack"/>
-				<input type="hidden" name="dirName" value="{{ dirName }}"/>
-				<input type="submit" name="GoBack" value="../" class="INVISIBLE_BUTTON"/>
-			</form>
+			<a href="javascript:view_printDir('GoBack','/coding/printDir','{{dirName}}','../')">../</a>
 		  </td>
 			<td>NONE</td>
 			<td>GO TO PARENT DIRECTORY</td>
@@ -141,29 +157,10 @@
 
 		<!-- 2nd column ___ FileName -->
 		<td>
-
-			<script type="text/javascript">
-<!--
-function sch_submit(){
-var load_url = '/coding/printDir';
-$('#content').load(load_url,{
-dirName : '{{dirName}}{{info.1}}',
-operation : 'ReDirect'
-}
-);
-}
-//-->
-</script>
 				{% if info.0 == 'd' %}
-					<input type="hidden" name="operation" value="ReDirect"/>
-					<input type="hidden" name="dirName" value="{{ dirName }}"/>
-					<a href="javascript:sch_submit()">{{info.1}}</a>
+				<a href="javascript:view_printDir('ReDirect','/coding/printDir','{{dirName}}','{{info.1}}')">{{info.1}}</a>
 				{% else %}
-				<form action="/coding/sourceView.html" method="POST">
-					{% csrf_token %}
-					<input type="submit" name="fileName" value="{{ info.1 }}" class="INVISIBLE_BUTTON"/>
-					<input type="hidden" name="directoryName" value="{{ dirName }}"/>
-				</form>
+				<a href="javascript:view_sourceView('/coding/sourceView','{{ dirName }}','{{ info.1 }}')">{{info.1}}</a>
 				{% endif %}
     </td>
 		<!-- 3rd column ___ DATE -->
