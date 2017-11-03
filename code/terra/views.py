@@ -81,6 +81,7 @@ def checkUserDirectory(request):
 	result = result.replace('\r', '')
 
 	if result != hex_dig:
-		os.popen("mkdir userDirectory/" + hex_dig)
-		
+		os.popen("mkdir userDirectory").read()
+		os.popen("cd userDirectory && mkdir "+hex_dig)
+
 	return

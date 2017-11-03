@@ -9,7 +9,16 @@
 	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
-
+	<script>
+	function view_printDir(op,url,dir,file){
+		$('#content').load(url,{
+				dirName : dir,
+				operation : op,
+				folder : file
+			});
+		}
+	}
+	</script>
 </head>
 
 <body bgcolor="#A4A4A4">
@@ -27,14 +36,7 @@
 
 
 <br><br><br>
-
-<form action="/coding/printDir.html" method="POST">
-	{% csrf_token %}
-	<input type="hidden" name="operation" value="ReDirect"/>
-	<input type="hidden" name="dirName" value="{{ directoryName }}"/>
-	<input type="submit" name="previous" value="previous page"/>
-</form>
-
+<button type="button" onclick="view_printDir('ReDirect','/coding/printDir','{{directoryName}}','');">previous page</button>
 
 {% if service_type == 'text' %}
 <form action="/coding/sourceEdit.html" method="POST">

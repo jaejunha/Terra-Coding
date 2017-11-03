@@ -1,1 +1,5 @@
+#compiled python
 *.pyc
+
+#userDirectory
+code/userDirectory*
