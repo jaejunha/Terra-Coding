@@ -5,11 +5,13 @@
 	 <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/terra.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}"/>
 	<script type="text/javascript" src="{% static 'js/loadDiv.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/move.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/menu.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/intro.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
 	<script type="text/javascript">
 			$(window).resize(function (){
 				terra_move();
@@ -66,5 +68,9 @@
 	{% endif %}
 	</div>
 	<div id="screen"></div>
+	<div id="dialog_coding" title="select type">
+			What do you want to do?<br>
+			problem / free(project)<br>
+	</div>
 </body>
 </html>

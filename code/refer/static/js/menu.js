@@ -59,6 +59,11 @@ function terra_menu(no){
     $('#rank').css('color','#cccccc');
     $('#selector').css('left',$('#coding').offset().left+'px');
     $('#selector').css('width',$('#coding').width()+'px');
+    $("#dialog_coding").dialog({
+      autoOpen: true,
+      modal:	true,
+      disabled:	true,
+    });
   }else if(no == 3){
     loadDiv('/statistics');
     $('#info').css('color','#cccccc');

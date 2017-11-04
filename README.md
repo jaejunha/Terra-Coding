@@ -28,6 +28,8 @@
 >https://docs.djangoproject.com
 - JQuery
 >http://jquery.com
+- JQuery UI
+>https://jqueryui.com
 - Lucida Grande font
 >http://www.mediafire.com/file/vblckzvj6dn/Lucida.Grande.rar#!
 - Open Sans font

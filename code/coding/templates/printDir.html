@@ -23,8 +23,9 @@
 	var current='';
 
 	$(window).on('hashchange', function() {
-			if(location.hash != ('#'+current))
+			if(location.hash != ('#'+current)){
 				checkForHash();
+			}
 	});
 
 	function checkForHash() {
@@ -222,7 +223,5 @@
  	 </tbody>
 	 	{% endfor %}
   </table>
-
-
 </body>
 </html>
