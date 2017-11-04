@@ -20,20 +20,27 @@ from subprocess import call
 
 FORBIDDEN_TEXT_EXTENSION = ['.pyc', '.sqlite3'] # may be white list is more efficient...
 ALLOWED_IMG_EXTENSION = ['.png', '.jpg']
+ERR_NO_SESSION_ID = 0x10
 
 @csrf_exempt
 def printDir(request):
 	fileType = []
 	operation = request.POST.get('operation', '')
 	directoryName = request.POST.get('dirName', '')
-	directoryName = nomalize_directory_path(request, directoryName)
+	(directoryName, status) = nomalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+		return render(request, 'coding/templates/error.html', token)
 
 	# __ REDIRECT BETWEEN DIRECTORIES __START__#
 	if operation == 'ReDirect':
 		folderName = request.POST.get('folder', '')
 		directoryName += folderName
 		#print '[printDir] directoryName --> %s' % directoryName
-		#auth_directory_jump(request, directoryName)
+		status = auth_directory_jump(request, directoryName)
+		if status == ERR_NO_SESSION_ID:
+			token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+			return render(request, 'coding/templates/error.html', token)
 
 	# __ GO TO PARENT DIRECTORY __START__#
 	elif operation == 'GoBack':
@@ -43,6 +50,7 @@ def printDir(request):
 				break
 			index = index - 1
 		directoryName = directoryName[:index]
+		auth_directory_jump(request, directoryName)
 
 	# __ -L OPTION FOR FILE TYPE __START__#
 	command = 'ls -l ' + "'" + directoryName + "'"
@@ -76,7 +84,10 @@ def sourceView(request):
 	fileName = request.POST.get('fileName', '')
 	directoryName = request.POST.get('directoryName', '')
 
-	directoryName = nomalize_directory_path(request, directoryName)
+	(directoryName, status) = nomalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+		return render(request, 'coding/templates/error.html', token)
 	extension = os.path.splitext(fileName)[1]
 	viewPath = directoryName + fileName
 
@@ -107,7 +118,10 @@ def sourceEdit(request):
 	directoryName = request.POST.get('directoryName', '')
 	operation = request.POST.get('operation', '')
 
-	directoryName = nomalize_directory_path(request, directoryName)
+	(directoryName, status) = nomalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+		return render(request, 'coding/templates/error.html', token)
 	editPath = directoryName + fileName
 
 	# __ ALTER CONTENTS OF FILE __START__#
@@ -130,7 +144,10 @@ def sourceEdit(request):
 def sourceDel(request):
 	fileName = request.POST.get('selected_file', '')
 	directoryName = request.POST.get('dirName', '')
-	directoryName = nomalize_directory_path(request, directoryName)
+	(directoryName, status) = nomalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+		return render(request, 'coding/templates/error.html', token)
 
 	path = directoryName + fileName
 	os.popen("rm -rf " + "'" + path + "'")
@@ -141,7 +158,10 @@ def createNewFile(request):
 	fileName = request.POST.get('fileName', '')
 	operation = request.POST.get('operation', '')
 
-	directoryName = nomalize_directory_path(request, directoryName)
+	(directoryName, status) = nomalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+		return render(request, 'coding/templates/error.html', token)
 
 	if operation == 'file':
 		if fileName == '':
@@ -181,7 +201,10 @@ def do_compile_c_language(request):
 	operation = request.POST.get('operation', '')
 	fileName = request.POST.get('fileName', '')
 	directoryName = request.POST.get('dirName', '')
-	directoryName = nomalize_directory_path(request, directoryName)
+	(directoryName, status) = nomalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+		return render(request, 'coding/templates/error.html', token)
 
 	# __ COMPILE PER PROJECT UNIT __START__#
 	if operation == 'ALL':
@@ -213,6 +236,12 @@ def do_compile_c_language(request):
 
 	token = {'result': result, 'status': status, 'directoryName': directoryName}
 	return render(request, 'coding/templates/compile_res.html', token)
+
+def errReDirection(request, ReDirectURL):
+	if ReDirectURL == '': # __ PREVENT EMPTY SET ERROR ___ #
+		ReDirectURL = '/terra'
+	token = {'ReDirectURL': ReDirectURL}
+	return render(request, 'coding/templates/error.html', token)
 
 def make_file_info(_fileType, _fileName, _filter):
 	output = [] # it would be 2D array --- [ [filetype_1, filename_1], [filetype_2, filename_2] ]
@@ -261,10 +290,15 @@ def make_file_info(_fileType, _fileName, _filter):
 
 def auth_directory_jump(request, _in_Current):
 
-	currentDir = _in_Current
-	rootDirectory = os.popen('pwd').read() + '/' + 'userDirectory' + '/' + request.session['Directory'] # except '/' of
-	rootDirectory = rootDirectory.replace('\n', '')
-	rootDirectory = rootDirectory.replace('\r', '')
+	try:
+		currentDir = _in_Current
+		rootDirectory = "./userDirectory/" + request.session['Directory']
+		'''rootDirectory = os.popen('pwd').read() + '/' + 'userDirectory' + '/' + request.session['Directory'] # except '/' of
+		rootDirectory = rootDirectory.replace('\n', '')
+		rootDirectory = rootDirectory.replace('\r', '')'''
+	except:  # when there is no session['Directory'] value.
+		return ERR_NO_SESSION_ID
+
 
 	dirList = currentDir.split('/')
 	dirList = ' '.join(dirList).split()
@@ -284,7 +318,6 @@ def auth_directory_jump(request, _in_Current):
 	print '[auth_directory_jump] current %s' % currentDir
 	print '[auth_directory_jump] root %s' % rootDirectory
 
-	print 'asdasdasdsad'
 	if currentDir == rootDirectory:
 		print '[auth_directory_jump] good'
 	else:
@@ -294,15 +327,17 @@ def auth_directory_jump(request, _in_Current):
 
 def nomalize_directory_path(request, _dirName):
 	if _dirName == '': # PREVENT __EMPTY SET ERROR__
-		if request.session['Directory'] == '':
-			return os.popen('pwd').read() + '/' + 'userDirectory'
-		else:
-			_dirName = os.popen('pwd').read() + "/userDirectory/" + request.session['Directory']
+		try:
+			_dirName = "./userDirectory/" + request.session['Directory'] # Relative Path must be used.
+		except:
+			request.session.flush()
+			return ('', ERR_NO_SESSION_ID)
+
 	if _dirName[-1] != '/': # PREVENT __DUPLICATED SLASH ERROR__
 		_dirName += '/'
 	_dirName = _dirName.replace('\n', '') # PRVENT __ENCODING ERROR__
 	_dirName = _dirName.replace('\r', '')
-	return _dirName
+	return (_dirName, 'Normal')
 
 def get_all_c_files_name(fileList):
 	output = []
@@ -328,15 +363,7 @@ def do_file_upload(req, _directoryName):
 
     return "F"
 
-def testFucn():
-	print 'test\n'
-	a = ProjectInfo.objects.raw('SELECT * FROM coding_projectinfo')
-	#a = ProjectInfo.objects.raw("INSERT INTO coding_projectinfo VALUES ('123', '456', '789')")
-	for _a in a:
-		print _a
-	return
-
-def ttt():
+def external_database_connector():
 	conn = pymysql.connect(host='localhost', user='root', password='1234',
 	                       db='testDB', charset='utf8')
 	curs = conn.cursor()
@@ -354,31 +381,3 @@ def ttt():
 	conn.close()
 
 	return
-'''
-def check_user_directory(obj):
-	_query = ''
-	_number = obj.session['number']
-	_name = obj.session['name']
-
-	#<====[ EXCEPTION HANDLER ]====>
-	if _number == '' or _name == '':
-		print '[#ERR] __check_user_directory()__: session info is NULL'
-		return "ERR:NULL"
-	#<============================>
-
-	dirKey = _number + _name
-	dirKey = dirKey.encode('utf-8')
-	directoryName = hashlib.md5(dirKey).hexdigest()
-
-	try:
-		_query = ProjectInfo.objects.get(student_number = _number)
-	except ProjectInfo.DoesNotExist:
-		ProjectInfo(student_number = _number, student_name = _name, private_directory = directoryName)
-		saveDirectory = nomalize_directory_path(os.popen('pwd').read()) + 'coding/user_source/' + directoryName
-		os.popen('mkdir ' + saveDirectory)
-		os.chdir(saveDirectory)
-
-	print _query
-
-	return
-'''
