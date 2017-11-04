@@ -1,0 +1,48 @@
+<!-- VDB's index.html -->
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="stylesheet" href="{% static 'css/vdb/directory_list.css' %}">
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::T - HUB::</title>
+</head>
+
+<body>
+	<center>
+	<table>
+		<form action="/vdb/createVDB.html" method="POST">
+			{% csrf_token %}
+			<input id="create_button" type="submit" name="create" value="CREATE"/>
+		</form> &nbsp;
+		<form action="/vdb/createVDB.html" method="POST">
+			{% csrf_token %}
+			<input id="delete_button" type="submit" name="delete" value="DELETE"/>
+		</form> &nbsp;
+		<form action="/vdb/createVDB.html" method="POST">
+			{% csrf_token %}
+			<input id="update_button" type="submit" name="update" value="UPDATE"/>
+		</form> &nbsp;
+	<br><br>
+	<table class="container">
+		<thead>
+			<tr>
+				<th><h1>TABLE NAME</h1></th>
+				<th><h1>DATE</h1></th>
+			</tr>
+		</thead>
+		{% for each in result %}
+		<tbody>
+		<tr>
+			 <td> <!-- 1st column -->
+				{{ each.0 }}
+			 </td>
+			<td>  <!-- 2nd column -->
+				{{ each.1 }}
+	    </td>
+   </tr>
+ 	 </tbody>
+	 {% endfor %}
+  </table>
+</table>
+</body>
+</html>

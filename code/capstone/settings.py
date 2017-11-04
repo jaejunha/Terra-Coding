@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'terra.apps.TerraConfig',
     'coding.apps.CodingConfig',
+    'vdb.apps.VdbConfig',
 ]
 
 MIDDLEWARE = [
