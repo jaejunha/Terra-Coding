@@ -21,26 +21,24 @@ from subprocess import call
 FORBIDDEN_TEXT_EXTENSION = ['.pyc', '.sqlite3'] # may be white list is more efficient...
 ALLOWED_IMG_EXTENSION = ['.png', '.jpg']
 ERR_NO_SESSION_ID = 0x10
+ERR_ROOT_ACCESSING = 0x20
 
 @csrf_exempt
 def printDir(request):
 	fileType = []
 	operation = request.POST.get('operation', '')
 	directoryName = request.POST.get('dirName', '')
-	(directoryName, status) = nomalize_directory_path(request, directoryName)
-	if status == ERR_NO_SESSION_ID:
-		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+
+	# __ NORMALIZE DIRECTORY PATH & PREVENT ERROR  __START__#
+	(directoryName, status) = normalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
 		return render(request, 'coding/templates/error.html', token)
 
 	# __ REDIRECT BETWEEN DIRECTORIES __START__#
 	if operation == 'ReDirect':
 		folderName = request.POST.get('folder', '')
 		directoryName += folderName
-		#print '[printDir] directoryName --> %s' % directoryName
-		status = auth_directory_jump(request, directoryName)
-		if status == ERR_NO_SESSION_ID:
-			token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
-			return render(request, 'coding/templates/error.html', token)
 
 	# __ GO TO PARENT DIRECTORY __START__#
 	elif operation == 'GoBack':
@@ -50,7 +48,12 @@ def printDir(request):
 				break
 			index = index - 1
 		directoryName = directoryName[:index]
-		auth_directory_jump(request, directoryName)
+
+	# __ ROOT DIRECTORY RESTRICTION __START__#
+	(directoryName, status)= block_top_directory(request, directoryName)
+	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
+		return render(request, 'coding/templates/error.html', token)
 
 	# __ -L OPTION FOR FILE TYPE __START__#
 	command = 'ls -l ' + "'" + directoryName + "'"
@@ -84,9 +87,9 @@ def sourceView(request):
 	fileName = request.POST.get('fileName', '')
 	directoryName = request.POST.get('directoryName', '')
 
-	(directoryName, status) = nomalize_directory_path(request, directoryName)
-	if status == ERR_NO_SESSION_ID:
-		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+	(directoryName, status) = normalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
 		return render(request, 'coding/templates/error.html', token)
 	extension = os.path.splitext(fileName)[1]
 	viewPath = directoryName + fileName
@@ -118,9 +121,9 @@ def sourceEdit(request):
 	directoryName = request.POST.get('directoryName', '')
 	operation = request.POST.get('operation', '')
 
-	(directoryName, status) = nomalize_directory_path(request, directoryName)
-	if status == ERR_NO_SESSION_ID:
-		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+	(directoryName, status) = normalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
 		return render(request, 'coding/templates/error.html', token)
 	editPath = directoryName + fileName
 
@@ -144,9 +147,9 @@ def sourceEdit(request):
 def sourceDel(request):
 	fileName = request.POST.get('selected_file', '')
 	directoryName = request.POST.get('dirName', '')
-	(directoryName, status) = nomalize_directory_path(request, directoryName)
-	if status == ERR_NO_SESSION_ID:
-		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+	(directoryName, status) = normalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
 		return render(request, 'coding/templates/error.html', token)
 
 	path = directoryName + fileName
@@ -158,9 +161,9 @@ def createNewFile(request):
 	fileName = request.POST.get('fileName', '')
 	operation = request.POST.get('operation', '')
 
-	(directoryName, status) = nomalize_directory_path(request, directoryName)
-	if status == ERR_NO_SESSION_ID:
-		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+	(directoryName, status) = normalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
 		return render(request, 'coding/templates/error.html', token)
 
 	if operation == 'file':
@@ -201,9 +204,9 @@ def do_compile_c_language(request):
 	operation = request.POST.get('operation', '')
 	fileName = request.POST.get('fileName', '')
 	directoryName = request.POST.get('dirName', '')
-	(directoryName, status) = nomalize_directory_path(request, directoryName)
-	if status == ERR_NO_SESSION_ID:
-		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
+	(directoryName, status) = normalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
 		return render(request, 'coding/templates/error.html', token)
 
 	# __ COMPILE PER PROJECT UNIT __START__#
@@ -288,50 +291,32 @@ def make_file_info(_fileType, _fileName, _filter):
 
 	return output
 
-def auth_directory_jump(request, _in_Current):
+def block_top_directory(request, _currentDirectory):
 
 	try:
-		currentDir = _in_Current
-		rootDirectory = "./userDirectory/" + request.session['Directory']
-		'''rootDirectory = os.popen('pwd').read() + '/' + 'userDirectory' + '/' + request.session['Directory'] # except '/' of
-		rootDirectory = rootDirectory.replace('\n', '')
-		rootDirectory = rootDirectory.replace('\r', '')'''
+		if request.session['Directory'] == '': # Session itself exists, but there is no contents.
+			return (_currentDirectory, ERR_NO_SESSION_ID)
+		rootDirectory = "./userDirectory/" + request.session['Directory'] + '/'
 	except:  # when there is no session['Directory'] value.
-		return ERR_NO_SESSION_ID
+		return (_currentDirectory, ERR_NO_SESSION_ID)
 
+	curLen = len(_currentDirectory)
+	rootLen = len(rootDirectory)
+	if curLen < rootLen or curLen == rootLen:
+		return (rootDirectory, 'Normal')
 
-	dirList = currentDir.split('/')
-	dirList = ' '.join(dirList).split()
+	return (_currentDirectory, 'Normal')
 
-	currentDir = ''
-	index = 0
-	totalLen = len(dirList) - 1
-	while index < totalLen:
-		currentDir = currentDir + '/' + dirList[index]
-		if dirList[index] == 'userDirectory':
-			index = index + 1
-			currentDir = currentDir + '/' + dirList[index]
-			break
-
-		index = index + 1
-
-	print '[auth_directory_jump] current %s' % currentDir
-	print '[auth_directory_jump] root %s' % rootDirectory
-
-	if currentDir == rootDirectory:
-		print '[auth_directory_jump] good'
-	else:
-		print '[auth_directory_jump] bad'
-
-	return
-
-def nomalize_directory_path(request, _dirName):
-	if _dirName == '': # PREVENT __EMPTY SET ERROR__
+def normalize_directory_path(request, _dirName):
+	if _dirName == '' or '.': # PREVENT __EMPTY SET ERROR__
 		try:
 			_dirName = "./userDirectory/" + request.session['Directory'] # Relative Path must be used.
 		except:
 			request.session.flush()
-			return ('', ERR_NO_SESSION_ID)
+			return (_dirName, ERR_NO_SESSION_ID)
+
+	if _dirName[0] == '/': # PREVENT __ ROOT ACCESSING __ FOR SECURITY
+		return (_dirName, ERR_ROOT_ACCESSING)
 
 	if _dirName[-1] != '/': # PREVENT __DUPLICATED SLASH ERROR__
 		_dirName += '/'
