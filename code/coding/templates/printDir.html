@@ -23,7 +23,7 @@
 	var current='';
 
 	$(window).on('hashchange', function() {
-			if(location.hash != current)
+			if(location.hash != ('#'+current))
 				checkForHash();
 	});
 
@@ -37,8 +37,8 @@
 						view_printDir(res[0].split("=")[1],res[1].split("=")[1],res[2].split("=")[1],res[3].split("=")[1]);
 					}
 	    } else {
-	        $("#content").load('/coding/printDir');
-	    }
+					$("#content").load('/coding/printDir');
+			}
 	}
 
 	function view_printDir(op,url,dir,file){
