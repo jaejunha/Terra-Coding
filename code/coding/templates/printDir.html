@@ -20,10 +20,34 @@
 	}
 	</style>
 	<script>
+	var current='';
+
+	$(window).on('hashchange', function() {
+			if(location.hash != current)
+				checkForHash();
+	});
+
+	function checkForHash() {
+	    if(document.location.hash){
+	        var hashName = document.location.hash;
+	        hashName = hashName.replace("#","");
+					var res = hashName.split("&");
+					var method = res[1].split("=")[1];
+					if(method == '/coding/printDir'){
+						view_printDir(res[0].split("=")[1],res[1].split("=")[1],res[2].split("=")[1],res[3].split("=")[1]);
+					}
+	    } else {
+	        $("#content").load('/coding/printDir');
+	    }
+	}
+
 	function view_printDir(op,url,dir,file){
+	current = 'op='+op+'&url='+url+'&dir='+dir;
 		if(op == 'categorization'){
 			var sel = document.getElementById("project_attribute");
 			var val = sel.options[sel.selectedIndex].value+'';
+			current+='&project_attribute='+val;
+			document.location.hash = "#" + current;
 			$('#content').load(url,{
 				dirName : dir,
 				operation : op,
@@ -31,6 +55,8 @@
 			});
 		}
 		else{
+		current+='&file='+file;
+		document.location.hash = "#" + current;
 			$('#content').load(url,{
 				dirName : dir,
 				operation : op,
@@ -39,10 +65,12 @@
 		}
 	}
 	function view_sourceView(url,dir,file){
-			$('#content').load(url,{
-				fileName : file,
-				directoryName : dir
-			});
+	current = 'url='+url+'&dir='+dir+'&file='+file;
+	document.location.hash = "#" + current;
+		$('#content').load(url,{
+			fileName : file,
+			directoryName : dir
+		});
 	}
 	</script>
 	</head>
