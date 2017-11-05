@@ -23,6 +23,8 @@
 				{% else %}
 					{% if request.session.number %}
 					terra_menu(1);
+					{% elif request.session.number == 999999999 %}
+					admin_menu(1);
 					{% endif %}
 				{% endif %}
 			});
@@ -52,6 +54,9 @@
 		<a href="javascript:alert('login please');">Coding</a>
 		<a href="javascript:alert('login please');">VDB</a>
 		<a href="javascript:alert('login please');">Feedback</a>
+		{% elif request.session.number == 999999999 %}
+		<a id ="info" href="javascript:admin_menu(1);">Info</a>
+		<a id ="problem" href="javascript:admin_menu(2);">Problem</a>
 		{% else %}
 		<a id ="info" href="javascript:terra_menu(1);">Info</a>
 		<a id ="coding" href="javascript:terra_menu(2);">Coding</a>

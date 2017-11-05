@@ -82,3 +82,46 @@ function terra_menu(no){
     $('#selector').css('width',$('#rank').width()+'px');
   }
 }
+
+function admin_menu(no){
+  $('#info').hover(
+    function(){
+      $(this).css('color','#aaaaaa');
+    },
+    function(){
+      if(no != 1)
+        $(this).css('color','#cccccc');
+      else
+        $(this).css('color','#aaaaaa');
+    }
+  )
+  $('#problem').hover(
+    function(){
+      $(this).css('color','#aaaaaa');
+    },
+    function(){
+      if(no != 2)
+        $(this).css('color','#cccccc');
+      else
+        $(this).css('color','#aaaaaa');
+    }
+  )
+  if(no == 1){
+    loadDiv('/info');
+    $('#info').css('color','#aaaaaa');
+    $('#problem').css('color','#cccccc');
+    $('#selector').css('left',$('#info').offset().left+'px');
+    $('#selector').css('width',$('#info').width()+'px');
+  }else if(no == 2){
+    loadDiv('/problem');
+    $('#info').css('color','#cccccc');
+    $('#problem').css('color','#aaaaaa');
+    $('#selector').css('left',$('#problem').offset().left+'px');
+    $('#selector').css('width',$('#problem').width()+'px');
+    $("#dialog_problem").dialog({
+      autoOpen: true,
+      modal:	true,
+      disabled:	true,
+    });
+  }
+}
