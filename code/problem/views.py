@@ -3,6 +3,5 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 
-def rank(request):
-	return render(request, 'rank/templates/index.html')
-
+def problem(request):
+	return render(request, 'problem/templates/index.html')

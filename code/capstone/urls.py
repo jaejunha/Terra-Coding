@@ -19,8 +19,8 @@ urlpatterns = [
 	url(r'^', include('intro.urls')),
 	url(r'^terra', include('terra.urls')),
  	url(r'^coding', include('coding.urls')),
-    url(r'^vdb', include('vdb.urls')),
-	url(r'^statistics', include('statistics.urls')),
+	url(r'^vdb', include('vdb.urls')),
 	url(r'^info', include('info.urls')),
-	url(r'^rank', include('rank.urls')),
+	url(r'^feedback', include('feedback.urls')),
+	url(r'^problem', include('problem.urls')),
 ]

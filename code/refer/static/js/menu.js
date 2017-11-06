@@ -21,7 +21,7 @@ function terra_menu(no){
         $(this).css('color','#aaaaaa');
     }
   )
-  $('#statistics').hover(
+  $('#vdb').hover(
     function(){
       $(this).css('color','#aaaaaa');
     },
@@ -32,7 +32,7 @@ function terra_menu(no){
         $(this).css('color','#aaaaaa');
     }
   )
-  $('#rank').hover(
+  $('#feedback').hover(
     function(){
       $(this).css('color','#aaaaaa');
     },
@@ -47,16 +47,16 @@ function terra_menu(no){
     loadDiv('/info');
     $('#info').css('color','#aaaaaa');
     $('#coding').css('color','#cccccc');
-    $('#statistics').css('color','#cccccc');
-    $('#rank').css('color','#cccccc');
+    $('#vdb').css('color','#cccccc');
+    $('#feedback').css('color','#cccccc');
     $('#selector').css('left',$('#info').offset().left+'px');
     $('#selector').css('width',$('#info').width()+'px');
   }else if(no == 2){
     loadDiv('/coding');
     $('#info').css('color','#cccccc');
     $('#coding').css('color','#aaaaaa');
-    $('#statistics').css('color','#cccccc');
-    $('#rank').css('color','#cccccc');
+    $('#vdb').css('color','#cccccc');
+    $('#feedback').css('color','#cccccc');
     $('#selector').css('left',$('#coding').offset().left+'px');
     $('#selector').css('width',$('#coding').width()+'px');
     $("#dialog_coding").dialog({
@@ -65,21 +65,21 @@ function terra_menu(no){
       disabled:	true,
     });
   }else if(no == 3){
-    loadDiv('/statistics');
+    loadDiv('/vdb');
     $('#info').css('color','#cccccc');
     $('#coding').css('color','#cccccc');
-    $('#statistics').css('color','#aaaaaa');
-    $('#rank').css('color','#cccccc');
-    $('#selector').css('left',$('#statistics').offset().left+'px');
-    $('#selector').css('width',$('#statistics').width()+'px');
+    $('#vdb').css('color','#aaaaaa');
+    $('#feedback').css('color','#cccccc');
+    $('#selector').css('left',$('#vdb').offset().left+'px');
+    $('#selector').css('width',$('#vdb').width()+'px');
   }else if(no == 4){
-    loadDiv('/rank');
+    loadDiv('/feedback');
     $('#info').css('color','#cccccc');
     $('#coding').css('color','#cccccc');
-    $('#statistics').css('color','#cccccc');
-    $('#rank').css('color','#aaaaaa');
-    $('#selector').css('left',$('#rank').offset().left+'px');
-    $('#selector').css('width',$('#rank').width()+'px');
+    $('#vdb').css('color','#cccccc');
+    $('#feedback').css('color','#aaaaaa');
+    $('#selector').css('left',$('#feedback').offset().left+'px');
+    $('#selector').css('width',$('#feedback').width()+'px');
   }
 }
 
