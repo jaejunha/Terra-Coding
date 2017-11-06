@@ -29,6 +29,9 @@ def printDir(request):
 	operation = request.POST.get('operation', '')
 	directoryName = request.POST.get('dirName', '')
 
+	if directoryName ==	 '':
+		directoryName = './'
+
 	# __ NORMALIZE DIRECTORY PATH & PREVENT ERROR  __START__#
 	(directoryName, status) = normalize_directory_path(request, directoryName)
 	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
@@ -359,7 +362,6 @@ def external_database_connector():
 		    curs.execute(sql)
 		except curs.Error, e:
 			print "MySQL Error: %s" % e
-
 
 	conn.commit()
 	curs.close()
