@@ -27,6 +27,18 @@
 					admin_menu(1);
 					{% endif %}
 				{% endif %}
+				$('#problem').mouseover( function() {
+					 $(this).attr( 'src', "{% static 'img/roll_problem.png' %}" );
+				 } )
+				 $('#problem').mouseout( function() {
+					 $(this).attr( 'src', "{% static 'img/normal_problem.png' %}" );
+				 } );
+				 $('#folder').mouseover( function() {
+ 					 $(this).attr( 'src', "{% static 'img/roll_folder.png' %}" );
+ 				 } )
+ 				 $('#folder').mouseout( function() {
+ 					 $(this).attr( 'src', "{% static 'img/normal_folder.png' %}" );
+ 				 } );
 			});
 	</script>
 	<title>::T - HUB::</title>
@@ -75,7 +87,11 @@
 	<div id="screen"></div>
 	<div id="dialog_coding" title="select type">
 			What do you want to do?<br>
-			problem / free(project)<br>
+			<br>
+			<div style="text-align: center;">
+				<img id="problem" src="{% static 'img/normal_problem.png' %}" width="120px" style="margin-right:10px;">
+				<img id="folder" src="{% static 'img/normal_folder.png' %}" width="120px" style="margin-left:10px;">
+			</div>
 	</div>
 </body>
 </html>
