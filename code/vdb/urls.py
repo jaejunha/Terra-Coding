@@ -18,7 +18,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.vdbIndex, name='vdbIndex'),
-    url(r'^/createVDB', views.createVDB, name='createVDB'),
-    #url(r'^/alterVDB', views.alterVDB, name='alterVDB'),
-    #url(r'^/deleteVDB', views.deleteVDB, name='deleteVDB'),
+    url(r'^/createTable', views.createTable, name='createTable'),
+    #url(r'^/alterTable', views.alterTable, name='alterTable'),
+    #url(r'^/deleteTable', views.deleteTable, name='deleteTable'),
 ]

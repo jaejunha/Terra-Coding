@@ -10,15 +10,15 @@
 <body>
 	<center>
 	<table>
-		<form action="/vdb/createVDB.html" method="POST">
+		<form action="/vdb/createTable.html" method="POST">
 			{% csrf_token %}
 			<input id="create_button" type="submit" name="create" value="CREATE"/>
 		</form> &nbsp;
-		<form action="/vdb/createVDB.html" method="POST">
+		<form action="/vdb/createTable.html" method="POST">
 			{% csrf_token %}
 			<input id="delete_button" type="submit" name="delete" value="DELETE"/>
 		</form> &nbsp;
-		<form action="/vdb/createVDB.html" method="POST">
+		<form action="/vdb/createTable.html" method="POST">
 			{% csrf_token %}
 			<input id="update_button" type="submit" name="update" value="UPDATE"/>
 		</form> &nbsp;

@@ -11,6 +11,9 @@ import pymysql # For External SQL Connection
 ERR_NO_SESSION_ID = 0x10
 ERR_ROOT_ACCESSING = 0x20
 
+MYSQL_ADMIN_ID = 'root'; MYSQL_ADMIN_PASSWD = '1234';
+MYSQL_ADMIN_DB = 'mysql'; MYSQL_CHAR_SET = 'utf8';
+
 def vdbIndex(request):
     try:
         request.session['number']
@@ -28,10 +31,10 @@ def vdbIndex(request):
     token = {'result': output}
     return render(request, 'vdb/templates/index.html', token)
 
-def createVDB(request):
+def createTable(request):
     operation = request.POST.get('operation', '')
 
-    if operation == 'createVDB':
+    if operation == 'createTable':
         table_name = request.POST.get('table_name', '')
 
         # Extract one or multiple column name
@@ -41,6 +44,7 @@ def createVDB(request):
                 continue
             column_data.append([key, values[0]])
 
+        create_external_table(request, table_name, column_data)
         try:
             owner_id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest())
         except:
@@ -51,7 +55,7 @@ def createVDB(request):
         return vdbIndex(request)
 
     token = {'result': 'test'}
-    return render(request, 'vdb/templates/createVDB.html', token)
+    return render(request, 'vdb/templates/createTable.html', token)
 
 def deleteVDB(request):
     table = request.POST.get('table_name', '')
@@ -65,8 +69,8 @@ def deleteVDB(request):
 # So... this check routine may added in /terra where login is successful
 def create_external_vdb(request):
     # Establish connection between python and mysql __ START __
-    root_connection = pymysql.connect(host='localhost', user='root', password='1234',
-                       db='mysql', charset='utf8')
+    root_connection = pymysql.connect(host='localhost', user=MYSQL_ADMIN_ID, password=MYSQL_ADMIN_PASSWD,
+                       db=MYSQL_ADMIN_DB, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
     # Make information for external database __ START __
@@ -77,65 +81,55 @@ def create_external_vdb(request):
 
     #delete_external_user_test(request, _id, databaseName)
 
-    #create_external_table(request, _id, _passwd, databaseName)
     # Create User __START__
     sql = "create database _%s" % (databaseName)
-    try:
-        curs.execute(sql)
-    except Exception as e:
-        if e[0] == 1007:
-            print "Database already exists!"
-        else:
-            print "[@ERR] CREATE DATABASE [%s]" % e[1]
-        curs.close()
-        root_connection.close()
+    status = do_sql_commit(sql, root_connection, curs, "CREATE VDB")
+    if status != '':
         return
-    root_connection.commit()
 
     # Create external database's user & password
     sql = "create user '%s'@'%%' identified by '%s'" % (_id, _passwd)
-    try:
-        curs.execute(sql)
-    except Exception as e:
-        print "[@ERR] CREATE USER  [%s]" % e[1]
-        curs.close()
-        root_connection.close()
+    status = do_sql_commit(sql, root_connection, curs, "CREATE USER")
+    if status != '':
         return
-    root_connection.commit()
 
     # Set privileges for none super-user
     sql = "grant all privileges on _%s.* to %s@'%%' identified by '%s'; flush privileges;" % (databaseName, _id, _passwd)
-    try:
-        curs.execute(sql)
-    except Exception as e:
-        print '[@ERR]___GRANT PRIVILEGES [%s]' % e[1]
-        curs.close()
-        root_connection.close()
+    status = do_sql_commit(sql, root_connection, curs, "GRANT PRIVILEGES")
+    if status != '':
         return
-    root_connection.commit()
-
 
     curs.close()
     root_connection.close()
     return
 
-def create_external_table(request, _id, _passwd, databaseName):
+def create_external_table(request, _table_name, _column_data):
+    tableName = _table_name; columnData = _column_data; # For Readability
+
+    # Extract user information and Create database information
+    databaseName = str(request.session['number']) # make databaseName
+    databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
 
     root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
-                       db='_'+databaseName, charset='utf8')
+                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
-    tableName = 'TestTable1'
-    sql = "CREATE TABLE %s \
-    ( _id INT PRIMARY KEY AUTO_INCREMENT, \
-    name VARCHAR(32) NOT NULL, \
-    belong VARCHAR(12) DEFAULT 'FOO', \
-    phone VARCHAR(12) )" % (tableName)
+    # Exception Routine for there are no column_data
+    # ----> Please implement code here
 
-    try:
-        curs.execute(sql)
-    except Exception as e:
-        print "@ERR_[Create_TABLE]__%s" % e
+    # Assemble sql syntax from web request
+    sql = "CREATE TABLE %s (" % (tableName)
+    for (key, _colName) in columnData:
+        sql += " %s VARCHAR(30) ," % (_colName)
+    sql += ");"; sql = sql.replace(',)', ')');
+
+    print "sql syntax ===> %s ........." % sql
+
+    status = do_sql_commit(sql, root_connection, curs, "CREATE TABLE")
+    if status != '':
+        return
 
     output = root_connection.commit()
     print output
@@ -146,28 +140,37 @@ def create_external_table(request, _id, _passwd, databaseName):
 
 # This function is test function and will be updated.
 def delete_external_user_test(request, _id, databaseName):
-    root_connection = pymysql.connect(host='localhost', user='root', password='1234',
-                       db='mysql', charset='utf8')
+    root_connection = pymysql.connect(host='localhost', user=MYSQL_ADMIN_ID, password=MYSQL_ADMIN_PASSWD,
+                       db=MYSQL_ADMIN_DB, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
     # clean up user information
     sql = "DROP USER '%s'@'%%';" % _id
-    try:
-        curs.execute(sql)
-    except Exception as e:
-        print '*****[delete from] ____> %s' % e
-    root_connection.commit() # Real execution
-
+    status = do_sql_commit(sql, root_connection, curs, "DEL FROM")
+    if status != '':
+        return
     # drop database
     sql = "drop database _%s" % databaseName
-    try:
-        curs.execute(sql)
-    except Exception as e:
-        print '[*****Drop database] ____> %s' % e
-    root_connection.commit() # Real execution
-
+    status = do_sql_commit(sql, root_connection, curs, "DROP DB")
+    if status != '':
+        return
 
     curs.close()
     root_connection.close()
 
     return
+
+def do_sql_commit(_sql, _root_connection, _curs, error_type='[DEFAULT]'):
+    sql = _sql; root_connection = _root_connection; curs = _curs # Increase Readability
+
+    try:
+        curs.execute(sql)
+    except Exception as e:
+        print '*****[%s] ____> %s' % (error_type, e)
+        curs.close()
+        root_connection.close()
+        return error_type
+
+    root_connection.commit() # Real execution
+
+    return ''
