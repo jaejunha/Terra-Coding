@@ -118,10 +118,5 @@ function admin_menu(no){
     $('#problem').css('color','#aaaaaa');
     $('#selector').css('left',$('#problem').offset().left+'px');
     $('#selector').css('width',$('#problem').width()+'px');
-    $("#dialog_problem").dialog({
-      autoOpen: true,
-      modal:	true,
-      disabled:	true,
-    });
   }
 }

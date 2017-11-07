@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+  <head>
+    <style>
+      #left{
+        float:left;
+        width:150px;
+        display:inline-block;
+        line-height: 1px;
+      }
+
+      #left .title{
+        width: 150px;
+        display:table-cell;
+        vertical-align:middle;
+        height:30px;
+        font-size:20pt;
+        height:50px;
+        text-align:center;
+      }
+
+      #left .box{
+        width: 150px;
+        display:table-cell;
+        vertical-align:middle;
+        height:30px;
+        border:1px solid #aaaaaa;
+      }
+
+      #left .box div:nth-child(1){
+        background-color:#555555;
+        width:10px;
+        height:30px;
+      }
+
+      #left .box div:nth-child(2){
+        text-align:center;
+        position:relative;
+        width:140px;
+        top:-15px;
+        left:10px;
+      }
+
+      #middle{
+        padding: 10px;
+        float:left;
+      }
+      </style>
+  </head>
+  <body>
+    <div id ="left">
+      <div class="title">Problem</div>
+      <br>
+      <div class="box">
+      <div></div>
+        <div>
+          <a href="">list</a>
+        </div>
+      </div>
+      <br>
+      <div class="box">
+        <div></div>
+        <div>
+          <a href="javascript:dialog();">add</a>
+        </div>
+      </div>
+      <br>
+      <div class="box">
+        <div></div>
+        <div>
+          <a href="">edit</a>
+        </div>
+      </div>
+      <br>
+      <div class="box">
+        <div></div>
+        <div>
+          <a href="">delete</a>
+        </div>
+      </div>
+    </div>
+    <div id ="middle" style="width:1000px;">
+      list of tests
+    </div>
+    <div id="dialog_problem" title="select type">
+  			What do you want to do?<br>
+  			<br>
+  			<div style="text-align: center;">
+  				<img id="problem" src="{% static 'img/normal_problem.png' %}" width="120px" style="margin-right:10px;">
+  				<img id="folder" src="{% static 'img/normal_folder.png' %}" width="120px" style="margin-left:10px;">
+  			</div>
+  	</div>
+  </body>
+</html>
