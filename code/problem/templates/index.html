@@ -5,82 +5,117 @@
     <style>
       #left{
         float:left;
-        width:150px;
+        width:250px;
         display:inline-block;
         line-height: 1px;
       }
 
       #left .title{
-        width: 150px;
+        width: 250px;
         display:table-cell;
         vertical-align:middle;
-        height:30px;
-        font-size:20pt;
-        height:50px;
+        font-size:25pt;
+        height:80px;
         text-align:center;
       }
 
       #left .box{
-        width: 150px;
+        width: 250px;
         display:table-cell;
         vertical-align:middle;
-        height:30px;
-        border:1px solid #aaaaaa;
+        height:50px;
       }
 
       #left .box div:nth-child(1){
         background-color:#555555;
         width:10px;
-        height:30px;
+        height:50px;
       }
 
       #left .box div:nth-child(2){
         text-align:center;
         position:relative;
-        width:140px;
-        top:-15px;
+        width:240px;
+        height:0px;
+        top: -25px;
         left:10px;
       }
 
       #middle{
-        padding: 10px;
         float:left;
+        position:relative;
+      }
+
+      #left div a{
+        font-size:20pt;
+        text-decoration: none;
+        color:#333333;
       }
       </style>
+      <script>
+      $(window).resize(function (){
+        $('#middle').css('width',$(window).width()-$('#left').width()-20);
+        $('#middle').css('left','10px');
+        $('#middle').css('top','10px');
+		  });
+			$(window).ready( function() {
+        $('#middle').css('width',$(window).width()-$('#left').width()-20);
+        $('#middle').css('left','10px');
+        $('#middle').css('top','10px');
+
+        $('#dialog_problem').hide();
+        problem_menu(0);
+      });
+       function problem_menu(no){
+         for(var i=0;i<4;i++){
+          $('#left .box'+'.'+i).css('background','rgb(228, 233, 236)');
+           $('#left .box'+'.'+i+' div:nth-child(1)').css('opacity','0');
+        }
+        $('#left .box'+'.'+no).css('background-color','#ffffff');
+        $('#left .box'+'.'+no+' div:nth-child(1)').css('opacity','1');
+
+        if(no == 1)
+          $("#dialog_problem").dialog({
+            autoOpen: true,
+            modal:	true,
+            disabled:	true,
+          });
+        }
+      </script>
   </head>
   <body>
     <div id ="left">
       <div class="title">Problem</div>
       <br>
-      <div class="box">
+      <div class="box 0">
       <div></div>
         <div>
-          <a href="">list</a>
+          <a href="javascript:problem_menu(0);">List</a>
         </div>
       </div>
       <br>
-      <div class="box">
+      <div class="box 1">
         <div></div>
         <div>
-          <a href="javascript:dialog();">add</a>
+          <a href="javascript:problem_menu(1);">Add</a>
         </div>
       </div>
       <br>
-      <div class="box">
+      <div class="box 2">
         <div></div>
         <div>
-          <a href="">edit</a>
+          <a href="javascript:problem_menu(2);">Edit</a>
         </div>
       </div>
       <br>
-      <div class="box">
+      <div class="box 3">
         <div></div>
         <div>
-          <a href="">delete</a>
+          <a href="javascript:problem_menu(3);">Delete</a>
         </div>
       </div>
     </div>
-    <div id ="middle" style="width:1000px;">
+    <div id ="middle">
       list of tests
     </div>
     <div id="dialog_problem" title="select type">

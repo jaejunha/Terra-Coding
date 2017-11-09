@@ -6,8 +6,87 @@
  	<link rel="stylesheet" type="text/css" href="{% static 'css/info.css' %}"/>
 	<meta charset="utf-8">
 	<title>::T - HUB::</title>
+	<style>
+		#left{
+			float:left;
+			width:250px;
+			display:inline-block;
+			line-height: 1px;
+		}
+
+		#left .title{
+			width: 250px;
+			display:table-cell;
+			vertical-align:middle;
+			font-size:25pt;
+			height:80px;
+			text-align:center;
+		}
+
+		#left .box{
+			width: 250px;
+			display:table-cell;
+			vertical-align:middle;
+			height:50px;
+			background-color: #ffffff;
+		}
+
+		#left .box div:nth-child(1){
+			background-color:#555555;
+			width:10px;
+			height:50px;
+		}
+
+		#left .box div:nth-child(2){
+			text-align:center;
+			position:relative;
+			width:240px;
+			height:0px;
+			top: -25px;
+			left:10px;
+		}
+
+		#middle{
+			float:left;
+			position:relative;
+		}
+
+		#left div a{
+			font-size:20pt;
+			text-decoration: none;
+			color:#333333;
+		}
+		</style>
+		<script>
+		$(window).resize(function (){
+			$('#middle').css('width',$(window).width()-$('#left').width()-20);
+			$('#middle').css('left','10px');
+			$('#middle').css('top','10px');
+		});
+		$(window).ready( function() {
+			$('#middle').css('width',$(window).width()-$('#left').width()-20);
+			$('#middle').css('left','10px');
+			$('#middle').css('top','10px');
+
+			problem_menu(0);
+		});
+		</script>
 </head>
 <body>
+	<div id ="left">
+		<div class="title">Info</div>
+		<br>
+		<div class="box 0">
+		<div></div>
+			<div>
+				<a>Information</a>
+			</div>
+		</div>
+		<br>
+	</div>
+	<div id ="middle">
+		list of tests
+	</div>
 		<div id="inner_content">
 		<img id="picture" src="{{ picture }}">
 			{{name}}
