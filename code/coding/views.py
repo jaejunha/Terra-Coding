@@ -136,6 +136,12 @@ def sourceEdit(request):
 		f = open(editPath, 'w')
 		f.write(edit_data)
 		f.close()
+		
+		translate_edit_data = replace_psuedo_syntax_to_db_syntax(request, edit_data)
+		editPath = directoryName + "." + fileName
+		f = open(editPath, 'w')
+		f.write(translate_edit_data)
+		f.close()
 		token = {'fileName': fileName, 'directoryName': directoryName}
 		return sourceView(request)
 
@@ -350,6 +356,21 @@ def do_file_upload(req, _directoryName):
             return "S"
 
     return "F"
+
+def replace_psuedo_syntax_to_db_syntax(request, _data):
+	# Make database information
+	hostName = "\"127.0.0.1\""
+	databaseName = "_\"" + str(request.session['number']) + "\""
+	databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
+	userName = "\"" + str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest())  + "\""
+	userPass = "\"" + str(hashlib.md5(request.session['number']).hexdigest())  + "\""
+
+	_data = _data.replace('__DB_HOST__', userName)
+	_data = _data.replace('__DB_USER__', hostName)
+	_data = _data.replace('__DB_PASS__', userPass)
+	_data = _data.replace('__DB_NAME__', databaseName);
+
+	return _data
 
 def external_database_connector():
 	conn = pymysql.connect(host='localhost', user='root', password='1234',
