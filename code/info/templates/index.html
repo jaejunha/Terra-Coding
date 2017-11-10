@@ -46,16 +46,17 @@
 			left:10px;
 		}
 
-		#middle{
-			float:left;
-			position:relative;
-		}
-
 		#left div a{
 			font-size:20pt;
 			text-decoration: none;
 			color:#333333;
 		}
+
+		#middle{
+			float:left;
+			position:relative;
+		}
+
 		.sub{
 			font-weight:bold;
 			font-size:20pt;
@@ -89,9 +90,6 @@
 			$('#picture').css('height',$('#summary').height());
 			$('#picture').css('top',$('#summary').offset().top-$('#summary').height());
 			$('#picture').css('left',$(window).width()-$('#picture').width()-$('#left').width()-50);
-			alert($('#summary').offset().top);
-
-			problem_menu(0);
 		});
 		</script>
 </head>

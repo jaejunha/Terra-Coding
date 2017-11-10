@@ -18,9 +18,79 @@
 	  border:0 none;
 	  cursor:pointer;
 	}
+
+	#left{
+		float:left;
+		width:250px;
+		display:inline-block;
+		line-height: 1px;
+	}
+
+	#left .title{
+		width: 250px;
+		display:table-cell;
+		vertical-align:middle;
+		font-size:25pt;
+		height:80px;
+		text-align:center;
+	}
+
+	#left .box{
+		width: 250px;
+		display:table-cell;
+		vertical-align:middle;
+		height:50px;
+		background-color: #ffffff;
+	}
+
+	#left .box div:nth-child(1){
+		background-color:#555555;
+		width:10px;
+		height:50px;
+	}
+
+	#left .box div:nth-child(2){
+		text-align:center;
+		position:relative;
+		width:240px;
+		height:0px;
+		top: -25px;
+		left:10px;
+	}
+
+	#left div a{
+		font-size:20pt;
+		text-decoration: none;
+		color:#333333;
+	}
+
+	#middle{
+		float:left;
+		position:relative;
+	}
 	</style>
 	<script>
 	var current='';
+
+	$(window).resize(function (){
+		$('#middle').css('width',$(window).width()-$('#left').width()-20);
+		$('#middle').css('left','10px');
+		$('#middle').css('top','10px');
+	});
+	$(window).ready( function() {
+		$('#middle').css('width',$(window).width()-$('#left').width()-20);
+		$('#middle').css('left','10px');
+		$('#middle').css('top','10px');
+
+		if(sessionStorage.getItem('coding')==0){
+			$('#left div a').text('Problem');
+			$('#project').hide();
+		}else{
+			$('#left div a').text('Project');
+			$('#problem').hide();
+		}
+		sessionStorage.removeItem('coding');
+	});
 
 	$(window).on('hashchange', function() {
 			if(location.hash != ('#'+current)){
@@ -76,7 +146,21 @@
 	</script>
 	</head>
 
-<body bgcolor="#F2E0F7">
+<body>
+	<div id ="left">
+		<div class="title">Coding</div>
+			<br>
+			<div class="box 0">
+			<div></div>
+				<div>
+					<a>Project</a>
+				</div>
+			</div>
+			<br>
+		</div>
+	<div id="middle">
+		<div id="problem"></div>
+		<div id="project">
 	<!-- JAVASCRIPT WILL BE ADDED
 	<script>
 		alert(document.cookie);
@@ -223,5 +307,7 @@
  	 </tbody>
 	 	{% endfor %}
   </table>
+</div>
+</div>
 </body>
 </html>

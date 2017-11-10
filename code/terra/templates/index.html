@@ -40,6 +40,11 @@
  					 $(this).attr( 'src', "{% static 'img/normal_folder.png' %}" );
  				 } );
 			});
+			function view_coding(url, menu){
+				sessionStorage.setItem('coding',menu);
+				$('#content').load(url);
+				$("#dialog_coding").dialog("close");
+			}
 	</script>
 	<title>::T - HUB::</title>
 </head>
@@ -89,8 +94,13 @@
 			What do you want to do?<br>
 			<br>
 			<div style="text-align: center;">
-				<img id="problem" src="{% static 'img/normal_problem.png' %}" width="120px" style="margin-right:10px;">
-				<img id="folder" src="{% static 'img/normal_folder.png' %}" width="120px" style="margin-left:10px;">
+				<a href="javascript:view_coding('/coding',0)">
+				<img id="problem" src="{% static 'img/normal_problem.png' %}" width="120px">
+				</a>
+				<span style="margin-right:20px;"></span>
+				<a href="javascript:view_coding('/coding',1)">
+				<img id="folder" src="{% static 'img/normal_folder.png' %}" width="120px">
+				</a>
 			</div>
 	</div>
 </body>
