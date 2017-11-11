@@ -6,18 +6,22 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/terra.css' %}"/>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/simpleBanner.css' %}"/>
 	<script type="text/javascript" src="{% static 'js/loadDiv.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/move.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/menu.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/intro.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/simpleBanner.js' %}"></script>
 	<script type="text/javascript">
 			$(window).resize(function (){
 				terra_move();
 		});
 			$(window).ready( function() {
 				terra_move();
+				$('#dialog_coding').hide();
+
 				{% if intro %}
 					index_intro();
 				{% else %}
@@ -86,7 +90,14 @@
 	{% endif %}
 	<div id="content" style="overflow:auto;">
 	{% if request.session.number is None %}
-		<img id="banner" src="{% static 'img/banner.jpg' %}" width="100%">
+		<img id="banner" src="{% static 'img/banner.jpg' %}" width="100%" style="position:absolute;">
+		<div class="simple_banner_wrap">
+			<ul>
+			<li style="background:url({% static 'img/banner1.png' %});"></li>
+			<li style="background:url({% static 'img/banner2.png' %});"></li>
+			<li style="background:url({% static 'img/banner3.png' %});"></li>
+		</ul>
+		<div>
 	{% endif %}
 	</div>
 	<div id="screen"></div>

@@ -29,4 +29,20 @@ function login_move(error){
 
 function terra_move(){
 	$('#top').css('left', $(window).width() - $('#top').width() +'px' );
+
+	var width = 0.3574*$('#banner').width();
+	var height = 0.4314*$('#banner').height();
+	$('.simple_banner_wrap').css('width',width);
+	$('.simple_banner_wrap').css('height',height);
+	$('.simple_banner_wrap ul li').css('background-size',width+'px '+height+'px');
+
+	var left = 0.3096*$('#banner').width();
+	var top = 0.1595*$('#banner').height();
+	$('.simple_banner_wrap').css('left',left);
+	$('.simple_banner_wrap').css('top',top);
+
+
+	$('.nav_wrap li').css('margin-left','10px');
+	$('.nav_wrap li').css('margin-right','10px');
+	$('.nav_wrap').css('left',width/2-40);
 }
