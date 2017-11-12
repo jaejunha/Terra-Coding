@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'terra.apps.TerraConfig',
     'coding.apps.CodingConfig',
     'vdb.apps.VdbConfig',
+    'problem.apps.ProblemConfig',
 ]
 
 MIDDLEWARE = [

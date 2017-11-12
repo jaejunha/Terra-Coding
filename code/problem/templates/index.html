@@ -64,6 +64,8 @@
         $('#middle').css('top','10px');
 
         $('#dialog_problem').hide();
+        $('textarea').css('width','700px');
+        $('textarea').css('height','400px');
         problem_menu(0);
       });
        function problem_menu(no){
@@ -76,6 +78,8 @@
 
         if(no == 1)
           $("#dialog_problem").dialog({
+            width:'auto',
+            height: 800,
             autoOpen: true,
             modal:	true,
             disabled:	true,
@@ -118,13 +122,27 @@
     <div id ="middle">
       list of tests
     </div>
-    <div id="dialog_problem" title="select type">
-  			What do you want to do?<br>
-  			<br>
-  			<div style="text-align: center;">
-  				<img id="problem" src="{% static 'img/normal_problem.png' %}" width="120px" style="margin-right:10px;">
-  				<img id="folder" src="{% static 'img/normal_folder.png' %}" width="120px" style="margin-left:10px;">
-  			</div>
+    <div id="dialog_problem" title="enter the problem">
+      <div width="700px" style="margin-top:10px;">
+        <span width="50px">Title</span><input placeholder="enter the title" style="display:inline; width:600px; margin-left:50px"/><br>
+        <br>
+        Contents<br>
+        <br>
+        <textarea width="700px" height="300px"></textarea><br>
+        <br>
+        Problem<br>
+        <br>
+        <input placeholder="enter the problem" style="width:700px;"><br>
+        <br>
+        Solution<br>
+        <br>
+        <input placeholder="enter the solution" style="width:700px;"><br>
+        <br>
+        <br>
+        <div align="right">
+          <button type="button" >Make</button>
+        </div>
+      </div>
   	</div>
   </body>
 </html>
