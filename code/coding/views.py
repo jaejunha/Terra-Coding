@@ -136,7 +136,7 @@ def sourceEdit(request):
 		f = open(editPath, 'w')
 		f.write(edit_data)
 		f.close()
-		
+
 		translate_edit_data = replace_psuedo_syntax_to_db_syntax(request, edit_data)
 		editPath = directoryName + "." + fileName
 		f = open(editPath, 'w')

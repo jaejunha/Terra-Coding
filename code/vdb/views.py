@@ -10,6 +10,7 @@ import pymysql # For External SQL Connection
 
 ERR_NO_SESSION_ID = 0x10
 ERR_ROOT_ACCESSING = 0x20
+ERR_NO_DABABASE = 0x30
 
 MYSQL_ADMIN_ID = 'root'; MYSQL_ADMIN_PASSWD = '1234';
 MYSQL_ADMIN_DB = 'mysql'; MYSQL_CHAR_SET = 'utf8';
@@ -65,6 +66,35 @@ def deleteVDB(request):
 
     return
 
+def viewTable(request):
+    tableName = request.POST.get('tableName', '')
+    # Extract user information and Create database information
+    databaseName = str(request.session['number']) # make databaseName
+    databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+
+    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
+                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    curs = root_connection.cursor()
+
+    # Get Column name of Table __START__
+    sql = "SHOW FIELDS FROM %s;" % (tableName)
+    (status, columns)= do_sql_commit(sql, root_connection, curs, "GET_COLUMN_NAME")
+    if status != '':
+        print status
+        return vdbIndex(request)
+
+    # Get list of Table __START__
+    sql = "select * from %s" % (tableName)
+    (status, result)= do_sql_commit(sql, root_connection, curs, "GET_SELECT_ALL")
+    if status != '':
+        print status
+        return vdbIndex(request)
+
+    token = {'columns': columns, 'result': result }
+    return render(request, 'vdb/templates/viewTable.html', token)
+
 # it is not creating "Table", it is creating "Database for user"
 # So... this check routine may added in /terra where login is successful
 def create_external_vdb(request):
@@ -83,25 +113,26 @@ def create_external_vdb(request):
 
     # Create User __START__
     sql = "create database _%s" % (databaseName)
-    status = do_sql_commit(sql, root_connection, curs, "CREATE VDB")
+    (status, result) = do_sql_commit(sql, root_connection, curs, "CREATE VDB")
     if status != '':
         return
 
     # Create external database's user & password
     sql = "create user '%s'@'%%' identified by '%s'" % (_id, _passwd)
-    status = do_sql_commit(sql, root_connection, curs, "CREATE USER")
+    (status, result) = do_sql_commit(sql, root_connection, curs, "CREATE USER")
     if status != '':
         return
 
     # Set privileges for none super-user
     sql = "grant all privileges on _%s.* to %s@'%%' identified by '%s'; flush privileges;" % (databaseName, _id, _passwd)
-    status = do_sql_commit(sql, root_connection, curs, "GRANT PRIVILEGES")
+    (status, result) = do_sql_commit(sql, root_connection, curs, "GRANT PRIVILEGES")
     if status != '':
         return
 
     curs.close()
     root_connection.close()
     return
+
 
 def create_external_table(request, _table_name, _column_data):
     tableName = _table_name; columnData = _column_data; # For Readability
@@ -127,7 +158,7 @@ def create_external_table(request, _table_name, _column_data):
 
     print "sql syntax ===> %s ........." % sql
 
-    status = do_sql_commit(sql, root_connection, curs, "CREATE TABLE")
+    (status, result) = do_sql_commit(sql, root_connection, curs, "CREATE TABLE")
     if status != '':
         return
 
@@ -146,12 +177,12 @@ def delete_external_user_test(request, _id, databaseName):
 
     # clean up user information
     sql = "DROP USER '%s'@'%%';" % _id
-    status = do_sql_commit(sql, root_connection, curs, "DEL FROM")
+    (status, result) = do_sql_commit(sql, root_connection, curs, "DEL FROM")
     if status != '':
         return
     # drop database
     sql = "drop database _%s" % databaseName
-    status = do_sql_commit(sql, root_connection, curs, "DROP DB")
+    (status, result) = do_sql_commit(sql, root_connection, curs, "DROP DB")
     if status != '':
         return
 
@@ -169,8 +200,10 @@ def do_sql_commit(_sql, _root_connection, _curs, error_type='[DEFAULT]'):
         print '*****[%s] ____> %s' % (error_type, e)
         curs.close()
         root_connection.close()
-        return error_type
+        error_type = ERR_NO_DABABASE
+        return (error_type, '')
 
     root_connection.commit() # Real execution
+    result = curs.fetchall()
 
-    return ''
+    return ('', result)

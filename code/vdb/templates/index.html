@@ -34,7 +34,10 @@
 		<tbody>
 		<tr>
 			 <td> <!-- 1st column -->
-				{{ each.0 }}
+				 <form action="/vdb/viewTable.html" method="POST">
+					{% csrf_token %}
+					<input type="submit" name="tableName" value="{{ each.0 }}"/>
+				</form>
 			 </td>
 			<td>  <!-- 2nd column -->
 				{{ each.1 }}
