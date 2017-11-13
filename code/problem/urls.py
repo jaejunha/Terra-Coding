@@ -18,4 +18,5 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.problem, name='problem'),
+	url(r'^/list',views.list, name='list'),
 ]
