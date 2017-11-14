@@ -4,6 +4,14 @@
   <head>
       <script>
 			$(window).ready( function() {
+        $("tr").click(function(event) {
+          if(select_el!=null){
+              select_el.css('background','rgb(228, 233, 236)');
+          }
+          select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
+          $(event.target).parent().css('background','#bbbbbb');
+          select_el = $(event.target).parent();
+        });
       });
       </script>
       <style>

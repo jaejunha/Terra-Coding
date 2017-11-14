@@ -53,7 +53,10 @@
       }
       </style>
       <script>
-      var dialog;
+      var dialog_problem;
+      var dialog_delete;
+      var select_no;
+      var select_el;
       $(window).resize(function (){
         $('#middle').css('width',$(window).width()-$('#left').width()-20);
         $('#middle').css('left','10px');
@@ -65,7 +68,26 @@
         $('#middle').css('top','10px');
         $('#middle').load('/problem/list');
 
-        $('#dialog_problem').hide();
+        dialog_problem = $("#dialog_problem").dialog({
+          width:'auto',
+          height: 800,
+          autoOpen: true,
+          modal:	true,
+          disabled:	true,
+        });
+
+        dialog_delete = $("#dialog_delete").dialog({
+          width:'auto',
+          height: 'auto',
+          autoOpen: true,
+          modal:	true,
+          disabled:	true,
+        });
+
+
+        $(dialog_problem).dialog("close");
+        $(dialog_delete).dialog("close");
+
         $('textarea').css('width','700px');
         $('textarea').css('height','400px');
         problem_menu(0);
@@ -78,26 +100,44 @@
         $('#left .box'+'.'+no).css('background-color','#ffffff');
         $('#left .box'+'.'+no+' div:nth-child(1)').css('opacity','1');
 
-        if(no == 1)
-          dialog = $("#dialog_problem").dialog({
-            width:'auto',
-            height: 800,
-            autoOpen: true,
-            modal:	true,
-            disabled:	true,
-          });
+        if(no == 1){
+          $(dialog_problem).dialog("open");
         }
-        function view_problem(o,t,d,e,s){
+        else if(no == 3){
+          if(select_el==null){
+            alert('choose problem first');
+            problem_menu(0);
+          }
+          else
+            $(dialog_delete).dialog("open");
+        }
+      }
+        function view_problem(o){
+          if(o=='save'){
       		$('#middle').load('/problem/list',{
       			op : o,
-            title : t,
-            desc : d,
-            example : e,
-            solution : s
+            title : $('input:nth-of-type(1)').val(),
+            desc : $('textarea').val(),
+            example : $('input:nth-of-type(2)').val(),
+            solution : $('input:nth-of-type(3)').val()
       		});
           problem_menu(0);
-          $(dialog).dialog("close");
-      	}
+          $('textarea').val('');
+          $('input:nth-of-type(1)').val('');
+          $('input:nth-of-type(2)').val('');
+          $('input:nth-of-type(3)').val('');
+          $(dialog_problem).dialog("close");
+        }else if(o=='delete'){
+          $('#middle').load('/problem/list',{
+      			op : o,
+            number : select_no
+      		});
+          problem_menu(0);
+          $(dialog_delete).dialog("close");
+          select_no = null;
+          select_el = null;
+        }
+      }
       </script>
   </head>
   <body>
@@ -151,8 +191,13 @@
         <br>
         <br>
         <div align="right">
-          <button type="button" onclick="javascript:view_problem('save',$('input:nth-of-type(1)').val(),$('textarea').val(),$('input:nth-of-type(2)').val(),$('input:nth-of-type(3)').val());">Make</button>
+          <button type="button" onclick="javascript:view_problem('save');">Make</button>
         </div>
+      </div>
+    </div>
+    <div id="dialog_delete" title="Do you want to delete it?">
+      <div width="300px" style="margin-top:10px;">
+          <button type="button" onclick="javascript:view_problem('delete');">Yes</button>
       </div>
   	</div>
   </body>

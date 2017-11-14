@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from models import *
+from django.db.models import Max
 
 @csrf_exempt
 def problem(request):
@@ -12,15 +13,22 @@ def problem(request):
 @csrf_exempt
 def list(request):
 	op = request.POST.get('op', '')
-	title = request.POST.get('title', '')
-	desc = request.POST.get('desc', '')
-	example = request.POST.get('example', '')
-	solution = request.POST.get('solution', '')
-	no = Problem.objects.count()+1;
 
 	if op == 'save':
+		title = request.POST.get('title', '')
+		desc = request.POST.get('desc', '')
+		example = request.POST.get('example', '')
+		solution = request.POST.get('solution', '')
+		try:
+			no = Problem.objects.all().aggregate(Max('no'))['no__max']+1
+		except:
+			no = 1
 		Problem(no=no,name=title,desc=desc).save()
 		Solution(no=no,ex=example,sol=solution).save()
+	if op == 'delete':
+		number = request.POST.get('number', '')
+		Problem.objects.get(no=number).delete()
+		Solution.objects.get(no=number).delete()
 
 	result = Problem.objects.filter()
 	list = []
