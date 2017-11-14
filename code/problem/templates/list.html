@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+  <head>
+      <script>
+			$(window).ready( function() {
+      });
+      </script>
+      <style>
+      table{
+          width: 100%;
+          border: 2px solid #787878;
+          border-collapse: collapse;
+      }
+      th, td{
+        border: 2px solid #787878;
+        padding: 10px;
+      }
+      th{
+        background: #ffffff;
+        text-align: center;
+      }
+      </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th width="50px">Number</th>
+          <th width="300px">Title</th>
+          <th>Contents</th>
+        </tr>
+      </thead>
+      <tbody>
+  {% for l in list %}
+  <tr>
+    <td>{{l.0}}</td>
+    <td>{{l.1}}</td>
+    <td>{{l.2}}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+  </table>
+  </body>
+</html>

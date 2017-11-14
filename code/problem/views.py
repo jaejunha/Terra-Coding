@@ -23,7 +23,8 @@ def list(request):
 		Solution(no=no,ex=example,sol=solution).save()
 
 	result = Problem.objects.filter()
+	list = []
 	for r in result:
-		print str(r.no)+' '+r.name
+		list.append((str(r.no),r.name,r.desc))
 
-	return render(request, 'problem/templates/list.html')
+	return render(request, 'problem/templates/list.html',{'list':list})
