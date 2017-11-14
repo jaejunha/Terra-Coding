@@ -123,6 +123,7 @@ def sourceEdit(request):
 	fileName = request.POST.get('fileName', '')
 	directoryName = request.POST.get('directoryName', '')
 	operation = request.POST.get('operation', '')
+	check_db_syntax = request.POST.get('check_db_syntax', '')
 
 	(directoryName, status) = normalize_directory_path(request, directoryName)
 	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
@@ -137,11 +138,14 @@ def sourceEdit(request):
 		f.write(edit_data)
 		f.close()
 
-		translate_edit_data = replace_psuedo_syntax_to_db_syntax(request, edit_data)
-		editPath = directoryName + "." + fileName
-		f = open(editPath, 'w')
-		f.write(translate_edit_data)
-		f.close()
+		# Save a sourceFile as translated version
+		if check_db_syntax != '':
+			translate_edit_data = replace_psuedo_syntax_to_db_syntax(request, edit_data)
+			editPath = directoryName + "." + fileName
+			f = open(editPath, 'w')
+			f.write(translate_edit_data)
+			f.close()
+
 		token = {'fileName': fileName, 'directoryName': directoryName}
 		return sourceView(request)
 
@@ -206,10 +210,8 @@ def createNewFile(request):
 
 	return sourceEdit(request)
 
-def do_compile_c_language(request):
-	path = ''
-	result = ''
-	status = ''
+# Connector for multiple langunage
+def compiler_connector(request):
 	operation = request.POST.get('operation', '')
 	fileName = request.POST.get('fileName', '')
 	directoryName = request.POST.get('dirName', '')
@@ -217,6 +219,27 @@ def do_compile_c_language(request):
 	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
 		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
 		return render(request, 'coding/templates/error.html', token)
+
+	extension = os.path.splitext(fileName)[1]
+	# case of C langunage
+	if extension == '.c' or extension == '.C':
+		(result, status, directoryName) = do_compile_c_language(operation, fileName, directoryName)
+	# case of JAVA langunage
+	elif extension == '.java' or extension == '.JAVA':
+		(result, status, directoryName) = do_compile_java_language(operation, fileName, directoryName)
+	elif extension == '.python' or extension == '.PYTHON':
+		(result, status, directoryName) = do_compile_python_language(operation, fileName, directoryName)
+	else:
+		result = "out of service :)"
+		status = 'F'
+
+	token = {'result': result, 'status': status, 'directoryName': directoryName}
+	return render(request, 'coding/templates/compile_res.html', token)
+
+def do_compile_c_language(operation, fileName, directoryName):
+	path = ''
+	result = ''
+	status = ''
 
 	# __ COMPILE PER PROJECT UNIT __START__#
 	if operation == 'ALL':
@@ -231,8 +254,7 @@ def do_compile_c_language(request):
 		extension = os.path.splitext(fileName)[1]
 		path = directoryName + fileName
 		if extension != '.c':
-			token = {'result': "out of service format :)" , 'status': 'F'}
-			return render(request, 'coding/templates/compile_res.html', token)
+			return ("out of service :)" , 'F', '')
 
 	# __ GCC COMPILER & GET RESULT __START__#
 	gcc_compile_command = "gcc -o " + directoryName + "/main " + path + " 2> " + directoryName + "/compile_message"
@@ -242,12 +264,47 @@ def do_compile_c_language(request):
 	# __ COMPILE STATUS __START__#
 	if result == '': # which means error is none
 		status = 'S'
-		result = os.popen(directoryName + "/main").read()
+		execute_command = directoryName + "/main"
+		result = os.popen(execute_command).read()
 	else:
 		status = 'F'
 
-	token = {'result': result, 'status': status, 'directoryName': directoryName}
-	return render(request, 'coding/templates/compile_res.html', token)
+	return (result, status, directoryName)
+
+def do_compile_java_language(operation, fileName, directoryName):
+	status = ''
+	path = directoryName + fileName
+
+	java_compile_command = "javac " + path + " 2> " + directoryName + "/compile_message"
+	result = os.popen(java_compile_command).read() # executable file will be created in manage.py directory
+	result = os.popen("cat " + directoryName + "/compile_message").read() # show a error message
+
+	if result == '': # which means error is none
+		status = 'S'
+		execute_command = "java -cp " + path
+		result = os.popen(execute_command).read()
+	else:
+		status = 'F'
+
+	return (result, status, directoryName)
+
+def do_compile_python_language(operation, fileName, directoryName):
+	status = ''
+	path = directoryName + fileName
+
+	python_compile_command = "python -m py_compile " + path + " 2> " + directoryName + "/compile_message"
+	result = os.popen(python_compile_command).read() # executable file will be created in manage.py directory
+	result = os.popen("cat " + directoryName + "/compile_message").read() # show a error message
+	os.popen("rm -rf " + path + 'c') # py + c ==> .pyc
+
+	if result == '': # which means error is none
+		status = 'S'
+		execute_command = "python " + path
+		result = os.popen(execute_command).read()
+	else:
+		status = 'F'
+
+	return (result, status, directoryName)
 
 def errReDirection(request, ReDirectURL):
 	if ReDirectURL == '': # __ PREVENT EMPTY SET ERROR ___ #
@@ -256,19 +313,18 @@ def errReDirection(request, ReDirectURL):
 	return render(request, 'coding/templates/error.html', token)
 
 def make_file_info(_fileType, _fileName, _filter):
-	output = [] # it would be 2D array --- [ [filetype_1, filename_1], [filetype_2, filename_2] ]
 	row = [] # [filetype, filename]
+	output = [] # it would be 2D array --- [ [filetype_1, filename_1], [filetype_2, filename_2] ]
 
-	'''<====[ EXCEPTION HANDLER ]====>'''
+	# Exception Handler
 	if _fileType == '' or _fileName == '':
 		print '[#ERR] __make_file_info()__: filetype or filename is NULL'
 		return "ERR:NULL"
 	if len(_fileType) != len(_fileName):
 		print '[#ERR] __make_file_info()__: length of filetype and filename is not equal'
 		return "ERR:LENGTH"
-	'''<============================>'''
 
-# __ MAKE 2D LIST __START__#
+	# __ MAKE 2D LIST __START__#
 	MAX = len(_fileType)
 	for i in range(0, MAX):
 		if _fileType[i] == '-': # case of file
@@ -280,7 +336,7 @@ def make_file_info(_fileType, _fileName, _filter):
 		output.append(row)
 		row = []
 
-# __ EXTENSION FILTER __START__#
+	# __ EXTENSION FILTER __START__#
 	tempOut = []
 	FILTER = []
 	if _filter != 'NULL':
@@ -371,21 +427,3 @@ def replace_psuedo_syntax_to_db_syntax(request, _data):
 	_data = _data.replace('__DB_NAME__', databaseName);
 
 	return _data
-
-def external_database_connector():
-	conn = pymysql.connect(host='localhost', user='root', password='1234',
-	                       db='testDB', charset='utf8')
-	curs = conn.cursor()
-
-	for i in range(1,100):
-		sql = "insert into users values ('%s', '%s', '%s')" % (i,i,i)
-		try:
-		    curs.execute(sql)
-		except curs.Error, e:
-			print "MySQL Error: %s" % e
-
-	conn.commit()
-	curs.close()
-	conn.close()
-
-	return

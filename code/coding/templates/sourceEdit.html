@@ -99,7 +99,8 @@
 			<input type="hidden" name="fileName" value="{{ fileName }}"/>
 			<input type="hidden" name="directoryName" value="{{ directoryName }}"/>
 			<br>
-			<input type="submit" name="edit" value="Edit" onclick="return confirm('Are you sure want to edit? :)')"/>
+			<input type="checkbox" name="check_db_syntax" value="use DB syntax">
+			<input type="submit" name="save" value="Save" onclick="return confirm('Are you sure want to edit? :)')"/>
 </form>
 
 <form action="/coding/printDir.html" method="POST">
