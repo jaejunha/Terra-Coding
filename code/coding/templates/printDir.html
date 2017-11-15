@@ -159,7 +159,11 @@
 			<br>
 		</div>
 	<div id="middle">
-		<div id="problem"></div>
+		<div id="problem">
+			{% for l in list %}
+				{{l.0}}|{{l.1}}|{{l.2}}<br>
+			{% endfor %}
+		</div>
 		<div id="project">
 	<!-- JAVASCRIPT WILL BE ADDED
 	<script>

@@ -18,6 +18,11 @@ import os
 from os.path import abspath, dirname
 from subprocess import call
 
+# to get problem db
+import sys
+sys.path.insert(0,'..')
+from problem.models import *
+
 FORBIDDEN_TEXT_EXTENSION = ['.pyc', '.sqlite3'] # may be white list is more efficient...
 ALLOWED_IMG_EXTENSION = ['.png', '.jpg']
 ERR_NO_SESSION_ID = 0x10
@@ -25,6 +30,7 @@ ERR_ROOT_ACCESSING = 0x20
 
 @csrf_exempt
 def printDir(request):
+
 	fileType = []
 	operation = request.POST.get('operation', '')
 	directoryName = request.POST.get('dirName', '')
@@ -82,7 +88,13 @@ def printDir(request):
 	else:
 		fileInfo = make_file_info(fileType, fileName, 'NULL')
 
-	token = {'fileInfo': fileInfo, 'dirName': directoryName}
+	result = Problem.objects.filter()
+	list = []
+	for r in result:
+		list.append((str(r.no),r.name,r.desc))
+
+	token = {'fileInfo': fileInfo, 'dirName': directoryName, 'list': list}
+
 	return render(request, 'coding/templates/printDir.html', token)
 
 @csrf_exempt
