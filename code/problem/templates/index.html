@@ -57,6 +57,7 @@
       var dialog_delete;
       var select_no;
       var select_el;
+      var mode = 0;
       $(window).resize(function (){
         $('#middle').css('width',$(window).width()-$('#left').width()-20);
         $('#middle').css('left','10px');
@@ -78,7 +79,7 @@
 
         dialog_delete = $("#dialog_delete").dialog({
           width:'auto',
-          height: 'auto',
+          height: 100,
           autoOpen: true,
           modal:	true,
           disabled:	true,
@@ -101,7 +102,20 @@
         $('#left .box'+'.'+no+' div:nth-child(1)').css('opacity','1');
 
         if(no == 1){
+          mode = 0;
           $(dialog_problem).dialog("open");
+        }else if(no == 2){
+          if(select_el==null){
+            alert('choose problem first');
+            problem_menu(0);
+          }
+          else{
+            mode = 1;
+            edit = $(select_el).html().replace(/<td>/gi,'').split('</td>');
+            $('input:nth-of-type(1)').val(edit[1].trim());
+            $('textarea').val(edit[2].trim());
+            $(dialog_problem).dialog("open");
+          }
         }
         else if(no == 3){
           if(select_el==null){
@@ -127,7 +141,23 @@
           $('input:nth-of-type(2)').val('');
           $('input:nth-of-type(3)').val('');
           $(dialog_problem).dialog("close");
-        }else if(o=='delete'){
+        }else if(o=='modify'){
+          $('#middle').load('/problem/list',{
+      			op : o,
+            no : select_no,
+            title : $('input:nth-of-type(1)').val(),
+            desc : $('textarea').val(),
+            example : $('input:nth-of-type(2)').val(),
+            solution : $('input:nth-of-type(3)').val()
+      		});
+          problem_menu(0);
+          $('textarea').val('');
+          $('input:nth-of-type(1)').val('');
+          $('input:nth-of-type(2)').val('');
+          $('input:nth-of-type(3)').val('');
+          $(dialog_problem).dialog("close");
+        }
+        else if(o=='delete'){
           $('#middle').load('/problem/list',{
       			op : o,
             number : select_no
@@ -137,6 +167,10 @@
           select_no = null;
           select_el = null;
         }
+      }
+      function cancel(){
+        problem_menu(0);
+        $(dialog_delete).dialog("close");
       }
       </script>
   </head>
@@ -191,13 +225,14 @@
         <br>
         <br>
         <div align="right">
-          <button type="button" onclick="javascript:view_problem('save');">Make</button>
+          <button type="button" onclick="javascript:view_problem(mode==0?'save':'modify');">Make</button>
         </div>
       </div>
     </div>
-    <div id="dialog_delete" title="Do you want to delete it?">
+    <div id="dialog_delete" title="Delete?">
       <div width="300px" style="margin-top:10px;">
           <button type="button" onclick="javascript:view_problem('delete');">Yes</button>
+          <button type="button" onclick="javascript:cancel();">No</button>
       </div>
   	</div>
   </body>

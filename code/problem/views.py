@@ -13,19 +13,32 @@ def problem(request):
 @csrf_exempt
 def list(request):
 	op = request.POST.get('op', '')
+	title = request.POST.get('title', '')
+	desc = request.POST.get('desc', '')
+	example = request.POST.get('example', '')
+	solution = request.POST.get('solution', '')
 
 	if op == 'save':
-		title = request.POST.get('title', '')
-		desc = request.POST.get('desc', '')
-		example = request.POST.get('example', '')
-		solution = request.POST.get('solution', '')
 		try:
 			no = Problem.objects.all().aggregate(Max('no'))['no__max']+1
 		except:
 			no = 1
 		Problem(no=no,name=title,desc=desc).save()
 		Solution(no=no,ex=example,sol=solution).save()
-	if op == 'delete':
+	elif op == 'modify':
+		no = request.POST.get('no',0)
+
+		result = Problem(no = no)
+		result.name = title
+		result.desc = desc
+		result.save()
+
+#		result = Solution(no=no)
+	#	result.ex = example
+	#	result.sol= solution
+	#	result.save()
+
+	elif op == 'delete':
 		number = request.POST.get('number', '')
 		Problem.objects.get(no=number).delete()
 		Solution.objects.get(no=number).delete()
