@@ -239,7 +239,7 @@ def compiler_connector(request):
 	# case of JAVA langunage
 	elif extension == '.java' or extension == '.JAVA':
 		(result, status, directoryName) = do_compile_java_language(operation, fileName, directoryName)
-	elif extension == '.python' or extension == '.PYTHON':
+	elif extension == '.py' or extension == '.PY':
 		(result, status, directoryName) = do_compile_python_language(operation, fileName, directoryName)
 	else:
 		result = "out of service :)"
@@ -293,8 +293,10 @@ def do_compile_java_language(operation, fileName, directoryName):
 
 	if result == '': # which means error is none
 		status = 'S'
-		execute_command = "java -cp " + path
+		fileName = os.path.splitext(fileName)[0]
+		execute_command = "java -cp " + directoryName + " " + fileName
 		result = os.popen(execute_command).read()
+		os.popen("rm -rf " + directoryName + fileName + ".class" )
 	else:
 		status = 'F'
 

@@ -16,21 +16,68 @@ MYSQL_ADMIN_ID = 'root'; MYSQL_ADMIN_PASSWD = '1234';
 MYSQL_ADMIN_DB = 'mysql'; MYSQL_CHAR_SET = 'utf8';
 
 def vdbIndex(request):
+    # Session ID check routine
     try:
         request.session['number']
     except:
         token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
         return render(request, 'coding/templates/error.html', token)
-
-    create_external_vdb(request)
-
-    output = []
     owner_id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest())
-    for _row in VDB.objects.filter(owner_id=owner_id):
-        output.append([str(_row.table), str(_row.date)])
 
-    token = {'result': output}
+    # Establish connection between python and mysql __ START __
+    root_connection = pymysql.connect(host='localhost', user=MYSQL_ADMIN_ID, password=MYSQL_ADMIN_PASSWD,
+                       db=MYSQL_ADMIN_DB, charset=MYSQL_CHAR_SET)
+    curs = root_connection.cursor()
+
+    row = str(VDB.objects.filter(owner_id = owner_id).first())
+    if row == owner_id:
+        sql = "SELECT TABLE_NAME, UPDATE_TIME FROM information_schema.tables WHERE TABLE_SCHEMA = '_%s';" % request.session['number']
+        (status, result)= do_sql_commit(sql, root_connection, curs, "GET_SELECT_ALL")
+        if status != '':
+            print status
+            return vdbIndex(request)
+    else:
+        # VDB Creatation
+        create_external_vdb(request, root_connection, curs)
+
+    curs.close()
+    root_connection.close()
+    token = {'result': result}
     return render(request, 'vdb/templates/index.html', token)
+
+'''
+@ Called from : vdbIndex
+@ Function : create DATABASE of mysql for a user & Grant the privileges to user
+'''
+def create_external_vdb(request, root_connection, curs):
+
+    # Make information for external database __ START __
+    databaseName = str(request.session['number']) # make databaseName
+    databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+
+    #delete_external_user_test(request, _id, databaseName)
+
+    # Create User __START__
+    sql = "create database _%s" % (databaseName)
+    (status, result) = do_sql_commit(sql, root_connection, curs, "CREATE VDB")
+    if status != '':
+        return
+
+    # Create external database's user & password
+    sql = "create user '%s'@'%%' identified by '%s'" % (_id, _passwd)
+    (status, result) = do_sql_commit(sql, root_connection, curs, "CREATE USER")
+    if status != '':
+        return
+
+    # Set privileges for none super-user
+    sql = "grant all privileges on _%s.* to %s@'%%' identified by '%s'; flush privileges;" % (databaseName, _id, _passwd)
+    (status, result) = do_sql_commit(sql, root_connection, curs, "GRANT PRIVILEGES")
+    if status != '':
+        return
+
+    return
 
 def createTable(request):
     operation = request.POST.get('operation', '')
@@ -52,7 +99,6 @@ def createTable(request):
             token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
             return render(request, 'coding/templates/error.html', token)
 
-        VDB(owner_id=str(owner_id), table=str(table_name)).save()
         return vdbIndex(request)
 
     token = {'result': 'test'}
@@ -61,8 +107,8 @@ def createTable(request):
 def deleteVDB(request):
     table = request.POST.get('table_name', '')
     table = table.replace('\n', ''); table = table.replace('\r', '');
-    for _row in VDB.objects.filter(table=table):
-        _row.delete()
+    #for _row in VDB.objects.filter(table=table):
+    #    _row.delete()
 
     return
 
@@ -94,44 +140,6 @@ def viewTable(request):
 
     token = {'columns': columns, 'result': result }
     return render(request, 'vdb/templates/viewTable.html', token)
-
-# it is not creating "Table", it is creating "Database for user"
-# So... this check routine may added in /terra where login is successful
-def create_external_vdb(request):
-    # Establish connection between python and mysql __ START __
-    root_connection = pymysql.connect(host='localhost', user=MYSQL_ADMIN_ID, password=MYSQL_ADMIN_PASSWD,
-                       db=MYSQL_ADMIN_DB, charset=MYSQL_CHAR_SET)
-    curs = root_connection.cursor()
-
-    # Make information for external database __ START __
-    databaseName = str(request.session['number']) # make databaseName
-    databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
-    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
-    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
-
-    #delete_external_user_test(request, _id, databaseName)
-
-    # Create User __START__
-    sql = "create database _%s" % (databaseName)
-    (status, result) = do_sql_commit(sql, root_connection, curs, "CREATE VDB")
-    if status != '':
-        return
-
-    # Create external database's user & password
-    sql = "create user '%s'@'%%' identified by '%s'" % (_id, _passwd)
-    (status, result) = do_sql_commit(sql, root_connection, curs, "CREATE USER")
-    if status != '':
-        return
-
-    # Set privileges for none super-user
-    sql = "grant all privileges on _%s.* to %s@'%%' identified by '%s'; flush privileges;" % (databaseName, _id, _passwd)
-    (status, result) = do_sql_commit(sql, root_connection, curs, "GRANT PRIVILEGES")
-    if status != '':
-        return
-
-    curs.close()
-    root_connection.close()
-    return
 
 
 def create_external_table(request, _table_name, _column_data):
