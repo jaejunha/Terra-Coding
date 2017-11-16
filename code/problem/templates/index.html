@@ -77,6 +77,14 @@
           disabled:	true,
         });
 
+        dialog_detail = $("#dialog_detail").dialog({
+          width:'200px',
+          height: 'auto',
+          autoOpen: true,
+          modal:	true,
+          disabled:	true,
+        });
+
         dialog_delete = $("#dialog_delete").dialog({
           width:'auto',
           height: 100,
@@ -85,8 +93,8 @@
           disabled:	true,
         });
 
-
         $(dialog_problem).dialog("close");
+        $(dialog_detail).dialog("close");
         $(dialog_delete).dialog("close");
 
         $('textarea').css('width','700px');
@@ -128,34 +136,42 @@
       }
         function view_problem(o){
           if(o=='save'){
-      		$('#middle').load('/problem/list',{
-      			op : o,
-            title : $('input:nth-of-type(1)').val(),
-            desc : $('textarea').val(),
-            example : $('input:nth-of-type(2)').val(),
-            solution : $('input:nth-of-type(3)').val()
-      		});
-          problem_menu(0);
-          $('textarea').val('');
-          $('input:nth-of-type(1)').val('');
-          $('input:nth-of-type(2)').val('');
-          $('input:nth-of-type(3)').val('');
-          $(dialog_problem).dialog("close");
+            if($('input:nth-of-type(1)').val() == '')
+              alert('Please enter the title');
+            else{
+          		$('#middle').load('/problem/list',{
+          			op : o,
+                title : $('input:nth-of-type(1)').val(),
+                desc : $('textarea').val(),
+                example : $('input:nth-of-type(2)').val(),
+                solution : $('input:nth-of-type(3)').val()
+          		});
+              problem_menu(0);
+              $('textarea').val('');
+              $('input:nth-of-type(1)').val('');
+              $('input:nth-of-type(2)').val('');
+              $('input:nth-of-type(3)').val('');
+              $(dialog_problem).dialog("close");
+            }
         }else if(o=='modify'){
-          $('#middle').load('/problem/list',{
-      			op : o,
-            no : select_no,
-            title : $('input:nth-of-type(1)').val(),
-            desc : $('textarea').val(),
-            example : $('input:nth-of-type(2)').val(),
-            solution : $('input:nth-of-type(3)').val()
-      		});
-          problem_menu(0);
-          $('textarea').val('');
-          $('input:nth-of-type(1)').val('');
-          $('input:nth-of-type(2)').val('');
-          $('input:nth-of-type(3)').val('');
-          $(dialog_problem).dialog("close");
+          if($('input:nth-of-type(1)').val() == '')
+            alert('Please enter the title');
+          else{
+            $('#middle').load('/problem/list',{
+        			op : o,
+              no : select_no,
+              title : $('input:nth-of-type(1)').val(),
+              desc : $('textarea').val(),
+              example : $('input:nth-of-type(2)').val(),
+              solution : $('input:nth-of-type(3)').val()
+        		});
+            problem_menu(0);
+            $('textarea').val('');
+            $('input:nth-of-type(1)').val('');
+            $('input:nth-of-type(2)').val('');
+            $('input:nth-of-type(3)').val('');
+            $(dialog_problem).dialog("close");
+          }
         }
         else if(o=='delete'){
           $('#middle').load('/problem/list',{
@@ -227,6 +243,10 @@
         <div align="right">
           <button type="button" onclick="javascript:view_problem(mode==0?'save':'modify');">Make</button>
         </div>
+      </div>
+    </div>
+    <div id="dialog_detail" title="information">
+      <div width="700px" style="margin-top:10px;">
       </div>
     </div>
     <div id="dialog_delete" title="Delete?">

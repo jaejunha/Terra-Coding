@@ -68,9 +68,29 @@
 		float:left;
 		position:relative;
 	}
+	table{
+			width: 100%;
+			border: 2px solid #ffffff;
+			border-collapse: collapse;
+			background: #566788;
+	}
+	th, td{
+		border: 2px solid #ffffff;
+		padding: 10px;
+	}
+	th{
+		background: #323c50;
+		text-align: center;
+		color: #ffffff;
+	}
+	td{
+		color: #efefef;
+	}
 	</style>
 	<script>
 	var current='';
+	var select_el;
+	var select_no;
 
 	$(window).resize(function (){
 		$('#middle').css('width',$(window).width()-$('#left').width()-20);
@@ -81,6 +101,36 @@
 		$('#middle').css('width',$(window).width()-$('#left').width()-20);
 		$('#middle').css('left','10px');
 		$('#middle').css('top','10px');
+
+		dialog_detail = $("#dialog_detail").dialog({
+			width:'200px',
+			height: 'auto',
+			autoOpen: true,
+			modal:	true,
+			disabled:	true,
+		});
+		$(dialog_detail).dialog("close");
+
+		$("tr").click(function(event) {
+			if(select_el!=null){
+					select_el.css('background','#566788');
+			}
+			select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
+			$(event.target).parent().css('background','#434d61');
+			select_el = $(event.target).parent();
+		});
+		$("tr").dblclick(function(event) {
+			if(select_el!=null){
+					select_el.css('background','#566788');
+			}
+			select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
+			$(event.target).parent().css('background','#434d61');
+			select_el = $(event.target).parent();
+
+			$(dialog_detail).dialog("open");
+			var text = $(select_el).html().replace(/<td>/gi,'').split('</td>');
+			$(dialog_detail).html('<b>'+text[1]+'</b><br><br>'+text[2]);
+		});
 
 		if(sessionStorage.getItem('coding')==0){
 			$('#left div a').text('Problem');
@@ -143,6 +193,17 @@
 			directoryName : dir
 		});
 	}
+
+	function view_do_compile(url, operation, fileName, dirName) {
+current = 'url='+url+'&operation='+operation+'&fileName='+fileName+'&dirName='+dirName;
+document.location.hash = "#" + current;
+	$('#content').load(url,{
+		operation : operation,
+		fileName : fileName,
+		dirName : dirName
+	});
+}
+
 	</script>
 	</head>
 
@@ -160,9 +221,24 @@
 		</div>
 	<div id="middle">
 		<div id="problem">
-			{% for l in list %}
-				{{l.0}}|{{l.1}}|{{l.2}}<br>
-			{% endfor %}
+			<table>
+	      <thead>
+	        <tr>
+	          <th width="50px">Number</th>
+	          <th width="300px">Title</th>
+	          <th>Contents</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	  {% for l in list %}
+	  <tr>
+	    <td>{{l.0}}</td>
+	    <td>{{l.1}}</td>
+	    <td>{{l.2}}</td>
+	  </tr>
+	  {% endfor %}
+	  </tbody>
+	  </table>
 		</div>
 		<div id="project">
 	<!-- JAVASCRIPT WILL BE ADDED
@@ -297,13 +373,7 @@
 		&nbsp;&nbsp;
 		 <!-- Redirect to a single unit complie -->
 		 {% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
-		 <form action="/coding/compile_res.html" method="POST">
-			 {% csrf_token %}
-			 <input type="hidden" name="operation" value="selected"/>
-			 <input type="hidden" name="fileName" value="{{ info.1 }}"/>
-			 <input type="hidden" name="dirName" value="{{ dirName }}"/>
-			 <input class="COMPILE_BUTTON" type="submit" name="compile" value="COMPILE"/>
-		 </form>
+			<a href="javascript:view_do_compile('/coding/compile_res', 'selected','{{info.1}}', '{{ dirName }}')">COMPILE</a>
 		 {% endif %}
 		</table>
 		</td>
@@ -312,6 +382,10 @@
 	 	{% endfor %}
   </table>
 </div>
+</div>
+<div id="dialog_detail" title="information">
+	<div width="700px" style="margin-top:10px;">
+	</div>
 </div>
 </body>
 </html>

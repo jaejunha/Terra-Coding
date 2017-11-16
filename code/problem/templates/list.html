@@ -6,27 +6,44 @@
 			$(window).ready( function() {
         $("tr").click(function(event) {
           if(select_el!=null){
-              select_el.css('background','rgb(228, 233, 236)');
+              select_el.css('background','#566788');
           }
           select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
-          $(event.target).parent().css('background','#bbbbbb');
+          $(event.target).parent().css('background','#434d61');
           select_el = $(event.target).parent();
+        });
+        $("tr").dblclick(function(event) {
+          if(select_el!=null){
+              select_el.css('background','#566788');
+          }
+          select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
+          $(event.target).parent().css('background','#434d61');
+          select_el = $(event.target).parent();
+
+          $(dialog_detail).dialog("open");
+          var text = $(select_el).html().replace(/<td>/gi,'').split('</td>');
+          $(dialog_detail).html('<b>'+text[1]+'</b><br><br>'+text[2]);
         });
       });
       </script>
       <style>
       table{
           width: 100%;
-          border: 2px solid #787878;
+          border: 2px solid #ffffff;
           border-collapse: collapse;
+          background: #566788;
       }
       th, td{
-        border: 2px solid #787878;
+        border: 2px solid #ffffff;
         padding: 10px;
       }
       th{
-        background: #ffffff;
+        background: #323c50;
         text-align: center;
+        color: #ffffff;
+      }
+      td{
+        color: #efefef;
       }
       </style>
   </head>
