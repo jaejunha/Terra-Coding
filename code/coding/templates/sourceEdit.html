@@ -82,28 +82,17 @@
 
 <body>
 
-<form action="/coding/sourceEdit.html" method="POST">
+<form action="/coding/sourceEdit.html" method="POST" style="display:inline">
 	{% csrf_token %}
 		<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 60%; width: 100%;" name="edit_data">{{file_data}}</textarea>
-			<input type='button' onclick='alert(editAreaLoader.getValue("example_1"));' value='get value' />
-			<input type='button' onclick='editAreaLoader.setValue("example_1", "new_value");' value='set value' />
-			<input type='button' onclick='test_getSelectionRange("example_1");' value='getSelectionRange' />
-			<input type='button' onclick='test_setSelectionRange("example_1");' value='setSelectionRange' />
-			<input type='button' onclick='test_getSelectedText("example_1");' value='getSelectedText' />
-			<input type='button' onclick='test_setSelectedText("example_1");' value='setSelectedText' />
-			<input type='button' onclick='editAreaLoader.insertTags("example_1", "[OPEN]", "[CLOSE]");' value='insertTags' />
-			<input type='button' onclick='toogle_editable("example_1");' value='Toggle readonly mode' /> <br>
-			<input type='button' onclick='open_file1()' value='open file 1' />
-			<input type='button' onclick='close_file1()' value='close file 1' />
 			<input type="hidden" name="operation" value="Write"/>
 			<input type="hidden" name="fileName" value="{{ fileName }}"/>
 			<input type="hidden" name="directoryName" value="{{ directoryName }}"/>
-			<br>
-			<input type="checkbox" name="check_db_syntax" value="use DB syntax">
-			<input type="submit" name="save" value="Save" onclick="return confirm('Are you sure want to edit? :)')"/>
+			<input type="checkbox" name="check_db_syntax" value="use DB syntax">Activate DB syntax
+			<<br><br><input type="submit" name="save" value="Save" onclick="return confirm('Are you sure want to edit? :)')"/>
 </form>
 
-<form action="/coding/printDir.html" method="POST">
+<form action="/coding/printDir.html" method="POST" style="display:inline">
 	{% csrf_token %}
 	<input type="hidden" name="dirName" value="{{ directoryName }}"/>
 	<input type="hidden" name="operation" value="ReDirect"/>

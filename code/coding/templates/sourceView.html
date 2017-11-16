@@ -6,57 +6,72 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::Source Viewer::</title>
 
-	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css">
+	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/zenburn.min.css">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 	<script>
-	function view_printDir(op,url,dir,file){
+		hljs.initHighlightingOnLoad();
+		$(document).ready(function()
+		{ $('pre viewer').each(function(i, block) { hljs.highlightBlock(block); }); });
+
+
+	</script>
+
+	<style>
+		#content a{
+		  text-decoration: none;
+		  font-family: 'Open Sans', sans-serif;
+		  font-weight: normal;
+		  font-size: 1em;
+		  color:#A7A1AE;
+		  padding:5px 15px;
+		  background:transparent;
+		  border:0 none;
+		  cursor:pointer;
+		}
+	</style>
+
+	<script>
+	function view_printDir(op, url, dir, file){
 		$('#content').load(url,{
 				dirName : dir,
 				operation : op,
 				folder : file
 			});
 		}
+
+	function view_sourceEdit(url, file, dir){
+
+		$('#content').load(url,{
+			fileName : file,
+			directoryName : dir
+		});
 	}
+
 	</script>
 </head>
 
 <body bgcolor="#A4A4A4">
-
+	<div id='code'>
 <center>
 <b><font size=15 style="Lucida Blackletter" color="#9FF781">
 [Source View]
 </font></b>
 
-<br><br><br>
-
-<font size=4 style="Lucida Blackletter" color="#8258FA">
-	 <pre> Directory --- {{ directoryName|add:fileName }}</pre>
-</font>
-
-
-<br><br><br>
+<br><br><br><br><br><br>
 <button type="button" onclick="view_printDir('ReDirect','/coding/printDir','{{directoryName}}','');">previous page</button>
 
 {% if service_type == 'text' %}
-<form action="/coding/sourceEdit.html" method="POST">
-	{% csrf_token %}
-	<input type="hidden" name="fileName" value="{{ fileName }}"/>
-	<input type="hidden" name="directoryName" value="{{ directoryName }}"/>
-	<input type="submit" name="edit" value="edit"/>
-</form>
+	<a href="javascript:view_sourceEdit('/coding/sourceEdit', '{{ fileName }}', '{{ directoryName }}');">EDIT</a>
 {% endif %}
 </center>
 
-<hr color="red" width=100%>
 {% if service_type == 'text' %}
-<pre><code class="C">{{ file_data }} </code></pre>
+<pre><viewer class="C">{{ file_data }}</viewer></pre>
 {% elif service_type == 'img' %}
 <img style="vertical-align: bottom;" src="{{ directoryName|add:fileName }}" width="30%" height="30%">
 {% else %}
 <font size=3 style="Lucida Blackletter" color="RED"> <pre> {{ file_data }} </pre> </font>
 {% endif %}
-<hr color="red" width=100%>
-
+	</div>
 </body>
 </html>

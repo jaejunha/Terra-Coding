@@ -223,6 +223,7 @@ def createNewFile(request):
 	return sourceEdit(request)
 
 # Connector for multiple langunage
+@csrf_exempt
 def compiler_connector(request):
 	operation = request.POST.get('operation', '')
 	fileName = request.POST.get('fileName', '')

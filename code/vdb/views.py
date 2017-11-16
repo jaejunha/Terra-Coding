@@ -7,6 +7,7 @@ from .models import *
 import hashlib
 import datetime # for datetime filed
 import pymysql # For External SQL Connection
+from django.views.decorators.csrf import csrf_exempt
 
 ERR_NO_SESSION_ID = 0x10
 ERR_ROOT_ACCESSING = 0x20
@@ -15,6 +16,7 @@ ERR_NO_DABABASE = 0x30
 MYSQL_ADMIN_ID = 'root'; MYSQL_ADMIN_PASSWD = '1234';
 MYSQL_ADMIN_DB = 'mysql'; MYSQL_CHAR_SET = 'utf8';
 
+@csrf_exempt
 def vdbIndex(request):
     # Session ID check routine
     try:
@@ -49,6 +51,7 @@ def vdbIndex(request):
 @ Called from : vdbIndex
 @ Function : create DATABASE of mysql for a user & Grant the privileges to user
 '''
+@csrf_exempt
 def create_external_vdb(request, root_connection, curs):
 
     # Make information for external database __ START __
@@ -79,6 +82,7 @@ def create_external_vdb(request, root_connection, curs):
 
     return
 
+@csrf_exempt
 def createTable(request):
     operation = request.POST.get('operation', '')
 
@@ -112,6 +116,7 @@ def deleteVDB(request):
 
     return
 
+@csrf_exempt
 def viewTable(request):
     tableName = request.POST.get('tableName', '')
     # Extract user information and Create database information

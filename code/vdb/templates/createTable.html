@@ -2,6 +2,7 @@
 {% load staticfiles %}
 <head>
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<link rel="stylesheet" href="{% static 'css/vdb/directory_list.css' %}">
 	<title>::T - HUB::</title>
 </head>
 <script>
@@ -18,10 +19,24 @@ function addQuestion()
     newEl.appendChild(newText);
     newEl.appendChild(newInput);
     theList.appendChild(newEl);
+	}
+
+function addColumn()
+{
+    limit++;
+    var theList = document.getElementById("columnFields");
+    var th = document.createElement("th");
+    //var newText = document.createTextNode("column "+limit+":");
+		var input = document.createElement("input");
+		input.type = "text";
+		input.name = ("column" + limit);
+    th.appendChild(input);
+    theList.appendChild(th);
 }
 </script>
 <body>
 <button onclick="addQuestion();">attach Column</button><br>
+
 <form action="/vdb/createTable.html" method="POST">
   {% csrf_token %}
   Table Name: <input type='text' name='table_name' placeholder="Table name?"/><br />
@@ -32,5 +47,16 @@ function addQuestion()
   <input type='submit' name='submit' value="save"/>
 </form>
 
+
+<button onclick="addColumn();">attach Column</button><br>
+<table class="container">
+	<thead>
+		<tr id="columnFields">
+			<th><h1>TABLE NAME</h1></th>
+			<th><h1>DATE</h1></th>
+
+		</tr>
+	</thead>
+</table>
 
 </body>
