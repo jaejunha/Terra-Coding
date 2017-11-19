@@ -29,20 +29,17 @@ def list(request):
 	elif op == 'modify':
 		no = request.POST.get('no',0)
 
-		p = Problem(no = no)
-		p.name = title
-		p.desc = desc
-		p.save()
+		p = Problem.objects.filter(no = no)
+		p.update(name=title)
+		p.update(desc=desc)
 
-		result = Solution(sNo=p)
-		result.ex = example
-		result.sol= solution
-		result.save()
+		s = Solution.objects.filter(sNo=p)
+		s.update(ex=example)
+		s.update(sol=solution)
 
 	elif op == 'delete':
 		number = request.POST.get('number', '')
 		Problem.objects.get(no=number).delete()
-		Solution.objects.get(sNo=number).delete()
 
 	result = Solution.objects.all()
 	list = []
