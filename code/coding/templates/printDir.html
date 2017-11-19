@@ -89,6 +89,7 @@
 	</style>
 	<script>
 	var current='';
+	var mode;
 	var select_el;
 	var select_no;
 
@@ -112,32 +113,38 @@
 		$(dialog_detail).dialog("close");
 
 		$("tr").click(function(event) {
-			if(select_el!=null){
-					select_el.css('background','#566788');
+			if(mode ==  'problem'){
+				if(select_el!=null){
+						select_el.css('background','#566788');
+				}
+				select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
+				$(event.target).parent().css('background','#434d61');
+				select_el = $(event.target).parent();
 			}
-			select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
-			$(event.target).parent().css('background','#434d61');
-			select_el = $(event.target).parent();
 		});
 		$("tr").dblclick(function(event) {
-			if(select_el!=null){
-					select_el.css('background','#566788');
-			}
-			select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
-			$(event.target).parent().css('background','#434d61');
-			select_el = $(event.target).parent();
+			if(mode == 'problem'){
+				if(select_el!=null){
+						select_el.css('background','#566788');
+				}
+				select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
+				$(event.target).parent().css('background','#434d61');
+				select_el = $(event.target).parent();
 
-			$(dialog_detail).dialog("open");
-			var text = $(select_el).html().replace(/<td>/gi,'').split('</td>');
-			$(dialog_detail).html('<b>'+text[1]+'</b><br><br>'+text[2]);
+				$(dialog_detail).dialog("open");
+				var text = $(select_el).html().replace(/<td>/gi,'').split('</td>');
+				$(dialog_detail).html('<b>'+text[1]+'</b><br><br>'+text[2]+'<br><br><div align="right"><button type="button">Solve it</button></div>');
+			}
 		});
 
 		if(sessionStorage.getItem('coding')==0){
 			$('#left div a').text('Problem');
 			$('#project').hide();
+			mode = 'problem';
 		}else{
 			$('#left div a').text('Project');
 			$('#problem').hide();
+			mode = 'project';
 		}
 		sessionStorage.removeItem('coding');
 	});
@@ -302,10 +309,10 @@ document.location.hash = "#" + current;
 	<table class="container">
 		<thead>
 			<tr>
-				<th><h1>Type</h1></th>
-				<th><h1>Name</h1></th>
-				<th><h1>Date</h1></th>
-				<th><h1>Function</h1></th>
+				<th>Type</th>
+				<th>Name</th>
+				<th>Date</th>
+				<th>Function</th>
 			</tr>
 		</thead>
 		<tr>
@@ -384,8 +391,7 @@ document.location.hash = "#" + current;
 </div>
 </div>
 <div id="dialog_detail" title="information">
-	<div width="700px" style="margin-top:10px;">
-	</div>
+	<div width="700px" style="margin-top:10px;"></div>
 </div>
 </body>
 </html>

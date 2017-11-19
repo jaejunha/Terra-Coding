@@ -11,9 +11,6 @@ class Problem(models.Model):
         return self.name
 
 class Solution(models.Model):
-    no = models.IntegerField()
+    sNo = models.ForeignKey(Problem, on_delete=models.CASCADE)
     ex = models.TextField()
     sol = models.TextField()
-
-    class Meta:
-        unique_together = (('no', 'ex', 'sol'),)

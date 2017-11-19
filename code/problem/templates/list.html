@@ -22,7 +22,7 @@
 
           $(dialog_detail).dialog("open");
           var text = $(select_el).html().replace(/<td>/gi,'').split('</td>');
-          $(dialog_detail).html('<b>'+text[1]+'</b><br><br>'+text[2]);
+          $(dialog_detail).html('<b>'+text[1]+'</b><br><br>'+text[2]+'<br>'+text[3]+'<br>'+text[4]);
         });
       });
       </script>
@@ -54,6 +54,8 @@
           <th width="50px">Number</th>
           <th width="300px">Title</th>
           <th>Contents</th>
+          <th style="display:none;"></th>
+          <th style="display:none;"></th>
         </tr>
       </thead>
       <tbody>
@@ -62,6 +64,8 @@
     <td>{{l.0}}</td>
     <td>{{l.1}}</td>
     <td>{{l.2}}</td>
+    <td style="display:none;">{{l.3}}</td>
+    <td style="display:none;">{{l.4}}</td>
   </tr>
   {% endfor %}
   </tbody>

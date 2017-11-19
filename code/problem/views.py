@@ -24,28 +24,30 @@ def list(request):
 		except:
 			no = 1
 		Problem(no=no,name=title,desc=desc).save()
-		Solution(no=no,ex=example,sol=solution).save()
+		p = Problem.objects.get(no=no)
+		Solution(sNo=p,ex=example,sol=solution).save()
 	elif op == 'modify':
 		no = request.POST.get('no',0)
 
-		result = Problem(no = no)
-		result.name = title
-		result.desc = desc
-		result.save()
+		p = Problem(no = no)
+		p.name = title
+		p.desc = desc
+		p.save()
 
-#		result = Solution(no=no)
-	#	result.ex = example
-	#	result.sol= solution
-	#	result.save()
+		result = Solution(sNo=p)
+		result.ex = example
+		result.sol= solution
+		result.save()
 
 	elif op == 'delete':
 		number = request.POST.get('number', '')
 		Problem.objects.get(no=number).delete()
-		Solution.objects.get(no=number).delete()
+		Solution.objects.get(sNo=number).delete()
 
-	result = Problem.objects.filter()
+	result = Solution.objects.all()
 	list = []
 	for r in result:
-		list.append((str(r.no),r.name,r.desc))
+		print r.sNo.desc
+		list.append((str(r.sNo.no),r.sNo.name,r.sNo.desc,r.ex,r.sol))
 
 	return render(request, 'problem/templates/list.html',{'list':list})
