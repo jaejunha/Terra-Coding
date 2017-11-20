@@ -125,11 +125,12 @@ h2 a {
 */
 .container tr:hover {
    background-color: #464A52;
--webkit-box-shadow: 0 6px 6px -6px #0E1119;
-	   -moz-box-shadow: 0 6px 6px -6px #0E1119;
-	        box-shadow: 0 6px 6px -6px #0E1119;
+//-webkit-box-shadow: 0 6px 6px -6px #0E1119;
+//	   -moz-box-shadow: 0 6px 6px -6px #0E1119;
+//	        box-shadow: 0 6px 6px -6px #0E1119;
 }
 
+/*
 .container td:hover {
   margin: 0 auto;
   padding-right:0%;
@@ -149,4 +150,4 @@ h2 a {
 @media (max-width: 800px) {
 .container td:nth-child(4),
 .container th:nth-child(4) { display: none; }
-}
+}*/
