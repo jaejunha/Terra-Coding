@@ -6,14 +6,16 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::Source Viewer::</title>
 
-	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/zenburn.min.css">
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+	<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+	-->
+	<script src="{% static 'package/highlight/highlight.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'package/highlight/atom-one-dark.css' %}">
+		<!--<script src="{% static 'package/highlight/highlight.js' %}"></script>-->
+
 	<script>
 		hljs.initHighlightingOnLoad();
 		$(document).ready(function()
 		{ $('pre viewer').each(function(i, block) { hljs.highlightBlock(block); }); });
-
-
 	</script>
 
 	<style>
@@ -28,6 +30,10 @@
 		  border:0 none;
 		  cursor:pointer;
 		}
+
+		td{
+			  border: 1px solid;
+			}
 	</style>
 
 	<script>
@@ -51,7 +57,7 @@
 </head>
 
 <body bgcolor="#A4A4A4">
-	<div id='code'>
+
 <center>
 <b><font size=15 style="Lucida Blackletter" color="#9FF781">
 [Source View]
@@ -66,12 +72,20 @@
 </center>
 
 {% if service_type == 'text' %}
-<pre><viewer class="C">{{ file_data }}</viewer></pre>
+<table style="width: 100%;">
+  <tr>
+    <td align="left">
+      <div style="word-wrap: break-word;">
+				<pre><viewer class="C"><font size="4">{{ file_data }}</font></viewer></pre>
+			</div>
+    </td>
+  </tr>
+</table>
 {% elif service_type == 'img' %}
 <img style="vertical-align: bottom;" src="{{ directoryName|add:fileName }}" width="30%" height="30%">
 {% else %}
 <font size=3 style="Lucida Blackletter" color="RED"> <pre> {{ file_data }} </pre> </font>
 {% endif %}
-	</div>
+
 </body>
 </html>

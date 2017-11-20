@@ -8,6 +8,7 @@
 	<script language="Javascript" type="text/javascript" src="{% static 'package/edit_area/edit_area_full.js' %}"></script>
 
 <style> textarea.autosize { min-height: 50px; } </style>
+
 <script>
 	function resize(obj) {
 	  obj.style.height = "1px";
@@ -82,21 +83,23 @@
 
 <body>
 
-<form action="/coding/sourceEdit.html" method="POST" style="display:inline">
-	{% csrf_token %}
-		<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 60%; width: 100%;" name="edit_data">{{file_data}}</textarea>
-			<input type="hidden" name="operation" value="Write"/>
-			<input type="hidden" name="fileName" value="{{ fileName }}"/>
-			<input type="hidden" name="directoryName" value="{{ directoryName }}"/>
-			<input type="checkbox" name="check_db_syntax" value="use DB syntax">Activate DB syntax
-			<<br><br><input type="submit" name="save" value="Save" onclick="return confirm('Are you sure want to edit? :)')"/>
-</form>
+		<form action="/coding/sourceEdit.html" method="POST" style="display:inline">
+			{% csrf_token %}
+				<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 60%; width: 100%;" name="edit_data">{{file_data}}</textarea>
+					<input type="hidden" name="operation" value="Write"/>
+					<input type="hidden" name="fileName" value="{{ fileName }}"/>
+					<input type="hidden" name="directoryName" value="{{ directoryName }}"/>
+					<input type="checkbox" name="check_db_syntax" value="use DB syntax">Activate DB syntax
+					<<br><br><input type="submit" name="save" value="Save" onclick="return confirm('Are you sure want to edit? :)')"/>
+		</form>
 
-<form action="/coding/printDir.html" method="POST" style="display:inline">
-	{% csrf_token %}
-	<input type="hidden" name="dirName" value="{{ directoryName }}"/>
-	<input type="hidden" name="operation" value="ReDirect"/>
-	<input type="submit" name="cancel" value="Cancel"/>
-</form>
+		<form action="/coding/printDir.html" method="POST" style="display:inline">
+			{% csrf_token %}
+			<input type="hidden" name="dirName" value="{{ directoryName }}"/>
+			<input type="hidden" name="operation" value="ReDirect"/>
+			<input type="submit" name="cancel" value="Cancel"/>
+		</form>
+
+
 </body>
 </html>
