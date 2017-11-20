@@ -4,9 +4,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::Source Editor::</title>
+	<style> textarea.autosize { min-height: 50px; } </style>
 
 	<script language="Javascript" type="text/javascript" src="{% static 'package/edit_area/edit_area_full.js' %}"></script>
-	<style> textarea.autosize { min-height: 50px; } </style>
+	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
 
 	<script language="Javascript" type="text/javascript">
 		function resize(obj) {
@@ -73,12 +74,18 @@
 			editAreaLoader.execCommand(id, 'set_editable', !editAreaLoader.execCommand(id, 'is_editable'));
 		}
 
+
+		$(window).ready(function(){
+			//$('#sourceEditorArea').css('height',$(document).height()-200);
+		//	$('#sourceEditorArea').css('height',$(document).height()-200);
+		//	$('#sourceEditorArea').css('width',$(document).width());
+		});
+
 	</script>
 </head>
 <!--_______________ END OF HEAD _______________-->
 
 <body>
-
 		<form action="/coding/sourceEdit.html" method="POST" style="display:inline">
 			{% csrf_token %}
 				<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 60%; width: 100%;" name="edit_data">{{file_data}}</textarea>

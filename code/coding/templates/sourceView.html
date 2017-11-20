@@ -13,13 +13,15 @@
 		<!--<script src="{% static 'package/highlight/highlight.js' %}"></script>-->
 
 	<script>
+
 		hljs.initHighlightingOnLoad();
-		$(document).ready(function()
-		{ $('pre viewer').each(function(i, block) { hljs.highlightBlock(block); }); });
+		$(document).ready(function(){
+			$('pre viewer').each(function(i, block) { hljs.highlightBlock(block); });
+	});
 	</script>
 
 	<style>
-		#content a{
+		#content #prev, #content #edit{
 		  text-decoration: none;
 		  font-family: 'Open Sans', sans-serif;
 		  font-weight: normal;
@@ -56,12 +58,9 @@
 			});
 		}
 
-	function view_sourceEdit(url, file, dir){
-
-		$('#content').load(url,{
-			fileName : file,
-			directoryName : dir
-		});
+	function view_sourceEdit(url){
+		var el=document.getElementById("middle");
+		el.innerHTML="<iframe id=\"bodyIframe\" name=\"bodyIframe\"  src=\""+url+"\" style=\"width:"+$('#middle').width()+"px; height:"+($(document).height()-140)+"px;\" frameborder=\"0\"  scrolling = \"no\"></iframe>";
 	}
 
 	</script>
@@ -71,18 +70,10 @@
 
 <center>
 
-<br><br><br><br><br><br>
-<a href="javascript:view_printDir('ReDirect','/coding/printDir','{{directoryName}}','');">PREV</a>
+<br>
+<a id="prev" href="javascript:view_printDir('ReDirect','/coding/printDir','{{directoryName}}','');">PREV</a>
 {% if service_type == 'text' %}
-<!--<a href="javascript:view_sourceEdit('/coding/sourceEdit', '{{ fileName }}', '{{ directoryName }}');">EDIT</a>-->
-<form action="/coding/sourceEdit.html" method="POST" style="display:inline">
-	{% csrf_token %}
-	<input type="hidden" name="fileName" value="{{ fileName }}"/>
-	<input type="hidden" name="directoryName" value="{{ directoryName }}"/>
-	<input id="invisible" type="submit" value="EDIT"/>
-</form>
-
-</fotm>
+<a id="edit" href="javascript:view_sourceEdit('/coding/sourceEdit');">EDIT</a>
 {% endif %}
 </center>
 
@@ -93,6 +84,5 @@
 {% else %}
 <font size=3 style="Lucida Blackletter" color="RED"> <pre> {{ file_data }} </pre> </font>
 {% endif %}
-
 </body>
 </html>

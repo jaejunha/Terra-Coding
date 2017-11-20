@@ -127,13 +127,17 @@ def sourceView(request):
 	f.close()
 
 	token = {'file_data': file_data, 'fileName': fileName, 'directoryName': directoryName, 'service_type': "text"}
-	return render(request, 'coding/templates/sourceView.html', token)
+	response = render(request, 'coding/templates/sourceView.html', token)
+	response.set_cookie('fileName', fileName)
+	response.set_cookie('directoryName', directoryName)
+	return response
+#	return render(request, 'coding/templates/sourceView.html', token)
 
 @csrf_exempt
 def sourceEdit(request):
 	editpath = ''
-	fileName = request.POST.get('fileName', '')
-	directoryName = request.POST.get('directoryName', '')
+	fileName = request.COOKIES.get('fileName')
+	directoryName = request.COOKIES.get('directoryName')
 	operation = request.POST.get('operation', '')
 	check_db_syntax = request.POST.get('check_db_syntax', '')
 
