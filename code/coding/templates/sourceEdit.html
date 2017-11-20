@@ -4,19 +4,15 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::Source Editor::</title>
-	<!--<script language="Javascript" type="text/javascript" src="../edit_area/edit_area_full.js"></script>-->
+
 	<script language="Javascript" type="text/javascript" src="{% static 'package/edit_area/edit_area_full.js' %}"></script>
-
-<style> textarea.autosize { min-height: 50px; } </style>
-
-<script>
-	function resize(obj) {
-	  obj.style.height = "1px";
-	  obj.style.height = (12+obj.scrollHeight)+"px";
-	}
-</script>
+	<style> textarea.autosize { min-height: 50px; } </style>
 
 	<script language="Javascript" type="text/javascript">
+		function resize(obj) {
+		  obj.style.height = "1px";
+		  obj.style.height = (12+obj.scrollHeight)+"px";
+		}
 
 		editAreaLoader.init({
 			id: "sourceEditorArea"	// id of the textarea to transform

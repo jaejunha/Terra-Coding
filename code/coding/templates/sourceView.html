@@ -24,9 +24,20 @@
 		  font-family: 'Open Sans', sans-serif;
 		  font-weight: normal;
 		  font-size: 1em;
-		  color:#A7A1AE;
+		  color:#FFFFFF;
 		  padding:5px 15px;
-		  background:transparent;
+		  background:#000000;
+		  border:0 none;
+		  cursor:pointer;
+		}
+
+		#invisible[type=submit] {
+		  font-family: 'Open Sans', sans-serif;
+		  font-weight: normal;
+		  font-size: 1em;
+		  color:#FFFFFF;
+		  padding:5px 15px;
+		  background:#000000;
 		  border:0 none;
 		  cursor:pointer;
 		}
@@ -59,28 +70,24 @@
 <body bgcolor="#A4A4A4">
 
 <center>
-<b><font size=15 style="Lucida Blackletter" color="#9FF781">
-[Source View]
-</font></b>
 
 <br><br><br><br><br><br>
-<button type="button" onclick="view_printDir('ReDirect','/coding/printDir','{{directoryName}}','');">previous page</button>
-
+<a href="javascript:view_printDir('ReDirect','/coding/printDir','{{directoryName}}','');">PREV</a>
 {% if service_type == 'text' %}
-	<a href="javascript:view_sourceEdit('/coding/sourceEdit', '{{ fileName }}', '{{ directoryName }}');">EDIT</a>
+<!--<a href="javascript:view_sourceEdit('/coding/sourceEdit', '{{ fileName }}', '{{ directoryName }}');">EDIT</a>-->
+<form action="/coding/sourceEdit.html" method="POST" style="display:inline">
+	{% csrf_token %}
+	<input type="hidden" name="fileName" value="{{ fileName }}"/>
+	<input type="hidden" name="directoryName" value="{{ directoryName }}"/>
+	<input id="invisible" type="submit" value="EDIT"/>
+</form>
+
+</fotm>
 {% endif %}
 </center>
 
 {% if service_type == 'text' %}
-<table style="width: 100%;">
-  <tr>
-    <td align="left">
-      <div style="word-wrap: break-word;">
-				<pre><viewer class="C"><font size="4">{{ file_data }}</font></viewer></pre>
-			</div>
-    </td>
-  </tr>
-</table>
+	<pre><viewer class="C"><font size="4">{{ file_data }}</font></viewer></pre>
 {% elif service_type == 'img' %}
 <img style="vertical-align: bottom;" src="{{ directoryName|add:fileName }}" width="30%" height="30%">
 {% else %}

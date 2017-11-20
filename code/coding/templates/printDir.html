@@ -7,16 +7,31 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::T - HUB::</title>
 	<style>
-	#content a{
+
+
+	#directName {
 	  text-decoration: none;
 	  font-family: 'Open Sans', sans-serif;
-	  font-weight: normal;
+	  font-weight: bold;
 	  font-size: 1em;
-	  color:#A7A1AE;
+	  color:#FFFFFF;
 	  padding:5px 15px;
 	  background:transparent;
 	  border:0 none;
 	  cursor:pointer;
+	}
+
+
+	#Compile, #Delete {
+		text-decoration: none;
+		font-family: 'Open Sans', sans-serif;
+		font-weight: normal;
+		font-size: 1em;
+		color:#FFFFFF;
+		padding:5px 15px;
+		background:#000000;
+		border:0 none;
+		cursor:pointer;
 	}
 
 	#left{
@@ -195,7 +210,7 @@
 	function view_sourceView(url,dir,file){
 	current = 'url='+url+'&dir='+dir+'&file='+file;
 	document.location.hash = "#" + current;
-		$('#content').load(url,{
+		$('#middle').load(url,{
 			fileName : file,
 			directoryName : dir
 		});
@@ -318,7 +333,7 @@ document.location.hash = "#" + current;
 		<tr>
 			<td><img style="width: 70px; height: auto;" src="{% static 'ico/upper_arrow.png' %}"></td>
 			<td>
-			<a href="javascript:view_printDir('GoBack','/coding/printDir','{{dirName}}','../')">../</a>
+			<a id='directName' href="javascript:view_printDir('GoBack','/coding/printDir','{{dirName}}','../')">../</a>
 		  </td>
 			<td>NONE</td>
 			<td>GO TO PARENT DIRECTORY</td>
@@ -358,9 +373,9 @@ document.location.hash = "#" + current;
 		<!-- 2nd column ___ FileName -->
 		<td>
 				{% if info.0 == 'd' %}
-				<a href="javascript:view_printDir('ReDirect','/coding/printDir','{{dirName}}','{{info.1}}')">{{info.1}}</a>
+				<a id='directName' href="javascript:view_printDir('ReDirect','/coding/printDir','{{dirName}}','{{info.1}}')">{{info.1}}</a>
 				{% else %}
-				<a href="javascript:view_sourceView('/coding/sourceView','{{ dirName }}','{{ info.1 }}')">{{info.1}}</a>
+				<a id='directName' href="javascript:view_sourceView('/coding/sourceView','{{ dirName }}','{{ info.1 }}')">{{info.1}}</a>
 				{% endif %}
     </td>
 		<!-- 3rd column ___ DATE -->
@@ -371,16 +386,18 @@ document.location.hash = "#" + current;
 		<td>
 			<table align="center" border="0" cellpadding="0" cellspacing="0">
 			<!-- Redirect to sourceDel -->
-			<form action="/coding/sourceDel.html" method="POST">
+			<!--<form action="/coding/sourceDel.html" method="POST">
 				{% csrf_token %}
 				<input type="hidden" name="selected_file" value="{{ info.1 }}"/>
 				<input type="hidden" name="dirName" value="{{ dirName }}"/>
 				<input class="DEL_BUTTON" type="submit" name="del" value="DELETE" onclick="return confirm('Are you very very sure you want to delete? :)');"/>
-			</form>
+			</form>-->
+			<a id='Delete' href="javascript:view_do_compile('/coding/sourceDel.html', 'selected','{{info.1}}', '{{ dirName }}')"> DELETE </a>
+
 		&nbsp;&nbsp;
 		 <!-- Redirect to a single unit complie -->
 		 {% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
-			<a href="javascript:view_do_compile('/coding/compile_res', 'selected','{{info.1}}', '{{ dirName }}')">COMPILE</a>
+			<a id='Compile' href="javascript:view_do_compile('/coding/compile_res', 'selected','{{info.1}}', '{{ dirName }}')">COMPILE</a>
 		 {% endif %}
 		</table>
 		</td>

@@ -5,6 +5,28 @@
 <head>
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::compile Result::</title>
+	<style>
+	#content a{
+	  text-decoration: none;
+	  font-family: 'Open Sans', sans-serif;
+	  font-weight: normal;
+	  font-size: 1em;
+	  color:#FFFFFF;
+	  padding:5px 15px;
+	  background:#000000;
+	  border:0 none;
+	  cursor:pointer;
+	}
+	</style>
+	<script>
+	function view_printDir(url, op, dir){
+	current = 'op='+op+'&url='+url+'&dir='+dir;
+	$('#content').load(url,{
+		dirName : dir,
+		operation : op,
+		});
+	}
+	</script>
 </head>
 
 <body>
@@ -15,13 +37,7 @@
 </font></b>
 
 <br><br><br><br><br><br>
-
-<form action="/coding/printDir.html" method="POST">
-	{% csrf_token %}
-	<input type="hidden" name="operation" value="ReDirect"/>
-	<input type="hidden" name="dirName" value="{{ directoryName }}"/>
-	<input type="submit" name="previous" value="previous page"/>
-</form>
+<a href="javascript:view_printDir('/coding/printDir', 'ReDirect','{{directoryName}}')">Prev</a>
 
 {% if status == 'S' %}
 	<h1> compile status: <font color="Green">successful</font> </h1>
@@ -30,7 +46,7 @@
 	<div id="wrapper">
 	    <div id="menu">
 	        <p class="welcome">Welcome, <b></b></p>
-	        <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
+
 	        <div style="clear:both"></div>
 	    </div>
 	    <div id="chatbox">
