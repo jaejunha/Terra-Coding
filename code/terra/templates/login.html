@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
+	<script type="text/javascript" src="{% static 'js/move.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/set.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+	<title>::T - HUB::</title>
+	<script type="text/javascript">
+			$(window).resize(function (){
+			{% if error is None %}
+			login_move('');
+			{% else %}
+			login_move('error');
+			{% endif %}
+		});
+	    $(window).ready( function() {
+				{% if error is None %}
+				login_move('');
+				login_set();
+				{% else %}
+				login_move('error');
+				{% endif %}
+	    });
+	</script>
+</head>
+<body>
+	<div id="logo" style="position:absolute; height:70px;">
+		<img  src="{% static 'img/Logo.png' %}">
+		<a style="position:relative;color:#ffffff;font-size:50pt;top:-15px;left:10px;">T-HUB</a>
+	</div>
+	{% if error is None %}
+	<div id="simple"></div>
+	{% endif %}
+	<div id="simple_base"></div>
+	{% if error is None %}
+	<div id="login">
+	{% else %}
+  <div id="login_error">
+	{% endif %}
+								<!--<br>Ajou Student-->
+								<br><div id="login_label"><div><img src="{% static 'img/ajou.png' %}"><span>Ajou student</span></div></div>
+			          <form action="/terra/check" method="POST">
+			{% csrf_token %}
+                        <input id="id" type="text" placeholder="please enter ID" name="id" value="{{name}}">
+                        <br><input id="pwd" type="password" placeholder="please enter Password" name="pwd">
+                        <br><input id="check" type="image" src="{% static 'img/login.png' %}"  onClick="login_init();">
+			<br>
+			{%if error is None %}
+                       <font id="msg">To use our web service, must login</font>
+        		{% else %}
+                        <font id="msg_error">{{ error }}</font>
+        		{% endif %}
+                </form>
+        </div>
+</body>
+</html>

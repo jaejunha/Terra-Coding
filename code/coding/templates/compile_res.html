@@ -1,0 +1,86 @@
+<!-- sourceView.html-->
+
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::compile Result::</title>
+	<style>
+	#content a{
+	  text-decoration: none;
+	  font-family: 'Open Sans', sans-serif;
+	  font-weight: normal;
+	  font-size: 1em;
+	  color:#FFFFFF;
+	  padding:5px 15px;
+	  background:#000000;
+	  border:0 none;
+	  cursor:pointer;
+	}
+	</style>
+	<script>
+	function view_printDir(url, op, dir){
+	current = 'op='+op+'&url='+url+'&dir='+dir;
+	$('#content').load(url,{
+		dirName : dir,
+		operation : op,
+		});
+	}
+	</script>
+</head>
+
+<body>
+
+<center>
+<b><font size=15 style="Lucida Blackletter" color="#9FF781">
+[COMPILE RESULT]
+</font></b>
+
+<br><br><br><br><br><br>
+<a href="javascript:view_printDir('/coding/printDir', 'ReDirect','{{directoryName}}')">Prev</a>
+
+{% if status == 'S' %}
+	<h1> compile status: <font color="Green">successful</font> </h1>
+	<link type="text/css" rel="stylesheet" href="{% static 'css/coding/compile_box.css' %}" />
+
+	<div id="wrapper">
+	    <div id="menu">
+	        <p class="welcome">Welcome, <b></b></p>
+
+	        <div style="clear:both"></div>
+	    </div>
+	    <div id="chatbox">
+				<pre>{{ result }}</pre>
+			</div>
+	    <form name="message" action="">
+	        <input name="usermsg" type="text" id="usermsg" size="63" />
+	        <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
+	    </form>
+	</div>
+	<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+	-->
+	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+	<script type="text/javascript">
+	// jQuery Document
+	$(document).ready(function(){
+
+	});
+	$("#submitmsg").click(function(){
+		var clientmsg = $("#usermsg").val();
+		$.post("views.py", {text: clientmsg});
+		$("#usermsg").attr("value", "");
+		return false;
+	});
+	</script>
+
+{% elif status == 'F' %}
+	<h1> compile status: <font color="Red">failed</font> </h1>
+	<hr color="red" width=100%>
+	<font size=3 style="Lucida Blackletter">
+	<pre> {{ result }} </pre>
+	</font>
+	<hr color="red" width=100%>
+	</center>
+{% endif %}
+</body>
+</html>

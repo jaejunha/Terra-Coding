@@ -1,0 +1,102 @@
+<!-- sourceView.html-->
+
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::Source Viewer::</title>
+
+	<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+	-->
+	<script src="{% static 'package/highlight/highlight.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'package/highlight/atom-one-dark.css' %}">
+		<!--<script src="{% static 'package/highlight/highlight.js' %}"></script>-->
+
+	<script>
+
+		hljs.initHighlightingOnLoad();
+		$(document).ready(function(){
+			$('pre viewer').each(function(i, block) { hljs.highlightBlock(block); });
+
+			$('#source_edit').css('height',$(document).height()-140);
+			$('#source_edit').css('visibility','hidden');
+
+			var str="<br><center><a id=\"view\" href=\"javascript:view_sourceView();\">VIEW</a></center>"
+			str+="<iframe src=\"coding/sourceEdit\" style=\"width:"+($(document).width()-$('#left').width()-20)+"px; height:"+($(document).height()-140)+"px;\" frameborder=\"0\"  scrolling = \"no\"></iframe>";
+			var el=document.getElementById("source_edit").innerHTML=str;
+	});
+	</script>
+
+	<style>
+		#content #prev, #content #edit, #content #view{
+		  text-decoration: none;
+		  font-family: 'Open Sans', sans-serif;
+		  font-weight: normal;
+		  font-size: 1em;
+		  color:#FFFFFF;
+		  padding:5px 15px;
+		  background:#000000;
+		  border:0 none;
+		  cursor:pointer;
+		}
+
+		#invisible[type=submit] {
+		  font-family: 'Open Sans', sans-serif;
+		  font-weight: normal;
+		  font-size: 1em;
+		  color:#FFFFFF;
+		  padding:5px 15px;
+		  background:#000000;
+		  border:0 none;
+		  cursor:pointer;
+		}
+
+		td{
+			  border: 1px solid;
+		}
+	</style>
+
+	<script>
+	function view_printDir(op, url, dir, file){
+		$('#content').load(url,{
+				dirName : dir,
+				operation : op,
+				folder : file
+			});
+		}
+
+	function view_sourceEdit(){
+		$('#source_edit').css('visibility','visible');
+		$('#source_view').hide();
+	}
+
+	function view_sourceView(){
+		$('#source_edit').css('visibility','hidden');
+		$('#source_view').show();
+	}
+	</script>
+</head>
+
+<body bgcolor="#A4A4A4">
+<div id="source_view">
+<center>
+
+<br>
+<a id="prev" href="javascript:view_printDir('ReDirect','/coding/printDir','{{directoryName}}','');">PREV</a>
+{% if service_type == 'text' %}
+<a id="edit" href="javascript:view_sourceEdit();">EDIT</a>
+{% endif %}
+</center>
+
+{% if service_type == 'text' %}
+	<pre><viewer class="C"><font size="4">{{ file_data }}</font></viewer></pre>
+{% elif service_type == 'img' %}
+<img style="vertical-align: bottom;" src="{{ directoryName|add:fileName }}" width="30%" height="30%">
+{% else %}
+<font size=3 style="Lucida Blackletter" color="RED"> <pre> {{ file_data }} </pre> </font>
+{% endif %}
+</div>
+<div id="source_edit">
+</div>
+</body>
+</html>

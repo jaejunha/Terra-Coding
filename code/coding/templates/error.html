@@ -1,0 +1,23 @@
+<!-- sourceView.html-->
+
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+  <link rel="stylesheet" href="{% static 'css/coding/error.css' %}">
+	<title>::ERROR::</title>
+
+</head>
+<body>
+
+<center>
+<img style="vertical-align: bottom;" src="{% static 'img/coding/Error.png' %}">
+<br><br><br><br><br><br>
+
+<font id="ErrCode"> Error Code: {{ ERR_CODE }} </font> <br><br>
+<a class="ErrorReDirection" href="{{ ReDirectURL }}">CLICK TO RETURN</a> <br><br><br><br>
+<font id="Contact"> please contact technical support team. </font>
+</center>
+
+</body>
+</html>

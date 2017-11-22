@@ -1,0 +1,414 @@
+<!-- printDir.html-->
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="stylesheet" href="{% static 'css/coding/directory_list.css' %}">
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::T - HUB::</title>
+	<style>
+
+
+	#directName {
+	  text-decoration: none;
+	  font-family: 'Open Sans', sans-serif;
+	  font-weight: bold;
+	  font-size: 1em;
+	  color:#FFFFFF;
+	  padding:5px 15px;
+	  background:transparent;
+	  border:0 none;
+	  cursor:pointer;
+	}
+
+
+	#Compile, #Delete {
+		text-decoration: none;
+		font-family: 'Open Sans', sans-serif;
+		font-weight: normal;
+		font-size: 1em;
+		color:#FFFFFF;
+		padding:5px 15px;
+		background:#000000;
+		border:0 none;
+		cursor:pointer;
+	}
+
+	#left{
+		float:left;
+		width:250px;
+		display:inline-block;
+		line-height: 1px;
+	}
+
+	#left .title{
+		width: 250px;
+		display:table-cell;
+		vertical-align:middle;
+		font-size:25pt;
+		height:80px;
+		text-align:center;
+	}
+
+	#left .box{
+		width: 250px;
+		display:table-cell;
+		vertical-align:middle;
+		height:50px;
+		background-color: #ffffff;
+	}
+
+	#left .box div:nth-child(1){
+		background-color:#555555;
+		width:10px;
+		height:50px;
+	}
+
+	#left .box div:nth-child(2){
+		text-align:center;
+		position:relative;
+		width:240px;
+		height:0px;
+		top: -25px;
+		left:10px;
+	}
+
+	#left div a{
+		font-size:20pt;
+		text-decoration: none;
+		color:#333333;
+	}
+
+	#middle{
+		float:left;
+		position:relative;
+	}
+	table{
+			width: 100%;
+			border: 2px solid #ffffff;
+			border-collapse: collapse;
+			background: #566788;
+	}
+	th, td{
+		border: 2px solid #ffffff;
+		padding: 10px;
+	}
+	th{
+		background: #323c50;
+		text-align: center;
+		color: #ffffff;
+	}
+	td{
+		color: #efefef;
+	}
+	</style>
+	<script>
+	var current='';
+	var mode;
+	var select_el;
+	var select_no;
+
+	$(window).resize(function (){
+		$('#middle').css('width',$(window).width()-$('#left').width()-20);
+		$('#middle').css('left','10px');
+		$('#middle').css('top','10px');
+	});
+	$(window).ready( function() {
+		$('#middle').css('width',$(window).width()-$('#left').width()-20);
+		$('#middle').css('left','10px');
+		$('#middle').css('top','10px');
+
+		dialog_detail = $("#dialog_detail").dialog({
+			width:'200px',
+			height: 'auto',
+			autoOpen: true,
+			modal:	true,
+			disabled:	true,
+		});
+		$(dialog_detail).dialog("close");
+
+		$("tr").click(function(event) {
+			if(mode ==  'problem'){
+				if(select_el!=null){
+						select_el.css('background','#566788');
+				}
+				select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
+				$(event.target).parent().css('background','#434d61');
+				select_el = $(event.target).parent();
+			}
+		});
+		$("tr").dblclick(function(event) {
+			if(mode == 'problem'){
+				if(select_el!=null){
+						select_el.css('background','#566788');
+				}
+				select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
+				$(event.target).parent().css('background','#434d61');
+				select_el = $(event.target).parent();
+
+				$(dialog_detail).dialog("open");
+				var text = $(select_el).html().replace(/<td>/gi,'').split('</td>');
+				$(dialog_detail).html('<b>'+text[1]+'</b><br><br>'+text[2]+'<br><br><div align="right"><button type="button">Solve it</button></div>');
+			}
+		});
+
+		if(sessionStorage.getItem('coding')==0){
+			$('#left div a').text('Problem');
+			$('#project').hide();
+			mode = 'problem';
+		}else{
+			$('#left div a').text('Project');
+			$('#problem').hide();
+			mode = 'project';
+		}
+		sessionStorage.removeItem('coding');
+	});
+
+	$(window).on('hashchange', function() {
+			if(location.hash != ('#'+current)){
+				checkForHash();
+			}
+	});
+
+	function checkForHash() {
+	    if(document.location.hash){
+	        var hashName = document.location.hash;
+	        hashName = hashName.replace("#","");
+					var res = hashName.split("&");
+					var method = res[1].split("=")[1];
+					if(method == '/coding/printDir'){
+						view_printDir(res[0].split("=")[1],res[1].split("=")[1],res[2].split("=")[1],res[3].split("=")[1]);
+					}
+	    } else {
+					$("#content").load('/coding/printDir');
+			}
+	}
+
+	function view_printDir(op,url,dir,file){
+	current = 'op='+op+'&url='+url+'&dir='+dir;
+		if(op == 'categorization'){
+			var sel = document.getElementById("project_attribute");
+			var val = sel.options[sel.selectedIndex].value+'';
+			current+='&project_attribute='+val;
+			document.location.hash = "#" + current;
+			$('#content').load(url,{
+				dirName : dir,
+				operation : op,
+				project_attribute : val
+			});
+		}
+		else{
+		current+='&file='+file;
+		document.location.hash = "#" + current;
+			$('#content').load(url,{
+				dirName : dir,
+				operation : op,
+				folder : file
+			});
+		}
+	}
+	function view_sourceView(url,dir,file){
+	current = 'url='+url+'&dir='+dir+'&file='+file;
+	document.location.hash = "#" + current;
+		$('#middle').load(url,{
+			fileName : file,
+			directoryName : dir
+		});
+	}
+
+	function view_do_compile(url, operation, fileName, dirName) {
+current = 'url='+url+'&operation='+operation+'&fileName='+fileName+'&dirName='+dirName;
+document.location.hash = "#" + current;
+	$('#content').load(url,{
+		operation : operation,
+		fileName : fileName,
+		dirName : dirName
+	});
+}
+
+	</script>
+	</head>
+
+<body>
+	<div id ="left">
+		<div class="title">Coding</div>
+			<br>
+			<div class="box 0">
+			<div></div>
+				<div>
+					<a>Project</a>
+				</div>
+			</div>
+			<br>
+		</div>
+	<div id="middle">
+		<div id="problem">
+			<table>
+	      <thead>
+	        <tr>
+	          <th width="50px">Number</th>
+	          <th width="300px">Title</th>
+	          <th>Contents</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	  {% for l in list %}
+	  <tr>
+	    <td>{{l.0}}</td>
+	    <td>{{l.1}}</td>
+	    <td>{{l.2}}</td>
+	  </tr>
+	  {% endfor %}
+	  </tbody>
+	  </table>
+		</div>
+		<div id="project">
+	<!-- JAVASCRIPT WILL BE ADDED
+	<script>
+		alert(document.cookie);
+	</script>
+	-->
+	<br><br>
+
+	<!-- Most Top&Left ___ Directory Input form -->
+	<center>
+	<!-- Create Newfile -->
+	<form action="/coding/createNewFile.html" method="POST">
+		{% csrf_token %}
+		<input type="hidden" name="dirName" value="{{ dirName }}"/>
+		<input type="hidden" name="operation" value="file"/>
+		<input type="text" placeholder="file name?" name="fileName">
+		<input type="submit" value="create file" onclick="return alert(' GOOD LUCK :)');"/>
+	</form>
+	<br><br><br>
+
+	<!-- Upload Newfile -->
+	<form action="/coding/createNewFile.html" method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+  	File: <input type="file" name="file"/>
+				 <input type="hidden" name="dirName" value="{{ dirName }}"/>
+				 <input type="hidden" name="operation" value="upload"/>
+         <input type="submit" value="UPLOAD" />
+  </form>
+
+	<!-- Create NewFolder ===> EXTERMERLY DANGEROUS....
+	<form action="/coding/createNewFile.html" method="POST">
+		{% csrf_token %}
+		<input type="hidden" name="dirName" value="{{ dirName }}"/>
+		<input type="hidden" name="operation" value="directory"/>
+		<input type="text" placeholder="dir name?" name="fileName">
+		<input type="submit" value="create dir" onclick="return alert(' GOOD LUCK :)');"/>
+	</form>
+	<br><br><br> -->
+
+	<!-- Compile All C files on this Directory -->
+	<form action="/coding/compile_res.html" method="POST">
+		{% csrf_token %}
+		<input type="hidden" name="operation" value="ALL"/>
+		<input type="hidden" name="dirName" value="{{ dirName }}"/>
+		<input type="hidden" name="allName" value="{{ resultOfDir }}"/>
+		<!--<input type="text" placeholder="file name?" name="newFileName">-->
+		<input type="submit" value="Complie this project as C"/>
+	</form>
+
+	<!-- Select project attribute -->
+	<select name="project_attribute" id="project_attribute" onchange="view_printDir('categorization','/coding/printDir','{{dirName}}','')">
+		<option value="Select">Select</option>
+		<option value="ALL">ALL</option>
+    <option value="C_Lang">C</option>
+    <option value="CPP_LANG">C++</option>
+    <option value="Python_Lang">Python</option>
+	</select>
+	</center>
+
+	<table class="container">
+		<thead>
+			<tr>
+				<th>Type</th>
+				<th>Name</th>
+				<th>Date</th>
+				<th>Function</th>
+			</tr>
+		</thead>
+		<tr>
+			<td><img style="width: 70px; height: auto;" src="{% static 'ico/upper_arrow.png' %}"></td>
+			<td>
+			<a id='directName' href="javascript:view_printDir('GoBack','/coding/printDir','{{dirName}}','../')">../</a>
+		  </td>
+			<td>NONE</td>
+			<td>GO TO PARENT DIRECTORY</td>
+		</tr>
+		{% for info in fileInfo %}
+		<tbody>
+		<tr>
+		 <!-- 1st column ___ type icon -->
+		 <td class="IMG_TD">
+				{% if info.0 == 'd' %}
+	      	<img style="width: 70px; height: auto;" src="{% static 'ico/folder_ico.png' %}">
+				{% elif info.0 == 'l' %}
+	      	<img style="width: 70px; height: auto;" src="{% static 'ico/link_ico.png' %}">
+				{% else %}
+					{% if info.0 == '.py' %}
+					<img style="width: 70px; height: auto;" src="{% static 'ico/py_ico.png' %}">
+					{% elif info.0 == '.c' %}
+					<img style="width: 70px; height: auto;" src="{% static 'ico/c_ico.png' %}">
+					{% elif info.0 == '.cpp' %}
+					<img style="width: 70px; height: auto;" src="{% static 'ico/cpp_ico.png' %}">
+					{% elif info.0 == '.h' %}
+					<img style="width: 70px; height: auto;" src="{% static 'ico/header_ico.png' %}">
+					{% elif info.0 == '.pyc' %}
+					<img style="width: 70px; height: auto;" src="{% static 'ico/pyc_ico.png' %}">
+					{% elif info.0 == '.sqlite3' %}
+					<img style="width: 70px; height: auto;" src="{% static 'ico/sql_ico.png' %}">
+					{% elif info.0 == '.png' %}
+					<img style="width: 70px; height: auto;" src="{% static 'ico/png_ico.png' %}">
+					{% elif info.0 == '.jpg' %}
+					<img style="width: 70px; height: auto;" src="{% static 'ico/jpg_ico.png' %}">
+					{% else %}
+					<img style="width: 70px; height: auto;" src="{% static 'ico/file_ico.png' %}">
+					{% endif %}
+				{% endif %}
+		 </td>
+
+		<!-- 2nd column ___ FileName -->
+		<td>
+				{% if info.0 == 'd' %}
+				<a id='directName' href="javascript:view_printDir('ReDirect','/coding/printDir','{{dirName}}','{{info.1}}')">{{info.1}}</a>
+				{% else %}
+				<a id='directName' href="javascript:view_sourceView('/coding/sourceView','{{ dirName }}','{{ info.1 }}')">{{info.1}}</a>
+				{% endif %}
+    </td>
+		<!-- 3rd column ___ DATE -->
+		<td>
+			<input type="checkbox" id="coding" name="interest" value="coding">
+		</td>
+		<!-- 4th column ___ Button Family -->
+		<td>
+			<table align="center" border="0" cellpadding="0" cellspacing="0">
+			<!-- Redirect to sourceDel -->
+			<!--<form action="/coding/sourceDel.html" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="selected_file" value="{{ info.1 }}"/>
+				<input type="hidden" name="dirName" value="{{ dirName }}"/>
+				<input class="DEL_BUTTON" type="submit" name="del" value="DELETE" onclick="return confirm('Are you very very sure you want to delete? :)');"/>
+			</form>-->
+			<a id='Delete' href="javascript:view_do_compile('/coding/sourceDel.html', 'selected','{{info.1}}', '{{ dirName }}')"> DELETE </a>
+
+		&nbsp;&nbsp;
+		 <!-- Redirect to a single unit complie -->
+		 {% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
+			<a id='Compile' href="javascript:view_do_compile('/coding/compile_res', 'selected','{{info.1}}', '{{ dirName }}')">COMPILE</a>
+		 {% endif %}
+		</table>
+		</td>
+   </tr>
+ 	 </tbody>
+	 	{% endfor %}
+  </table>
+</div>
+</div>
+<div id="dialog_detail" title="information">
+	<div width="700px" style="margin-top:10px;"></div>
+</div>
+</body>
+</html>

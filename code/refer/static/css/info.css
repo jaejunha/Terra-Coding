@@ -1,0 +1,13 @@
+body{
+  margin: 0px;
+}
+
+#inner_content{
+  float: left;
+  margin: 20px;
+}
+
+#picture{
+  width: 100px;
+  height: 100px;
+}

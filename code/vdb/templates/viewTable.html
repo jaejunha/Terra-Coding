@@ -1,0 +1,33 @@
+<!-- VDB's index.html -->
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="stylesheet" href="{% static 'css/vdb/directory_list.css' %}">
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::T - HUB::</title>
+</head>
+
+<body>
+
+<center>
+	<table class="container">
+		<thead>
+			<tr>
+			{% for column in columns %}
+					<th><h1> {{ column.0 }}</h1></th>
+			{% endfor %}
+			</tr>
+		</thead>
+	 {% for each in result %}
+			<tbody>
+				<tr>
+					{% for single in each %}
+				 		<td> {{ single }} </td>
+			 		{% endfor %}
+		   </tr>
+	 	 </tbody>
+	 {% endfor %}
+  </table>
+</center>
+</body>
+</html>

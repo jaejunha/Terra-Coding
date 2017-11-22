@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+  <head>
+    <style>
+      #left{
+        float:left;
+        width:250px;
+        display:inline-block;
+        line-height: 1px;
+      }
+
+      #left .title{
+        width: 250px;
+        display:table-cell;
+        vertical-align:middle;
+        font-size:25pt;
+        height:80px;
+        text-align:center;
+      }
+
+      #left .box{
+        width: 250px;
+        display:table-cell;
+        vertical-align:middle;
+        height:50px;
+      }
+
+      #left .box div:nth-child(1){
+        background-color:#555555;
+        width:10px;
+        height:50px;
+      }
+
+      #left .box div:nth-child(2){
+        text-align:center;
+        position:relative;
+        width:240px;
+        height:0px;
+        top: -25px;
+        left:10px;
+      }
+
+      #middle{
+        float:left;
+        position:relative;
+      }
+
+      #left div a{
+        font-size:20pt;
+        text-decoration: none;
+        color:#333333;
+      }
+      </style>
+      <script>
+      var dialog_problem;
+      var dialog_delete;
+      var select_no;
+      var select_el;
+      var mode = 0;
+      $(window).resize(function (){
+        $('#middle').css('width',$(window).width()-$('#left').width()-20);
+        $('#middle').css('left','10px');
+        $('#middle').css('top','10px');
+		  });
+			$(window).ready( function() {
+        $('#middle').css('width',$(window).width()-$('#left').width()-20);
+        $('#middle').css('left','10px');
+        $('#middle').css('top','10px');
+        $('#middle').load('/problem/list');
+
+        dialog_problem = $("#dialog_problem").dialog({
+          width:'auto',
+          height: 800,
+          autoOpen: true,
+          modal:	true,
+          disabled:	true,
+        });
+
+        dialog_detail = $("#dialog_detail").dialog({
+          width:'200px',
+          height: 'auto',
+          autoOpen: true,
+          modal:	true,
+          disabled:	true,
+        });
+
+        dialog_delete = $("#dialog_delete").dialog({
+          width:'auto',
+          height: 100,
+          autoOpen: true,
+          modal:	true,
+          disabled:	true,
+        });
+
+        $(dialog_problem).dialog("close");
+        $(dialog_detail).dialog("close");
+        $(dialog_delete).dialog("close");
+
+        $('textarea').css('width','700px');
+        $('textarea').css('height','400px');
+        problem_menu(0);
+      });
+       function problem_menu(no){
+         for(var i=0;i<4;i++){
+          $('#left .box'+'.'+i).css('background','rgb(228, 233, 236)');
+           $('#left .box'+'.'+i+' div:nth-child(1)').css('opacity','0');
+        }
+        $('#left .box'+'.'+no).css('background-color','#ffffff');
+        $('#left .box'+'.'+no+' div:nth-child(1)').css('opacity','1');
+
+        if(no == 1){
+          mode = 0;
+          $(dialog_problem).dialog("open");
+        }else if(no == 2){
+          if(select_el==null){
+            alert('choose problem first');
+            problem_menu(0);
+          }
+          else{
+            mode = 1;
+            edit = $(select_el).html().replace(/<td>/gi,'').split('</td>');
+            $('input:nth-of-type(1)').val(edit[1].trim());
+            $('textarea').val(edit[2].trim());
+            $('input:nth-of-type(2)').val(edit[3].trim().replace('<td style="display:none;">',''));
+            $('input:nth-of-type(3)').val(edit[4].trim().replace('<td style="display:none;">',''));
+            $(dialog_problem).dialog("open");
+          }
+        }
+        else if(no == 3){
+          if(select_el==null){
+            alert('choose problem first');
+            problem_menu(0);
+          }
+          else
+            $(dialog_delete).dialog("open");
+        }
+      }
+        function view_problem(o){
+          if(o=='save'){
+            if($('input:nth-of-type(1)').val() == '')
+              alert('Please enter the title');
+            else{
+          		$('#middle').load('/problem/list',{
+          			op : o,
+                title : $('input:nth-of-type(1)').val(),
+                desc : $('textarea').val(),
+                example : $('input:nth-of-type(2)').val(),
+                solution : $('input:nth-of-type(3)').val()
+          		});
+              problem_menu(0);
+              $('textarea').val('');
+              $('input:nth-of-type(1)').val('');
+              $('input:nth-of-type(2)').val('');
+              $('input:nth-of-type(3)').val('');
+              $(dialog_problem).dialog("close");
+            }
+        }else if(o=='modify'){
+          if($('input:nth-of-type(1)').val() == '')
+            alert('Please enter the title');
+          else{
+            $('#middle').load('/problem/list',{
+        			op : o,
+              no : select_no,
+              title : $('input:nth-of-type(1)').val(),
+              desc : $('textarea').val(),
+              example : $('input:nth-of-type(2)').val(),
+              solution : $('input:nth-of-type(3)').val()
+        		});
+            problem_menu(0);
+            $('textarea').val('');
+            $('input:nth-of-type(1)').val('');
+            $('input:nth-of-type(2)').val('');
+            $('input:nth-of-type(3)').val('');
+            $(dialog_problem).dialog("close");
+          }
+        }
+        else if(o=='delete'){
+          $('#middle').load('/problem/list',{
+      			op : o,
+            number : select_no
+      		});
+          problem_menu(0);
+          $(dialog_delete).dialog("close");
+          select_no = null;
+          select_el = null;
+        }
+      }
+      function cancel(){
+        problem_menu(0);
+        $(dialog_delete).dialog("close");
+      }
+      </script>
+  </head>
+  <body>
+    <div id ="left">
+      <div class="title">Problem</div>
+      <br>
+      <div class="box 0">
+      <div></div>
+        <div>
+          <a href="javascript:problem_menu(0);">List</a>
+        </div>
+      </div>
+      <br>
+      <div class="box 1">
+        <div></div>
+        <div>
+          <a href="javascript:problem_menu(1);">Add</a>
+        </div>
+      </div>
+      <br>
+      <div class="box 2">
+        <div></div>
+        <div>
+          <a href="javascript:problem_menu(2);">Edit</a>
+        </div>
+      </div>
+      <br>
+      <div class="box 3">
+        <div></div>
+        <div>
+          <a href="javascript:problem_menu(3);">Delete</a>
+        </div>
+      </div>
+    </div>
+    <div id ="middle"></div>
+    <div id="dialog_problem" title="enter the problem">
+      <div width="700px" style="margin-top:10px;">
+        <span width="50px">Title</span><input placeholder="enter the title" style="display:inline; width:600px; margin-left:50px"/><br>
+        <br>
+        Contents<br>
+        <br>
+        <textarea id="desc" width="700px" height="300px"></textarea><br>
+        <br>
+        Problem<br>
+        <br>
+        <input placeholder="enter the problem" style="width:700px;"><br>
+        <br>
+        Solution<br>
+        <br>
+        <input placeholder="enter the solution" style="width:700px;"><br>
+        <br>
+        <br>
+        <div align="right">
+          <button type="button" onclick="javascript:view_problem(mode==0?'save':'modify');">Make</button>
+        </div>
+      </div>
+    </div>
+    <div id="dialog_detail" title="information">
+      <div width="700px" style="margin-top:10px;">
+      </div>
+    </div>
+    <div id="dialog_delete" title="Delete?">
+      <div width="300px" style="margin-top:10px;">
+          <button type="button" onclick="javascript:view_problem('delete');">Yes</button>
+          <button type="button" onclick="javascript:cancel();">No</button>
+      </div>
+  	</div>
+  </body>
+</html>

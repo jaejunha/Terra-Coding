@@ -1,0 +1,201 @@
+<!-- printDir.html-->
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'css/coding/directory_list.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}"/>
+	<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+	<title>::T - HUB::</title>
+	<style>
+
+	#directName {
+	  text-decoration: none;
+	  font-family: 'Open Sans', sans-serif;
+	  font-weight: bold;
+	  font-size: 1em;
+	  color:#FFFFFF;
+	  padding:5px 15px;
+	  background:transparent;
+	  border:0 none;
+	  cursor:pointer;
+	}
+
+
+	#Compile, #Delete {
+		text-decoration: none;
+		font-family: 'Open Sans', sans-serif;
+		font-weight: normal;
+		font-size: 1em;
+		color:#FFFFFF;
+		padding:5px 15px;
+		background:#000000;
+		border:0 none;
+		cursor:pointer;
+	}
+
+	#left{
+		float:left;
+		width:250px;
+		display:inline-block;
+		line-height: 1px;
+	}
+
+	#left .title{
+		width: 250px;
+		display:table-cell;
+		vertical-align:middle;
+		font-size:25pt;
+		height:80px;
+		text-align:center;
+	}
+
+	#left .box{
+		width: 250px;
+		display:table-cell;
+		vertical-align:middle;
+		height:50px;
+		background-color: #ffffff;
+	}
+
+	#left .box div:nth-child(1){
+		background-color:#555555;
+		width:10px;
+		height:50px;
+	}
+
+	#left .box div:nth-child(2){
+		text-align:center;
+		position:relative;
+		width:240px;
+		height:0px;
+		top: -25px;
+		left:10px;
+	}
+
+	#left div a{
+		font-size:20pt;
+		text-decoration: none;
+		color:#333333;
+	}
+
+	#middle{
+		float:left;
+		position:relative;
+	}
+	table{
+			width: 100%;
+			border: 2px solid #ffffff;
+			border-collapse: collapse;
+			background: #566788;
+	}
+	th, td{
+		border: 2px solid #ffffff;
+		padding: 10px;
+	}
+	th{
+		background: #323c50;
+		text-align: center;
+		color: #ffffff;
+	}
+	td{
+		color: #efefef;
+	}
+	</style>
+	<script>
+	var current='';
+	var mode;
+	var select_el;
+	var select_no;
+
+	$(window).resize(function (){
+		$('#middle').css('width',$(window).width()-$('#left').width()-20);
+		$('#middle').css('left','10px');
+		$('#middle').css('top','10px');
+	});
+	$(window).ready( function() {
+		$('#middle').css('width',$(window).width()-$('#left').width()-20);
+		$('#middle').css('left','10px');
+		$('#middle').css('top','10px');
+
+		dialog_detail = $("#dialog_detail").dialog({
+			width:'200px',
+			height: 'auto',
+			autoOpen: true,
+			modal:	true,
+			disabled:	true,
+		});
+		$(dialog_detail).dialog("close");
+
+		$("tr").click(function(event) {
+			if(mode ==  'problem'){
+				if(select_el!=null){
+						select_el.css('background','#566788');
+				}
+				select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
+				$(event.target).parent().css('background','#434d61');
+				select_el = $(event.target).parent();
+			}
+		});
+		$("tr").dblclick(function(event) {
+			if(mode == 'problem'){
+				if(select_el!=null){
+						select_el.css('background','#566788');
+				}
+				select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
+				$(event.target).parent().css('background','#434d61');
+				select_el = $(event.target).parent();
+
+				$(dialog_detail).dialog("open");
+				var text = $(select_el).html().replace(/<td>/gi,'').split('</td>');
+				$(dialog_detail).html('<b>'+text[1]+'</b><br><br>'+text[2]+'<br><br><div align="right"><button type="button">Solve it</button></div>');
+			}
+		});
+
+		$('#left div a').text('Problem');
+		mode = 'problem';
+	}
+
+	</script>
+	</head>
+
+<body>
+	<div id ="left">
+		<div class="title">Coding</div>
+			<br>
+			<div class="box 0">
+			<div></div>
+				<div>
+					<a>Project</a>
+				</div>
+			</div>
+			<br>
+		</div>
+	<div id="middle">
+		<div id="problem">
+			<table>
+	      <thead>
+	        <tr>
+	          <th width="50px">Number</th>
+	          <th width="300px">Title</th>
+	          <th>Contents</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	  {% for l in list %}
+	  <tr>
+	    <td>{{l.0}}</td>
+	    <td>{{l.1}}</td>
+	    <td>{{l.2}}</td>
+	  </tr>
+	  {% endfor %}
+	  </tbody>
+	  </table>
+		</div>
+</div>
+<div id="dialog_detail" title="information">
+	<div width="700px" style="margin-top:10px;"></div>
+</div>
+</body>
+</html>

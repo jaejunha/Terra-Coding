@@ -1,0 +1,83 @@
+<!-- VDB's index.html -->
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<link rel="stylesheet" href="{% static 'css/vdb/directory_list.css' %}">
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::T - HUB::</title>
+	<style>
+	#content a{
+	  text-decoration: none;
+	  font-family: 'Open Sans', sans-serif;
+	  font-weight: normal;
+	  font-size: 1em;
+	  color:#FFFFFF;
+	  padding:5px 15px;
+	  background:#2ECCFA;
+	  border:0 none;
+	  cursor:pointer;
+	}
+	.invisible {
+	  text-decoration: none;
+	  font-family: 'Open Sans', sans-serif;
+	  font-weight: normal;
+	  font-size: 1em;
+	  color:#A7A1AE;
+	  padding:5px 15px;
+	  background:transparent;
+	  border:0 none;
+	  cursor:pointer;
+	}
+	</style>
+	<script>
+
+	function view_createTable(url) {
+		current = 'url='+url;
+		$('#content').load(url);
+	}
+
+	function view_viewTable(url, tableName) {
+		$('#content').load(url, {
+			tableName : tableName
+		});
+	}
+	</script>
+</head>
+
+<body>
+	<center>
+	<table>
+		<a href="javascript:view_createTable('/vdb/createTable');">CREATE</a>
+		 &nbsp;
+		<form action="/vdb/createTable.html" method="POST">
+			{% csrf_token %}
+			<input id="delete_button" type="submit" name="delete" value="DELETE"/>
+		</form> &nbsp;
+		<form action="/vdb/createTable.html" method="POST">
+			{% csrf_token %}
+			<input id="update_button" type="submit" name="update" value="UPDATE"/>
+		</form> &nbsp;
+	<br><br>
+	<table class="container">
+		<thead>
+			<tr>
+				<th><h1>TABLE NAME</h1></th>
+				<th><h1>DATE</h1></th>
+			</tr>
+		</thead>
+		{% for each in result %}
+		<tbody>
+		<tr>
+			 <td> <!-- 1st column -->
+				 <a href="javascript:view_viewTable('/vdb/viewTable','{{ each.0 }}')">{{ each.0 }}</a>
+			 </td>
+			<td>  <!-- 2nd column -->
+				{{ each.1 }}
+	    </td>
+   </tr>
+ 	 </tbody>
+	 {% endfor %}
+  </table>
+</table>
+</body>
+</html>

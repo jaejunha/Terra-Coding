@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon/T-HUB.png' %}"/>
+ 	<link rel="stylesheet" type="text/css" href="{% static 'css/info.css' %}"/>
+	<meta charset="utf-8">
+	<title>::T - HUB::</title>
+	<style>
+		#left{
+			float:left;
+			width:250px;
+			display:inline-block;
+			line-height: 1px;
+		}
+
+		#left .title{
+			width: 250px;
+			display:table-cell;
+			vertical-align:middle;
+			font-size:25pt;
+			height:80px;
+			text-align:center;
+		}
+
+		#left .box{
+			width: 250px;
+			display:table-cell;
+			vertical-align:middle;
+			height:50px;
+			background-color: #ffffff;
+		}
+
+		#left .box div:nth-child(1){
+			background-color:#555555;
+			width:10px;
+			height:50px;
+		}
+
+		#left .box div:nth-child(2){
+			text-align:center;
+			position:relative;
+			width:240px;
+			height:0px;
+			top: -25px;
+			left:10px;
+		}
+
+		#left div a{
+			font-size:20pt;
+			text-decoration: none;
+			color:#333333;
+		}
+
+		#middle{
+			float:left;
+			position:relative;
+		}
+
+		.sub{
+			font-weight:bold;
+			font-size:20pt;
+		}
+		#summary{
+			margin-left: 10px;
+		}
+		#summary td:nth-child(1){
+			width:100px;
+		}
+		#summary td:nth-child(2){
+			width:200px;
+		}
+		#picture{
+			float:left;
+			position:absolute;
+		}
+		</style>
+		<script>
+		$(window).resize(function (){
+			$('#middle').css('width',$(window).width()-$('#left').width()-20);
+			$('#middle').css('left','10px');
+			$('#middle').css('top','10px');
+		});
+		$(window).ready( function() {
+			$('#middle').css('width',$(window).width()-$('#left').width()-20);
+			$('#middle').css('left','10px');
+			$('#middle').css('top','10px');
+
+			$('#picture').css('width',$('#summary').height());
+			$('#picture').css('height',$('#summary').height());
+			$('#picture').css('top',$('#summary').offset().top-$('#summary').height());
+			$('#picture').css('left',$(window).width()-$('#picture').width()-$('#left').width()-50);
+		});
+		</script>
+</head>
+<body>
+	<div id ="left">
+		<div class="title">Info</div>
+		<br>
+		<div class="box 0">
+		<div></div>
+			<div>
+				<a>Information</a>
+			</div>
+		</div>
+		<br>
+	</div>
+	<div id ="middle">
+		{% if picture %}
+		<br>
+		<div style="text-align:center;">
+			<img src="{% static 'img/ajou.png' %}" width="5%">
+			<span style="font-size:50pt;position:relative;top:-25px;left:10px;">Ajou University</span>
+		</div>
+		<br>
+		<span class="sub">Personal</span>
+		<hr style="opacity:0.5;">
+		<br>
+		<table id="summary">
+			<tr>
+				<td>Name</td>
+				<td>{{name}}</td>
+			</tr>
+			<tr>
+				<td>Number</td>
+				<td>{{number}}</td>
+			</tr>
+			<tr>
+				<td>Grade</td>
+				<td>{{grade}}</td>
+			</tr>
+			<tr>
+				<td>School</td>
+				<td>{{school}}</td>
+			</tr>
+			<tr>
+				<td>Major</td>
+				<td>{{major}}</td>
+			</tr>
+		</table>
+		<img id="picture" src="{{ picture }}">
+		<br>
+		<br>
+		<span class="sub">Record</span>
+		<hr style="opacity:0.5;">
+		{% else %}
+		{% endif %}
+		</div>
+</body>
+</html>

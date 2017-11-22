@@ -1,0 +1,109 @@
+<html lang="en">
+{% load staticfiles %}
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<title>::Source Editor::</title>
+	<style> textarea.autosize { min-height: 50px; } </style>
+
+	<script language="Javascript" type="text/javascript" src="{% static 'package/edit_area/edit_area_full.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+
+	<script language="Javascript" type="text/javascript">
+		function resize(obj) {
+		  obj.style.height = "1px";
+		  obj.style.height = (12+obj.scrollHeight)+"px";
+		}
+
+		editAreaLoader.init({
+			id: "sourceEditorArea"	// id of the textarea to transform
+			,start_highlight: true	// if start with highlight
+			,allow_resize: "both"
+			,allow_toggle: true
+			,word_wrap: true
+			,language: "en"
+			,syntax: "c"
+			,toolbar: "search, go_to_line, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help"
+			,syntax_selection_allow: "css,html,java,js,php,python,vb,xml,c,cpp,sql,basic"
+		});
+
+		// callback functions
+		function my_save(id, content){
+			alert("Here is the content of the EditArea '"+ id +"' as received by the save callback function:\n"+content);
+		}
+
+		function my_load(id){
+			editAreaLoader.setValue(id, "The content is loaded from the load_callback function into EditArea");
+		}
+
+		function test_setSelectionRange(id){
+			editAreaLoader.setSelectionRange(id, 100, 150);
+		}
+
+		function test_getSelectionRange(id){
+			var sel =editAreaLoader.getSelectionRange(id);
+			alert("start: "+sel["start"]+"\nend: "+sel["end"]);
+		}
+
+		function test_setSelectedText(id){
+			text= "[REPLACED SELECTION]";
+			editAreaLoader.setSelectedText(id, text);
+		}
+
+		function test_getSelectedText(id){
+			alert(editAreaLoader.getSelectedText(id));
+		}
+
+		function editAreaLoaded(id){
+			open_file1();
+		}
+
+		function open_file1()
+		{
+			var new_file= {id: "{{ fileName }}", text: "{% autoescape off %}{% filter escapejs %}{{ file_data }}{% endfilter %}{% endautoescape %}", syntax: 'c'};
+			editAreaLoader.openFile('sourceEditorArea', new_file);
+		}
+
+		function close_file1()
+		{
+			editAreaLoader.closeFile('sourceEditorArea', "{{ fileName }}");
+		}
+
+		function toogle_editable(id)
+		{
+			editAreaLoader.execCommand(id, 'set_editable', !editAreaLoader.execCommand(id, 'is_editable'));
+		}
+
+
+		$(window).ready(function(){
+			//$('#sourceEditorArea').css('height',$(document).height()-200);
+		//	$('#sourceEditorArea').css('height',$(document).height()-200);
+		//	$('#sourceEditorArea').css('width',$(document).width());
+		});
+
+	</script>
+</head>
+<!--_______________ END OF HEAD _______________-->
+
+<body>
+		<form action="/coding/sourceEdit.html" method="POST" style="display:inline">
+			{% csrf_token %}
+				<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 60%; width: 100%;" name="edit_data">{{file_data}}</textarea>
+					<input type="hidden" name="operation" value="Write"/>
+					<input type="hidden" name="fileName" value="{{ fileName }}"/>
+					<input type="hidden" name="directoryName" value="{{ directoryName }}"/>
+					<input type="checkbox" name="check_db_syntax" value="use DB syntax">Activate DB syntax
+					<<br><br><input type="submit" name="save" value="Save" onclick="return confirm('Are you sure want to edit? :)')"/>
+		</form>
+<!--
+		<form action="/coding/printDir.html" method="POST" style="display:inline">
+			{% csrf_token %}
+			<input type="hidden" name="dirName" value="{{ directoryName }}"/>
+			<input type="hidden" name="operation" value="ReDirect"/>
+			<input type="submit" name="cancel" value="Cancel"/>
+		</form>
+	-->
+
+
+</body>
+</html>

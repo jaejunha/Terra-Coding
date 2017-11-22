@@ -1,0 +1,152 @@
+html{
+	height:100%;
+  width: 100%;
+}
+body{
+	font-family : 'Lucida grande';
+	overflow-y:hidden;
+	overflow-x:hidden;
+	height:100%;
+	width: 100%;
+	margin: 0;
+}
+#simple{
+	position: absolute;
+	left: 45%;
+	top: 40%;
+	width: 10%;
+	height: 20%;
+	overflow-y:hidden;
+	overflow-x:hidden;
+	border-radius: 50%;
+	background: linear-gradient(#5a92b7, #6cc1a0 ) fixed;
+	animation: circle 4s;
+	animation-fill-mode: both;
+	z-index: -2;
+}
+#simple_base{
+	position: absolute;
+	transform-origin: 0% 0%;
+	width: 100%;
+	height: 100%;
+	left : 0px;
+	top : 0px;
+	overflow-y:hidden;
+	overflow-x:hidden;
+	background: linear-gradient(#5a92b7, #6cc1a0 ) fixed;
+	z-index: -2;
+}
+#logo{
+	position: absolute;
+	transform-origin: 0% 0%;
+	margin-left:auto;
+	margin-right:auto;
+	text-align: center;
+	left:-450px;
+	width : 450px;
+	opacity: 0.9;
+}
+#login{
+	left:-450px;
+  position: absolute;
+  width: 450px;
+  height: 350px;
+  background: rgba( 255, 255, 255, 0.3 );
+  opacity: 0;
+  animation: appear 3s;
+	animation-fill-mode:both;
+}
+#login_error{
+	left:-450px;
+  position: absolute;
+  width: 450px;
+  height: 350px;
+  background: rgba( 255, 255, 255, 0.3 );
+  opacity: 1;
+}
+
+#login_label{
+	background:#dcecec;
+	margin-top:20px;
+	margin-left:35px;
+	margin-bottom:25px;
+	width:380px;
+	height:55px;
+	display: table;
+	text-align:center;
+}
+
+#login_label div{
+	color: #bbbbbb;
+	font-size: 15pt;
+	vertical-align:middle;
+	display:table-cell;
+}
+
+#login_label div img{
+	margin-right: 10px;
+	width: 15pt;
+	height: 15pt;
+}
+
+form {
+	text-align: center;
+}
+
+input {
+	margin-bottom:10px;
+	display: inline-block;
+}
+#id, #pwd {
+	width:365px;
+	height: 30px;
+}
+#check{
+	margin-top: 20px;
+	width:380px;
+	height: 45px;
+}
+#msg{
+	margin: 35px;
+	position: relative;
+	color: #ffffff;
+}
+#msg_error{
+	margin: 35px;
+	position: relative;
+	width: 450px;
+	color: #ff0000;
+}
+@keyframes circle{
+  0%{
+  	transform: scale(0.1,0.1);
+		opacity: 1;
+  }
+  50%{
+  	transform: scale(20,20);
+		opacity: 1;
+  }
+	100%{
+  	transform: scale(20,20);
+		opacity: 0;
+	}
+}
+@keyframes circle2{
+	40%{
+		opacity: 0;
+	}
+	50%{
+		opacity: 1;
+  }
+	100%{
+		opacity: 1;
+	}
+}
+@keyframes appear{
+  40%{
+   opacity: 0;
+  }
+  100%{
+   	opacity: 1;
+  }
+}
