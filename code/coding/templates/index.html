@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+<meta charset="utf-8">
+<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+<script>
+$(window).resize(function (){
+  $('#frame').css('width',$(document).width());
+    $('#frame').css('height',$(document).height()-140);
+});
+$(window).ready( function() {
+  $('#frame').css('width',$(document).width());
+  $('#frame').css('height',$(document).height()-140);
+});
+</script>
+</head>
+<body>
+  {% if coding == '0' %}
+<iframe id="frame" src="coding/printProblem" width="100%" frameborder="0"  scrolling = "no"></iframe>
+  {% else %}
+<iframe id="frame" src="coding/printDir" width="100%" frameborder="0"  scrolling = "no"></iframe>
+  {% endif %}
+</body>
+</html>

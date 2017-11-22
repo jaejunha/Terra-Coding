@@ -17,11 +17,18 @@
 		hljs.initHighlightingOnLoad();
 		$(document).ready(function(){
 			$('pre viewer').each(function(i, block) { hljs.highlightBlock(block); });
+
+			$('#source_edit').css('height',$(document).height()-140);
+			$('#source_edit').css('visibility','hidden');
+
+			var str="<br><center><a id=\"view\" href=\"javascript:view_sourceView();\">VIEW</a></center>"
+			str+="<iframe src=\"coding/sourceEdit\" style=\"width:"+($(document).width()-$('#left').width()-20)+"px; height:"+($(document).height()-140)+"px;\" frameborder=\"0\"  scrolling = \"no\"></iframe>";
+			var el=document.getElementById("source_edit").innerHTML=str;
 	});
 	</script>
 
 	<style>
-		#content #prev, #content #edit{
+		#content #prev, #content #edit, #content #view{
 		  text-decoration: none;
 		  font-family: 'Open Sans', sans-serif;
 		  font-weight: normal;
@@ -46,7 +53,7 @@
 
 		td{
 			  border: 1px solid;
-			}
+		}
 	</style>
 
 	<script>
@@ -58,22 +65,26 @@
 			});
 		}
 
-	function view_sourceEdit(url){
-		var el=document.getElementById("middle");
-		el.innerHTML="<iframe id=\"bodyIframe\" name=\"bodyIframe\"  src=\""+url+"\" style=\"width:"+$('#middle').width()+"px; height:"+($(document).height()-140)+"px;\" frameborder=\"0\"  scrolling = \"no\"></iframe>";
+	function view_sourceEdit(){
+		$('#source_edit').css('visibility','visible');
+		$('#source_view').hide();
 	}
 
+	function view_sourceView(){
+		$('#source_edit').css('visibility','hidden');
+		$('#source_view').show();
+	}
 	</script>
 </head>
 
 <body bgcolor="#A4A4A4">
-
+<div id="source_view">
 <center>
 
 <br>
 <a id="prev" href="javascript:view_printDir('ReDirect','/coding/printDir','{{directoryName}}','');">PREV</a>
 {% if service_type == 'text' %}
-<a id="edit" href="javascript:view_sourceEdit('/coding/sourceEdit');">EDIT</a>
+<a id="edit" href="javascript:view_sourceEdit();">EDIT</a>
 {% endif %}
 </center>
 
@@ -84,5 +95,8 @@
 {% else %}
 <font size=3 style="Lucida Blackletter" color="RED"> <pre> {{ file_data }} </pre> </font>
 {% endif %}
+</div>
+<div id="source_edit">
+</div>
 </body>
 </html>
