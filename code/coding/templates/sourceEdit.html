@@ -4,7 +4,21 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::Source Editor::</title>
-	<style> textarea.autosize { min-height: 50px; } </style>
+	<style>
+		#save{
+			text-decoration: none;
+			font-family: 'Open Sans', sans-serif;
+			font-weight: normal;
+			font-size: 1em;
+			color:#000000;
+			padding:5px 15px;
+			background:#787878;
+			border:0 none;
+			cursor:pointer;
+			margin-top: 5px;
+		}
+		textarea.autosize { min-height: 50px; }
+	</style>
 
 	<script language="Javascript" type="text/javascript" src="{% static 'package/edit_area/edit_area_full.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
@@ -74,13 +88,6 @@
 			editAreaLoader.execCommand(id, 'set_editable', !editAreaLoader.execCommand(id, 'is_editable'));
 		}
 
-
-		$(window).ready(function(){
-			//$('#sourceEditorArea').css('height',$(document).height()-200);
-		//	$('#sourceEditorArea').css('height',$(document).height()-200);
-		//	$('#sourceEditorArea').css('width',$(document).width());
-		});
-
 	</script>
 </head>
 <!--_______________ END OF HEAD _______________-->
@@ -93,17 +100,7 @@
 					<input type="hidden" name="fileName" value="{{ fileName }}"/>
 					<input type="hidden" name="directoryName" value="{{ directoryName }}"/>
 					<input type="checkbox" name="check_db_syntax" value="use DB syntax">Activate DB syntax
-					<<br><br><input type="submit" name="save" value="Save" onclick="return confirm('Are you sure want to edit? :)')"/>
+					<<br><input id="save" type="submit" name="save" value="Save" onclick="return confirm('Are you sure want to edit this code? :)')"/>
 		</form>
-<!--
-		<form action="/coding/printDir.html" method="POST" style="display:inline">
-			{% csrf_token %}
-			<input type="hidden" name="dirName" value="{{ directoryName }}"/>
-			<input type="hidden" name="operation" value="ReDirect"/>
-			<input type="submit" name="cancel" value="Cancel"/>
-		</form>
-	-->
-
-
 </body>
 </html>

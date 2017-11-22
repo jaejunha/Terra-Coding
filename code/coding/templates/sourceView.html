@@ -13,22 +13,20 @@
 		<!--<script src="{% static 'package/highlight/highlight.js' %}"></script>-->
 
 	<script>
-
+		var mode = 0;
 		hljs.initHighlightingOnLoad();
 		$(document).ready(function(){
 			$('pre viewer').each(function(i, block) { hljs.highlightBlock(block); });
 
 			$('#source_edit').css('height',$(document).height()-140);
 			$('#source_edit').css('visibility','hidden');
-
-			var str="<br><center><a id=\"view\" href=\"javascript:view_sourceView();\">VIEW</a></center>"
-			str+="<iframe src=\"coding/sourceEdit\" style=\"width:"+($(document).width()-$('#left').width()-20)+"px; height:"+($(document).height()-140)+"px;\" frameborder=\"0\"  scrolling = \"no\"></iframe>";
-			var el=document.getElementById("source_edit").innerHTML=str;
+			var str="<iframe src=\"coding/sourceEdit\" style=\"width:"+($(document).width()-$('#left').width()-20)+"px; height:"+($(document).height()-140)+"px;\" frameborder=\"0\"  scrolling = \"no\"></iframe>";
+			document.getElementById("source_edit").innerHTML=str;
 	});
 	</script>
 
 	<style>
-		#content #prev, #content #edit, #content #view{
+		#prev, #edit{
 		  text-decoration: none;
 		  font-family: 'Open Sans', sans-serif;
 		  font-weight: normal;
@@ -66,28 +64,36 @@
 		}
 
 	function view_sourceEdit(){
-		$('#source_edit').css('visibility','visible');
-		$('#source_view').hide();
-	}
-
-	function view_sourceView(){
-		$('#source_edit').css('visibility','hidden');
-		$('#source_view').show();
+		if(mode == 0){
+			$('#edit').text('VIEW');
+			$('#source_edit').css('visibility','visible');
+			$('#source_view').hide();
+			mode = 1;
+		}
+		else{
+			$('#edit').text('EDIT');
+			$('#source_edit').css('visibility','hidden');
+			$('#source_view').show();
+			mode = 0;
+			var url = '/coding/sourceView';
+			$('#middle').load(url,{
+					fileName : '{{fileName}}',
+					directoryName : '{{directoryName}}'
+			});
+		}
 	}
 	</script>
 </head>
 
 <body bgcolor="#A4A4A4">
+	<center>
+	<br>
+	<a id="prev" href="javascript:view_printDir('ReDirect','/coding/printDir','{{directoryName}}','');">PREV</a>
+	{% if service_type == 'text' %}
+	<a id="edit" href="javascript:view_sourceEdit();">EDIT</a>
+	{% endif %}
+	</center>
 <div id="source_view">
-<center>
-
-<br>
-<a id="prev" href="javascript:view_printDir('ReDirect','/coding/printDir','{{directoryName}}','');">PREV</a>
-{% if service_type == 'text' %}
-<a id="edit" href="javascript:view_sourceEdit();">EDIT</a>
-{% endif %}
-</center>
-
 {% if service_type == 'text' %}
 	<pre><viewer class="C"><font size="4">{{ file_data }}</font></viewer></pre>
 {% elif service_type == 'img' %}
@@ -96,7 +102,6 @@
 <font size=3 style="Lucida Blackletter" color="RED"> <pre> {{ file_data }} </pre> </font>
 {% endif %}
 </div>
-<div id="source_edit">
-</div>
+<div id="source_edit"></div>
 </body>
 </html>

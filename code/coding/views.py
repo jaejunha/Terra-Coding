@@ -162,16 +162,15 @@ def sourceEdit(request):
 			f.write(translate_edit_data)
 			f.close()
 
-		token = {'fileName': fileName, 'directoryName': directoryName}
-		return sourceView(request)
+#		token = {'fileName': fileName, 'directoryName': directoryName}
+	#	return render(request, 'coding/templates/sourceEdit.html', token)
 
 	# __ RENDERING CONTENTS OF FILE __START__#
-	else:
-		f = open(editPath, 'r')
-		file_data = f.read()
-		f.close()
-		token = {'fileName': fileName, 'directoryName': directoryName, 'file_data': file_data}
-		return render(request, 'coding/templates/sourceEdit.html', token)
+	f = open(editPath, 'r')
+	file_data = f.read()
+	f.close()
+	token = {'fileName': fileName, 'directoryName': directoryName, 'file_data': file_data}
+	return render(request, 'coding/templates/sourceEdit.html', token)
 
 def sourceDel(request):
 	fileName = request.POST.get('selected_file', '')
