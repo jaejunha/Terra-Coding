@@ -108,13 +108,28 @@ def createTable(request):
     token = {'result': 'test'}
     return render(request, 'vdb/templates/createTable.html', token)
 
-def deleteVDB(request):
-    table = request.POST.get('table_name', '')
-    table = table.replace('\n', ''); table = table.replace('\r', '');
-    #for _row in VDB.objects.filter(table=table):
-    #    _row.delete()
+@csrf_exempt
+def deleteTable(request):
+    tableName = request.POST.get('tableName', '')
+    tableName = tableName.replace('\n', ''); tableName = tableName.replace('\r', '');
 
-    return
+    databaseName = str(request.session['number']) # make databaseName
+    databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+
+    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
+                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    curs = root_connection.cursor()
+
+    sql = "DROP table %s" % (tableName)
+    (status, result) = do_sql_commit(sql, root_connection, curs, "DROP Table")
+    if status != '':
+        return
+
+    curs.close()
+    root_connection.close()
+    return vdbIndex(request)
 
 @csrf_exempt
 def viewTable(request):

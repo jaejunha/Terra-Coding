@@ -36,6 +36,12 @@
 		$('#content').load(url);
 	}
 
+	function view_deleteTable(url, tableName) {
+		$('#content').load(url, {
+			tableName : tableName
+		});
+	}
+
 	function view_viewTable(url, tableName) {
 		$('#content').load(url, {
 			tableName : tableName
@@ -51,10 +57,6 @@
 		 &nbsp;
 		<form action="/vdb/createTable.html" method="POST">
 			{% csrf_token %}
-			<input id="delete_button" type="submit" name="delete" value="DELETE"/>
-		</form> &nbsp;
-		<form action="/vdb/createTable.html" method="POST">
-			{% csrf_token %}
 			<input id="update_button" type="submit" name="update" value="UPDATE"/>
 		</form> &nbsp;
 	<br><br>
@@ -62,7 +64,7 @@
 		<thead>
 			<tr>
 				<th><h1>TABLE NAME</h1></th>
-				<th><h1>DATE</h1></th>
+				<th><h1>OPTION</h1></th>
 			</tr>
 		</thead>
 		{% for each in result %}
@@ -72,7 +74,7 @@
 				 <a href="javascript:view_viewTable('/vdb/viewTable','{{ each.0 }}')">{{ each.0 }}</a>
 			 </td>
 			<td>  <!-- 2nd column -->
-				{{ each.1 }}
+				 <a href="javascript:view_deleteTable('/vdb/deleteTable', '{{ each.0 }}');">DELETE</a>
 	    </td>
    </tr>
  	 </tbody>

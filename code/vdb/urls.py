@@ -20,6 +20,6 @@ urlpatterns = [
     url(r'^$', views.vdbIndex, name='vdbIndex'),
     url(r'^/createTable', views.createTable, name='createTable'),
     #url(r'^/alterTable', views.alterTable, name='alterTable'),
-    #url(r'^/deleteTable', views.deleteTable, name='deleteTable'),
+    url(r'^/deleteTable', views.deleteTable, name='deleteTable'),
     url(r'^/viewTable', views.viewTable, name='viewTable'),
 ]
