@@ -38,6 +38,10 @@
 >https://www.pexels.com/photo/silver-imac-near-white-ceramic-kettle-205316/
 - SimpleBanner
 >http://hangunsworld.com/blog/1630/comment-page-1
+- EditArea
+>https://www.cdolivet.com/editarea/
+- SweetAlert
+>https://sweetalert.js.org/
 ---
 # Commit Record
 - 100 commit : **2017.10.01** by <img src="https://avatars1.githubusercontent.com/u/7951335?v=4&s=15"> <a href = "https://github.com/jaejunha"> jaejunha </a>
