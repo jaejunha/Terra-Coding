@@ -29,6 +29,21 @@ ERR_NO_SESSION_ID = 0x10
 ERR_ROOT_ACCESSING = 0x20
 
 @csrf_exempt
+def solveProblem(request):
+	print request.POST.get('no',0)
+#	token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
+#	return render(request, 'coding/templates/error.html', token)
+	return render(request, 'coding/templates/solveProblem.html')
+
+@csrf_exempt
+def solveEdit(request):
+	if request.POST.get('operation','') == 'Write':
+		#do something
+		pass
+
+	return render(request, 'coding/templates/solveEdit.html')
+
+@csrf_exempt
 def printDir(request):
 
 	fileType = []

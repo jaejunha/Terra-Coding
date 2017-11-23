@@ -119,7 +119,7 @@
 		$('#middle').css('top','10px');
 
 		dialog_detail = $("#dialog_detail").dialog({
-			width:'200px',
+			width:'700px',
 			height: 'auto',
 			autoOpen: true,
 			modal:	true,
@@ -148,7 +148,9 @@
 
 				$(dialog_detail).dialog("open");
 				var text = $(select_el).html().replace(/<td>/gi,'').split('</td>');
-				$(dialog_detail).html('<b>'+text[1]+'</b><br><br>'+text[2]+'<br><br><div align="right"><button type="button">Solve it</button></div>');
+				var html = '<b>'+text[1].trim()+'</b><br><br><pre>'+text[2].trim()+'</pre><br><br><div align="right">';
+				html+='<button type="button" onclick="javascript:view_solveProblem();">Solve it</button></div>'
+				$(dialog_detail).html(html);
 			}
 		});
 
@@ -224,6 +226,13 @@ document.location.hash = "#" + current;
 		fileName : fileName,
 		dirName : dirName
 	});
+}
+
+function view_solveProblem(){
+	$('#content').load('coding/solveProblem',{
+		no : select_no
+	});
+	$(dialog_detail).dialog("close");
 }
 
 	</script>
@@ -407,8 +416,6 @@ document.location.hash = "#" + current;
   </table>
 </div>
 </div>
-<div id="dialog_detail" title="information">
-	<div width="700px" style="margin-top:10px;"></div>
-</div>
+<div id="dialog_detail" title="information"></div>
 </body>
 </html>
