@@ -4,19 +4,47 @@
 <head>
 	<link rel="stylesheet" href="{% static 'css/vdb/directory_list.css' %}">
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<link rel="stylesheet" href="{% static 'package/sweet/jquery.sweet-modal.min.css' %}" />
+	<script src="{% static 'package/sweet/jquery.sweet-modal.min.js' %}"></script>
+
 	<title>::T - HUB::</title>
 	<style>
-	#content a{
+	#tableName {
 	  text-decoration: none;
 	  font-family: 'Open Sans', sans-serif;
 	  font-weight: normal;
 	  font-size: 1em;
 	  color:#FFFFFF;
 	  padding:5px 15px;
-	  background:#2ECCFA;
+	  background:transparent;
 	  border:0 none;
 	  cursor:pointer;
 	}
+
+	#Create, #Update {
+	  text-decoration: none;
+	  font-family: 'Open Sans', sans-serif;
+	  font-weight: normal;
+	  font-size: 1em;
+	  color:#FFFFFF;
+	  padding:5px 15px;
+	  background:#848484;
+	  border:0 none;
+	  cursor:pointer;
+	}
+
+	#Delete {
+	  text-decoration: none;
+	  font-family: 'Open Sans', sans-serif;
+	  font-weight: normal;
+	  font-size: 1em;
+	  color:#FFFFFF;
+	  padding:5px 15px;
+	  background:#585858;
+	  border:0 none;
+	  cursor:pointer;
+	}
+
 	.invisible {
 	  text-decoration: none;
 	  font-family: 'Open Sans', sans-serif;
@@ -32,8 +60,13 @@
 	<script>
 
 	function view_createTable(url) {
-		current = 'url='+url;
-		$('#content').load(url);
+		$.sweetModal.prompt('*please Enter your database name*', null, null, function(tableName)
+		{
+					current = 'url='+url;
+					$('#content').load(url, {
+						table_name : tableName
+					});
+	  });
 	}
 
 	function view_deleteTable(url, tableName) {
@@ -47,19 +80,20 @@
 			tableName : tableName
 		});
 	}
+
 	</script>
 </head>
 
 <body>
+
 	<center>
 	<table>
-		<a href="javascript:view_createTable('/vdb/createTable');">CREATE</a>
+		<br><br>
+		<a id='Create' href="javascript:view_createTable('/vdb/createTable');">CREATE</a>
 		 &nbsp;
-		<form action="/vdb/createTable.html" method="POST">
-			{% csrf_token %}
-			<input id="update_button" type="submit" name="update" value="UPDATE"/>
-		</form> &nbsp;
+		<a id='Update' href="javascript:view_createTable('/vdb/createTable');">UPDATE</a>
 	<br><br>
+
 	<table class="container">
 		<thead>
 			<tr>
@@ -71,10 +105,10 @@
 		<tbody>
 		<tr>
 			 <td> <!-- 1st column -->
-				 <a href="javascript:view_viewTable('/vdb/viewTable','{{ each.0 }}')">{{ each.0 }}</a>
+				 <a id='tableName' href="javascript:view_viewTable('/vdb/viewTable','{{ each.0 }}')">{{ each.0 }}</a>
 			 </td>
 			<td>  <!-- 2nd column -->
-				 <a href="javascript:view_deleteTable('/vdb/deleteTable', '{{ each.0 }}');">DELETE</a>
+				 <a id='Delete' href="javascript:view_deleteTable('/vdb/deleteTable', '{{ each.0 }}');">DELETE</a>
 	    </td>
    </tr>
  	 </tbody>

@@ -85,16 +85,17 @@ def create_external_vdb(request, root_connection, curs):
 @csrf_exempt
 def createTable(request):
     operation = request.POST.get('operation', '')
+    table_name = request.POST.get('table_name', '')
 
     if operation == 'createTable':
-        table_name = request.POST.get('table_name', '')
 
         # Extract one or multiple column name
         column_data = []
         for key, values in request.POST.lists():
+            print '@KEY ===> %s ||| %s' % (key, values)
             if key == 'csrfmiddlewaretoken' or key == 'operation' or key == 'submit' or key == 'table_name':
                 continue
-            column_data.append([key, values[0]])
+            column_data = values
 
         create_external_table(request, table_name, column_data)
         try:
@@ -105,7 +106,7 @@ def createTable(request):
 
         return vdbIndex(request)
 
-    token = {'result': 'test'}
+    token = {'table_name': table_name}
     return render(request, 'vdb/templates/createTable.html', token)
 
 @csrf_exempt
@@ -130,6 +131,11 @@ def deleteTable(request):
     curs.close()
     root_connection.close()
     return vdbIndex(request)
+
+@csrf_exempt
+def updateTable(request):
+
+    return
 
 @csrf_exempt
 def viewTable(request):
@@ -175,13 +181,10 @@ def create_external_table(request, _table_name, _column_data):
                        db='_'+databaseName, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
-    # Exception Routine for there are no column_data
-    # ----> Please implement code here
-
     # Assemble sql syntax from web request
     sql = "CREATE TABLE %s (" % (tableName)
-    for (key, _colName) in columnData:
-        sql += " %s VARCHAR(30) ," % (_colName)
+    for value in columnData:
+        sql += " %s VARCHAR(30) ," % (value)
     sql += ");"; sql = sql.replace(',)', ')');
 
     print "sql syntax ===> %s ........." % sql

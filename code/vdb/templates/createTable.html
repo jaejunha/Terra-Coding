@@ -4,50 +4,89 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<link rel="stylesheet" href="{% static 'css/vdb/directory_list.css' %}">
 	<title>::T - HUB::</title>
-</head>
-<script>
-var limit = 1;
-function addQuestion()
-{
-    limit++;
-    var theList = document.getElementById("inputFields");
-    var newEl = document.createElement("p");
-    var newText = document.createTextNode("column "+limit+":");
-    var newInput = document.createElement("input");
-    newInput.type = "text";
-    newInput.name = ("column" + limit);
-    newEl.appendChild(newText);
-    newEl.appendChild(newInput);
-    theList.appendChild(newEl);
+
+	<style>
+	#content a{
+	  text-decoration: none;
+	  font-family: 'Open Sans', sans-serif;
+	  font-weight: normal;
+	  font-size: 1em;
+	  color:#FFFFFF;
+	  padding:5px 15px;
+	  background:#848484;
+	  border:0 none;
+	  cursor:pointer;
+	}
+	</style>
+
+
+	<script>
+
+	// With the element initially hidden, we can show it slowly:
+	$( "#inputFields" ).click(function() {
+	  $( "#inputFields" ).fadeIn( "slow", function() {
+	    // Animation complete
+	  });
+	});
+
+	var limit = 1;
+	function addQuestion()
+	{
+	    limit++;
+	    var theList = document.getElementById("inputFields");
+	    var newEl = document.createElement("p");
+	    var newText = document.createTextNode("COL__"+limit+"> ");
+	    var newInput = document.createElement("input");
+	    newInput.type = "text";
+	    newInput.name = ("column");
+	    newEl.appendChild(newText);
+	    newEl.appendChild(newInput);
+	    theList.appendChild(newEl);
+		}
+
+	function addColumn()
+	{
+	    limit++;
+	    var theList = document.getElementById("columnFields");
+	    var th = document.createElement("th");
+	    //var newText = document.createTextNode("column "+limit+":");
+			var input = document.createElement("input");
+			input.type = "text";
+			input.name = ("column" + limit);
+	    th.appendChild(input);
+	    theList.appendChild(th);
 	}
 
-function addColumn()
-{
-    limit++;
-    var theList = document.getElementById("columnFields");
-    var th = document.createElement("th");
-    //var newText = document.createTextNode("column "+limit+":");
-		var input = document.createElement("input");
-		input.type = "text";
-		input.name = ("column" + limit);
-    th.appendChild(input);
-    theList.appendChild(th);
-}
-</script>
+	function view_createTable(url, operation, table_name) {
+		alert('test');
+
+		column = [];
+		for (var i=0; i<document.getElementsByName('column').length; i++)
+		{
+		    alert(document.getElementsByName('column')[i].value);
+				column.push(document.getElementsByName('column')[i].value);
+		}
+
+		//var column = arr.toString();
+		//alert(column);
+
+		$('#content').load(url, {
+			column : column,
+			operation : operation,
+			table_name : table_name
+		});
+	}
+
+	</script>
+</head>
+
 <body>
-<button onclick="addQuestion();">attach Column</button><br>
-
-<form action="/vdb/createTable.html" method="POST">
-  {% csrf_token %}
-  Table Name: <input type='text' name='table_name' placeholder="Table name?"/><br />
-  <div id="inputFields">
-    Column 1:<input type='text' name='column1'/><br />
-  </div>
-  <input type='hidden' name='operation' value="createTable"/>
-  <input type='submit' name='submit' value="save"/>
-</form>
-
-
+<div id="inputFields">
+	COL__1>: <input type='text' name="column">
+</div>
+&nbsp;&nbsp;<button onclick="addQuestion();">+</button><br><br>
+&nbsp;&nbsp;&nbsp;<a href="javascript:view_createTable('/vdb/createTable', 'createTable', '{{ table_name }}');">Save</a>
+<!--
 <button onclick="addColumn();">attach Column</button><br>
 <table class="container">
 	<thead>
@@ -58,5 +97,7 @@ function addColumn()
 		</tr>
 	</thead>
 </table>
+-->
+
 
 </body>
