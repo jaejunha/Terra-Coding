@@ -30,18 +30,45 @@ ERR_ROOT_ACCESSING = 0x20
 
 @csrf_exempt
 def solveProblem(request):
-	print request.POST.get('no',0)
-#	token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
-#	return render(request, 'coding/templates/error.html', token)
-	return render(request, 'coding/templates/solveProblem.html')
+	problem_no = request.POST.get('problem_no',0)
+#	token = {'problem_no': problem_no}
+#	return render(request, 'coding/templates/solveProblem.html',token)
+
+	response = render(request, 'coding/templates/solveProblem.html')
+	response.set_cookie('problem_no', problem_no)
+	return response
 
 @csrf_exempt
 def solveEdit(request):
+	code = ''
+	result = ''
 	if request.POST.get('operation','') == 'Write':
-		#do something
-		pass
-
-	return render(request, 'coding/templates/solveEdit.html')
+		code = request.POST.get('edit_data', '')
+		f = open('test.c','w')
+		f.write(code)
+		f.close()
+		gcc_compile_command = "gcc -o test test.c 2> error"
+		os.popen(gcc_compile_command)
+		result = os.popen("cat error").read()
+		#have error
+		if result.find('error')>=0:
+			os.popen("rm test.c test error")
+			token = {'code': code, 'result':result}
+			return render(request, 'coding/templates/solveEdit.html',token)
+		else:
+			problem_no = request.COOKIES.get('problem_no')
+			result = Solution.objects.all()
+			for r in result:
+				if int(r.sNo.no) == int(problem_no):
+					if os.popen('echo "'+r.ex+'\n" | ./test').read() != r.sol :
+						result = 'Wrong Answer'
+						os.popen("rm test.c test error")
+						token = {'code': code, 'result':result}
+						return render(request, 'coding/templates/solveEdit.html',token)
+			result = 'Correct Answer'
+			os.popen("rm test.c test error")
+	token = {'code': code, 'result':result}
+	return render(request, 'coding/templates/solveEdit.html',token)
 
 @csrf_exempt
 def printDir(request):
