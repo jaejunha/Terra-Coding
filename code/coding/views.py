@@ -25,8 +25,8 @@ from problem.models import *
 
 FORBIDDEN_TEXT_EXTENSION = ['.pyc', '.sqlite3'] # may be white list is more efficient...
 ALLOWED_IMG_EXTENSION = ['.png', '.jpg']
-ERR_NO_SESSION_ID = 0x10
-ERR_ROOT_ACCESSING = 0x20
+ERR_NO_SESSION_ID = 0x10; ERR_ROOT_ACCESSING = 0x20;
+ERR_SECURITY_BREACH = 0x30;
 
 @csrf_exempt
 def solveProblem(request):
@@ -116,19 +116,25 @@ def printDir(request):
 	command = 'ls -1 ' + "'" + directoryName + "'"
 	fileName = os.popen(command).read().split('\n')[:-1]
 
+	# __ FOR FILE DATE __START__ #
+	command = "ls -l " + "'" + directoryName + "'"  + " | awk '{print $6, $7, $8}'"
+	fileDate = os.popen(command).read().split('\n')[1:-1]
+	print command
+	print fileDate
+
 	# __ EXTENSION FILTER IS ON __START__#
 	if operation == 'categorization':
 		project_attr = request.POST.get('project_attribute', '')
 		if project_attr == 'C_Lang':
-			fileInfo = make_file_info(fileType, fileName, 'C')
+			fileInfo = make_file_info(fileType, fileName, fileDate, 'C')
 		elif project_attr == 'CPP_LANG':
-			fileInfo = make_file_info(fileType, fileName, 'CPP')
+			fileInfo = make_file_info(fileType, fileName, fileDate, 'CPP')
 		elif project_attr == 'Python_Lang':
-			fileInfo = make_file_info(fileType, fileName, 'PYTHON')
+			fileInfo = make_file_info(fileType, fileName, fileDate, 'PYTHON')
 		if project_attr == 'ALL':
-			fileInfo = make_file_info(fileType, fileName, 'NULL')
+			fileInfo = make_file_info(fileType, fileName, fileDate, 'NULL')
 	else:
-		fileInfo = make_file_info(fileType, fileName, 'NULL')
+		fileInfo = make_file_info(fileType, fileName, fileDate, 'NULL')
 
 	result = Problem.objects.filter()
 	list = []
@@ -187,6 +193,7 @@ def sourceEdit(request):
 	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
 		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
 		return render(request, 'coding/templates/error.html', token)
+
 	editPath = directoryName + fileName
 
 	# __ ALTER CONTENTS OF FILE __START__#
@@ -214,9 +221,15 @@ def sourceEdit(request):
 	token = {'fileName': fileName, 'directoryName': directoryName, 'file_data': file_data}
 	return render(request, 'coding/templates/sourceEdit.html', token)
 
+@csrf_exempt
 def sourceDel(request):
-	fileName = request.POST.get('selected_file', '')
+	fileName = request.POST.get('fileName', '')
 	directoryName = request.POST.get('dirName', '')
+
+	if ('../' in directoryName) or ('*' in directoryName) or directoryName == '/':
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_SECURITY_BREACH}
+		return render(request, 'coding/templates/error.html', token)
+
 	(directoryName, status) = normalize_directory_path(request, directoryName)
 	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
 		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
@@ -224,8 +237,9 @@ def sourceDel(request):
 
 	path = directoryName + fileName
 	os.popen("rm -rf " + "'" + path + "'")
-	return HttpResponseRedirect('/coding/printDir.html')
+	return printDir(request)
 
+@csrf_exempt
 def createNewFile(request):
 	directoryName = request.POST.get('dirName', '')
 	fileName = request.POST.get('fileName', '')
@@ -245,17 +259,7 @@ def createNewFile(request):
 		f.write('')
 		f.close()
 
-		post = request.POST.copy()
-		post['fileName'] = fileName
-		post['directoryName'] = directoryName
-		request.POST = post
-		print request.POST['fileName']
-
-	elif operation == 'upload':
-		status = do_file_upload(request, directoryName)
-		return printDir(request)
-
-	'''elif operation == 'directory': ===> EXTERMERLY DANGEROUS
+	elif operation == 'directory':
 		if fileName == '':
 			fileName = '_temp_'
 		mutable = request.POST._mutable
@@ -263,9 +267,18 @@ def createNewFile(request):
 		path = directoryName + fileName
 		os.popen('mkdir ' + path)
 		request.POST['operation'] = ''
-		return printDir(request)'''
 
-	return sourceEdit(request)
+	elif operation == 'upload':
+		status = do_file_upload(request, directoryName)
+		if status == 'S':
+			print "SUCEED!"
+		else:
+			print "FAILED!"
+
+	post = request.POST.copy()
+	post['dirName'] = directoryName
+	request.POST = post
+	return printDir(request)
 
 # Connector for multiple langunage
 @csrf_exempt
@@ -300,7 +313,7 @@ def do_compile_c_language(operation, fileName, directoryName):
 	status = ''
 
 	# __ COMPILE PER PROJECT UNIT __START__#
-	if operation == 'ALL':
+	if operation == 'directory':
 		command = 'ls -1 ' + directoryName
 		allName = os.popen(command).read().split('\n')
 		fileName_c = get_all_c_files_name(allName)
@@ -315,14 +328,14 @@ def do_compile_c_language(operation, fileName, directoryName):
 			return ("out of service :)" , 'F', '')
 
 	# __ GCC COMPILER & GET RESULT __START__#
-	gcc_compile_command = "gcc -o " + directoryName + "/main " + path + " 2> " + directoryName + "/compile_message"
+	gcc_compile_command = "gcc -o " + directoryName + "/.main " + path + " 2> " + directoryName + "/.compile_message"
 	result = os.popen(gcc_compile_command).read() # executable file will be created in manage.py directory
-	result = os.popen("cat " + directoryName + "/compile_message").read() # show a error message
+	result = os.popen("cat " + directoryName + "/.compile_message").read() # show a error message
 
 	# __ COMPILE STATUS __START__#
 	if result == '': # which means error is none
 		status = 'S'
-		execute_command = directoryName + "/main"
+		execute_command = directoryName + "/.main"
 		result = os.popen(execute_command).read()
 	else:
 		status = 'F'
@@ -333,9 +346,9 @@ def do_compile_java_language(operation, fileName, directoryName):
 	status = ''
 	path = directoryName + fileName
 
-	java_compile_command = "javac " + path + " 2> " + directoryName + "/compile_message"
+	java_compile_command = "javac " + path + " 2> " + directoryName + "/.compile_message"
 	result = os.popen(java_compile_command).read() # executable file will be created in manage.py directory
-	result = os.popen("cat " + directoryName + "/compile_message").read() # show a error message
+	result = os.popen("cat " + directoryName + "/.compile_message").read() # show a error message
 
 	if result == '': # which means error is none
 		status = 'S'
@@ -352,9 +365,9 @@ def do_compile_python_language(operation, fileName, directoryName):
 	status = ''
 	path = directoryName + fileName
 
-	python_compile_command = "python -m py_compile " + path + " 2> " + directoryName + "/compile_message"
+	python_compile_command = "python -m py_compile " + path + " 2> " + directoryName + "/.compile_message"
 	result = os.popen(python_compile_command).read() # executable file will be created in manage.py directory
-	result = os.popen("cat " + directoryName + "/compile_message").read() # show a error message
+	result = os.popen("cat " + directoryName + "/.compile_message").read() # show a error message
 	os.popen("rm -rf " + path + 'c') # py + c ==> .pyc
 
 	if result == '': # which means error is none
@@ -372,16 +385,16 @@ def errReDirection(request, ReDirectURL):
 	token = {'ReDirectURL': ReDirectURL}
 	return render(request, 'coding/templates/error.html', token)
 
-def make_file_info(_fileType, _fileName, _filter):
+def make_file_info(_fileType, _fileName, _fileDate, _filter):
 	row = [] # [filetype, filename]
 	output = [] # it would be 2D array --- [ [filetype_1, filename_1], [filetype_2, filename_2] ]
 
 	# Exception Handler
-	if _fileType == '' or _fileName == '':
-		print '[#ERR] __make_file_info()__: filetype or filename is NULL'
+	if _fileType == '' or _fileName == '' or _fileDate == '':
+		print '[#ERR] __make_file_info()__: filetype or filename or fileDate is NULL'
 		return "ERR:NULL"
-	if len(_fileType) != len(_fileName):
-		print '[#ERR] __make_file_info()__: length of filetype and filename is not equal'
+	if len(_fileType) != len(_fileName) != len(_fileDate):
+		print '[#ERR] __make_file_info()__: length of array of filetype and filename is not equal'
 		return "ERR:LENGTH"
 
 	# __ MAKE 2D LIST __START__#
@@ -393,6 +406,7 @@ def make_file_info(_fileType, _fileName, _filter):
 		else: # case of directory or other things
 			row.append(_fileType[i])
 		row.append(_fileName[i])
+		row.append(_fileDate[i])
 		output.append(row)
 		row = []
 
@@ -421,19 +435,20 @@ def block_top_directory(request, _currentDirectory):
 	try:
 		if request.session['Directory'] == '': # Session itself exists, but there is no contents.
 			return (_currentDirectory, ERR_NO_SESSION_ID)
-		rootDirectory = "./userDirectory/" + request.session['Directory'] + '/'
 	except:  # when there is no session['Directory'] value.
 		return (_currentDirectory, ERR_NO_SESSION_ID)
 
+	rootDirectory = "./userDirectory/" + request.session['Directory'] + '/'
+
 	curLen = len(_currentDirectory)
 	rootLen = len(rootDirectory)
-	if curLen < rootLen or curLen == rootLen:
+	if curLen <= rootLen:
 		return (rootDirectory, 'Normal')
 
 	return (_currentDirectory, 'Normal')
 
 def normalize_directory_path(request, _dirName):
-	if _dirName == '' or '.': # PREVENT __EMPTY SET ERROR__
+	if _dirName == '' or _dirName == '.': # PREVENT __EMPTY SET ERROR__
 		try:
 			_dirName = "./userDirectory/" + request.session['Directory'] # Relative Path must be used.
 		except:
@@ -460,18 +475,17 @@ def get_all_c_files_name(fileList):
 	return output
 
 def do_file_upload(req, _directoryName):
-    if req.method == 'POST':
-        if 'file' in req.FILES:
-            file = req.FILES['file']
-            filename = file._name
+	if req.method == 'POST':
+		if 'file' in req.FILES:
+			file = req.FILES['file']
+			filename = file._name
+			fp = open('%s/%s' % (_directoryName, filename) , 'wb')
+			for chunk in file.chunks():
+			    fp.write(chunk)
+			fp.close()
+			return "S"
 
-            fp = open('%s/%s' % (_directoryName, filename) , 'wb')
-            for chunk in file.chunks():
-                fp.write(chunk)
-            fp.close()
-            return "S"
-
-    return "F"
+	return "F"
 
 def replace_psuedo_syntax_to_db_syntax(request, _data):
 	# Make database information

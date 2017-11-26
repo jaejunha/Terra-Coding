@@ -5,11 +5,60 @@
 <head>
 	<link rel="stylesheet" href="{% static 'css/coding/directory_list.css' %}">
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<link rel="stylesheet" href="{% static 'package/sweet/jquery.sweet-modal.min.css' %}" />
+	<script src="{% static 'package/sweet/jquery.sweet-modal.min.js' %}"></script>
+
 	<title>::T - HUB::</title>
 	<style>
 
+	.dropdown {
+	    float: left;
+	    overflow: hidden;
+			background-color: #333;
+	}
 
-	#directName {
+	.dropdown .dropbtn {
+	    font-size: 16px;
+	    border: none;
+	    outline: none;
+	    color: white;
+	    padding: 14px 16px;
+	    background-color: inherit;
+	}
+
+	.navbar a:hover, .dropdown:hover .dropbtn {
+	    background-color: red;
+	}
+
+	.dropdown-content {
+	    display: none;
+	    position: absolute;
+	    background-color: #f9f9f9;
+	    min-width: 160px;
+	    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	    z-index: 1;
+	}
+
+	.dropdown-content a {
+	    float: none;
+	    color: black;
+	    padding: 12px 16px;
+	    text-decoration: none;
+	    display: block;
+	    text-align: left;
+	}
+
+	.dropdown-content a:hover {
+	    background-color: #ddd;
+	}
+
+	.dropdown:hover .dropdown-content {
+	    display: block;
+	}
+	</style>
+	<style>
+
+	#directName, #date{
 	  text-decoration: none;
 	  font-family: 'Open Sans', sans-serif;
 	  font-weight: bold;
@@ -21,8 +70,7 @@
 	  cursor:pointer;
 	}
 
-
-	#Compile, #Delete {
+	#Compile, #Delete, #Create {
 		text-decoration: none;
 		font-family: 'Open Sans', sans-serif;
 		font-weight: normal;
@@ -30,6 +78,18 @@
 		color:#FFFFFF;
 		padding:5px 15px;
 		background:#000000;
+		border:0 none;
+		cursor:pointer;
+	}
+
+	#darkBut {
+		text-decoration: none;
+		font-family: 'Open Sans', sans-serif;
+		font-weight: normal;
+		font-size: 1em;
+		color:#FFFFFF;
+		padding:5px 15px;
+		background: #555555;
 		border:0 none;
 		cursor:pointer;
 	}
@@ -211,6 +271,7 @@
 			});
 		}
 	}
+
 	function view_sourceView(url,dir,file){
 	current = 'url='+url+'&dir='+dir+'&file='+file;
 	document.location.hash = "#" + current;
@@ -220,15 +281,33 @@
 		});
 	}
 
+	function view_sourceDel(url, fileName, dirName) {
+
+		$.sweetModal.confirm('Deleting ' + fileName, 'Are you sure?', function() {
+				$.sweetModal({
+					content: 'Deleted!',
+					icon: $.sweetModal.ICON_SUCCESS,
+					//theme: $.sweetModal.THEME_DARK
+				});
+				current = 'url='+url+'&fileName='+fileName+'&dirName='+dirName;
+				document.location.hash = "#" + current;
+				$('#content').load(url,{
+					fileName : fileName,
+					dirName : dirName
+				});
+			});
+		}
+
+
 	function view_do_compile(url, operation, fileName, dirName) {
-current = 'url='+url+'&operation='+operation+'&fileName='+fileName+'&dirName='+dirName;
-document.location.hash = "#" + current;
-	$('#content').load(url,{
-		operation : operation,
-		fileName : fileName,
-		dirName : dirName
-	});
-}
+		current = 'url='+url+'&operation='+operation+'&fileName='+fileName+'&dirName='+dirName;
+		document.location.hash = "#" + current;
+		$('#middle').load(url,{
+			operation : operation,
+			fileName : fileName,
+			dirName : dirName
+		});
+	}
 
 function view_solveProblem(){
 	$('#middle').load('coding/solveProblem',{
@@ -236,6 +315,27 @@ function view_solveProblem(){
 	});
 	$(dialog_detail).dialog("close");
 }
+
+	function view_createNewFile(url, operation, dirName)
+	{
+		var question = '';
+		if(operation == 'file')
+			question = "@_ Enter new file name _@";
+		else if(operation == 'directory')
+			question = "@_ Enter new directory name _@";
+
+		$.sweetModal.prompt(question, null, null, function(fileName)
+		{
+
+					current = 'url='+url+'&operation='+operation+'&file='+fileName+'&dir='+dirName;
+					document.location.hash = "#" + current;
+					$('#content').load(url, {
+						dirName : dirName,
+						operation : operation,
+						fileName : fileName
+					});
+		});
+	}
 
 	</script>
 	</head>
@@ -274,57 +374,25 @@ function view_solveProblem(){
 	  </table>
 		</div>
 		<div id="project">
-	<!-- JAVASCRIPT WILL BE ADDED
-	<script>
-		alert(document.cookie);
-	</script>
-	-->
 	<br><br>
 
 	<!-- Most Top&Left ___ Directory Input form -->
 	<center>
-	<!-- Create Newfile -->
-	<form action="/coding/createNewFile.html" method="POST">
-		{% csrf_token %}
-		<input type="hidden" name="dirName" value="{{ dirName }}"/>
-		<input type="hidden" name="operation" value="file"/>
-		<input type="text" placeholder="file name?" name="fileName">
-		<input type="submit" value="create file" onclick="return alert(' GOOD LUCK :)');"/>
-	</form>
+	<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'file', '{{dirName}}')">+File</a>
+	<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'directory', '{{dirName}}')">+Directory</a>
 	<br><br><br>
 
-	<!-- Upload Newfile -->
+	<!-- Upload Newfile
 	<form action="/coding/createNewFile.html" method="POST" enctype="multipart/form-data">
-		{% csrf_token %}
-  	File: <input type="file" name="file"/>
-				 <input type="hidden" name="dirName" value="{{ dirName }}"/>
-				 <input type="hidden" name="operation" value="upload"/>
-         <input type="submit" value="UPLOAD" />
-  </form>
-
-	<!-- Create NewFolder ===> EXTERMERLY DANGEROUS....
-	<form action="/coding/createNewFile.html" method="POST">
-		{% csrf_token %}
+	{% csrf_token %}
 		<input type="hidden" name="dirName" value="{{ dirName }}"/>
-		<input type="hidden" name="operation" value="directory"/>
-		<input type="text" placeholder="dir name?" name="fileName">
-		<input type="submit" value="create dir" onclick="return alert(' GOOD LUCK :)');"/>
-	</form>
-	<br><br><br> -->
-
-	<!-- Compile All C files on this Directory -->
-	<form action="/coding/compile_res.html" method="POST">
-		{% csrf_token %}
-		<input type="hidden" name="operation" value="ALL"/>
-		<input type="hidden" name="dirName" value="{{ dirName }}"/>
-		<input type="hidden" name="allName" value="{{ resultOfDir }}"/>
-		<!--<input type="text" placeholder="file name?" name="newFileName">-->
-		<input type="submit" value="Complie this project as C"/>
-	</form>
+		<input type="hidden" name="operation" value="upload"/>
+		<input type="file" onchange="form.submit()"/>
+  </form>-->
 
 	<!-- Select project attribute -->
 	<select name="project_attribute" id="project_attribute" onchange="view_printDir('categorization','/coding/printDir','{{dirName}}','')">
-		<option value="Select">Select</option>
+		<option value="Select">Extension</option>
 		<option value="ALL">ALL</option>
     <option value="C_Lang">C</option>
     <option value="CPP_LANG">C++</option>
@@ -344,9 +412,9 @@ function view_solveProblem(){
 		<tr>
 			<td><img style="width: 70px; height: auto;" src="{% static 'ico/upper_arrow.png' %}"></td>
 			<td>
-			<a id='directName' href="javascript:view_printDir('GoBack','/coding/printDir','{{dirName}}','../')">../</a>
+			<center><a id='directName' href="javascript:view_printDir('GoBack','/coding/printDir','{{dirName}}','../')">../</a></center>
 		  </td>
-			<td>NONE</td>
+			<td><center>NONE</center></td>
 			<td>GO TO PARENT DIRECTORY</td>
 		</tr>
 		{% for info in fileInfo %}
@@ -382,35 +450,32 @@ function view_solveProblem(){
 		 </td>
 
 		<!-- 2nd column ___ FileName -->
-		<td>
+		<td><center>
 				{% if info.0 == 'd' %}
 				<a id='directName' href="javascript:view_printDir('ReDirect','/coding/printDir','{{dirName}}','{{info.1}}')">{{info.1}}</a>
 				{% else %}
 				<a id='directName' href="javascript:view_sourceView('/coding/sourceView','{{ dirName }}','{{ info.1 }}')">{{info.1}}</a>
 				{% endif %}
-    </td>
+    </center></td>
 		<!-- 3rd column ___ DATE -->
 		<td>
-			<input type="checkbox" id="coding" name="interest" value="coding">
+			<center>{{ info.2 }}</center>
 		</td>
 		<!-- 4th column ___ Button Family -->
-		<td>
-			<table align="center" border="0" cellpadding="0" cellspacing="0">
-			<!-- Redirect to sourceDel -->
-			<!--<form action="/coding/sourceDel.html" method="POST">
-				{% csrf_token %}
-				<input type="hidden" name="selected_file" value="{{ info.1 }}"/>
-				<input type="hidden" name="dirName" value="{{ dirName }}"/>
-				<input class="DEL_BUTTON" type="submit" name="del" value="DELETE" onclick="return confirm('Are you very very sure you want to delete? :)');"/>
-			</form>-->
-			<a id='Delete' href="javascript:view_do_compile('/coding/sourceDel.html', 'selected','{{info.1}}', '{{ dirName }}')"> DELETE </a>
-
-		&nbsp;&nbsp;
-		 <!-- Redirect to a single unit complie -->
-		 {% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
-			<a id='Compile' href="javascript:view_do_compile('/coding/compile_res', 'selected','{{info.1}}', '{{ dirName }}')">COMPILE</a>
-		 {% endif %}
-		</table>
+		<td width=25%>
+			<div class="navbar">
+			  <div class="dropdown">
+			    <button class="dropbtn">Functions</button>
+			    <div class="dropdown-content">
+						{% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
+						<a href="javascript:view_do_compile('/coding/compile_res', 'selected', '{{info.1}}', '{{ dirName }}')">Compile</a>
+ 					  {% elif info.0 == 'd' %}
+						<a href="javascript:view_do_compile('/coding/compile_res', 'directory', '{{info.1}}', '{{ dirName }}')">Compile this project as C</a>
+	  				{% endif %}
+						<a href="javascript:view_sourceDel('/coding/sourceDel.html', '{{info.1}}', '{{ dirName }}')">Delete</a>
+			    </div>
+			  </div>
+			</div>
 		</td>
    </tr>
  	 </tbody>

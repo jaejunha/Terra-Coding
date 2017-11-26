@@ -3,10 +3,13 @@
 <html lang="en">
 {% load staticfiles %}
 <head>
-	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::compile Result::</title>
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
+	<link rel="stylesheet" href="{% static 'package/sweet/jquery.sweet-modal.min.css' %}" />
+	<script src="{% static 'package/sweet/jquery.sweet-modal.min.js' %}"></script>
+
 	<style>
-	#content a{
+	#prev{
 	  text-decoration: none;
 	  font-family: 'Open Sans', sans-serif;
 	  font-weight: normal;
@@ -17,31 +20,127 @@
 	  border:0 none;
 	  cursor:pointer;
 	}
+
+	form, p, span {
+	    color:#FE2E2E;
+	    margin:0;
+	    padding:0;
+	  }
+
+	input { font:15px arial; }
+
+	a {
+	    color:#0000FF;
+	    text-decoration:none; }
+
+	    a:hover { text-decoration:underline; }
+
+	#wrapper, #loginform {
+	    margin:0 auto;
+	    padding-bottom:25px;
+	    background:#000000;
+	    width:70%;
+	    border:1px solid #FE2E2E; }
+
+	#loginform { padding-top:18px; }
+
+	#loginform p { margin: 5px; }
+
+	#chatbox {
+	    text-align:left;
+	    margin:0 auto;
+	    margin-bottom:25px;
+	    padding:10px;
+	    background:#fff;
+	    height:600px;
+	    width:90%;
+	    border:1px solid #FE2E2E;
+	    overflow:auto; }
+
+	#usermsg {
+	    width:395px;
+	    border:1px solid #ACD8F0; }
+
+	#submit { width: 60px; }
+
+	.error { color: #ff0000; }
+
+	#menu { padding:12.5px 25px 12.5px 25px; }
+
+	.welcome { float:left; }
+
+	.logout { float:right; }
+
+	.msgln { margin:0 0 2px 0; }
 	</style>
+
 	<script>
-	function view_printDir(url, op, dir){
-	current = 'op='+op+'&url='+url+'&dir='+dir;
-	$('#content').load(url,{
-		dirName : dir,
-		operation : op,
+		function view_printDir(url, op, dir){
+		current = 'op='+op+'&url='+url+'&dir='+dir;
+		$('#content').load(url,{
+			dirName : dir,
+			operation : op
+			});
+		}
+
+		function sweet_result(status, result)
+		{
+			var _title;
+			var _icon;
+			var _label;
+			var _classed;
+
+			if (status == 'S')
+			{
+				_title = 'SUCCESS';
+				_icon = $.sweetModal.ICON_SUCCESS;
+				_label = 'Congraturations!'
+				_classed = 'greenB';
+			}else{
+				_title = 'COMPILE FAILED';
+				_icon = $.sweetModal.ICON_ERROR;
+				_label = 'Cheer UP! :)'
+				_classed = 'redB';
+			}
+			result = unescape(result);
+			$.sweetModal({
+				content: result,
+				title: _title,
+				icon: _icon,
+
+				buttons: [
+					{
+						label: _label,
+						classes: _classed,
+						action: function() {
+								if (status == 'F')
+									return view_printDir('/coding/printDir', 'ReDirect', '{{directoryName}}');
+						}
+					}
+				]
+			});
+		}
+
+		// jQuery Document
+		$("#submitmsg").click(function(){
+			var clientmsg = $("#usermsg").val();
+			$.post("views.py", {text: clientmsg});
+			$("#usermsg").attr("value", "");
+			return false;
 		});
-	}
+
 	</script>
 </head>
 
 <body>
 
 <center>
-<b><font size=15 style="Lucida Blackletter" color="#9FF781">
-[COMPILE RESULT]
-</font></b>
-
-<br><br><br><br><br><br>
-<a href="javascript:view_printDir('/coding/printDir', 'ReDirect','{{directoryName}}')">Prev</a>
+<br><br><br><br>
 
 {% if status == 'S' %}
-	<h1> compile status: <font color="Green">successful</font> </h1>
-	<link type="text/css" rel="stylesheet" href="{% static 'css/coding/compile_box.css' %}" />
+<script> sweet_result('{{status}}'); </script>
+<div>
+<a id='prev' href="javascript:view_printDir('/coding/printDir', 'ReDirect', '{{directoryName}}')">Prev</a>
 
 	<div id="wrapper">
 	    <div id="menu">
@@ -50,31 +149,18 @@
 	        <div style="clear:both"></div>
 	    </div>
 	    <div id="chatbox">
-				<pre>{{ result }}</pre>
+				<pre><font size=15>{{ result }}</font></pre>
 			</div>
 	    <form name="message" action="">
 	        <input name="usermsg" type="text" id="usermsg" size="63" />
 	        <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
 	    </form>
 	</div>
-	<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
-	-->
-	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
-	<script type="text/javascript">
-	// jQuery Document
-	$(document).ready(function(){
-
-	});
-	$("#submitmsg").click(function(){
-		var clientmsg = $("#usermsg").val();
-		$.post("views.py", {text: clientmsg});
-		$("#usermsg").attr("value", "");
-		return false;
-	});
-	</script>
-
+</div>
 {% elif status == 'F' %}
-	<h1> compile status: <font color="Red">failed</font> </h1>
+
+<script> sweet_result('{{status}}', '<pre>{{result | escapejs}}</pre>'); </script>
+
 	<hr color="red" width=100%>
 	<font size=3 style="Lucida Blackletter">
 	<pre> {{ result }} </pre>
