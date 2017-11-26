@@ -119,8 +119,6 @@ def printDir(request):
 	# __ FOR FILE DATE __START__ #
 	command = "ls -l " + "'" + directoryName + "'"  + " | awk '{print $6, $7, $8}'"
 	fileDate = os.popen(command).read().split('\n')[1:-1]
-	print command
-	print fileDate
 
 	# __ EXTENSION FILTER IS ON __START__#
 	if operation == 'categorization':
@@ -328,7 +326,7 @@ def do_compile_c_language(operation, fileName, directoryName):
 			return ("out of service :)" , 'F', '')
 
 	# __ GCC COMPILER & GET RESULT __START__#
-	gcc_compile_command = "gcc -o " + directoryName + "/.main " + path + " 2> " + directoryName + "/.compile_message"
+	gcc_compile_command = "gcc -o " + directoryName + "/.main " + path + ' -I/usr/include/mysql -L/usr/local/lib/mysql -lmysqlclient ' + " 2> " + directoryName + "/.compile_message"
 	result = os.popen(gcc_compile_command).read() # executable file will be created in manage.py directory
 	result = os.popen("cat " + directoryName + "/.compile_message").read() # show a error message
 

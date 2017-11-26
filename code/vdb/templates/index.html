@@ -2,12 +2,60 @@
 <html lang="en">
 {% load staticfiles %}
 <head>
-	<link rel="stylesheet" href="{% static 'css/vdb/directory_list.css' %}">
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<link rel="stylesheet" href="{% static 'package/sweet/jquery.sweet-modal.min.css' %}" />
 	<script src="{% static 'package/sweet/jquery.sweet-modal.min.js' %}"></script>
 
 	<title>::T - HUB::</title>
+
+	<style>
+
+	.dropdown {
+	    float: left;
+	    overflow: hidden;
+			background-color: #333;
+	}
+
+	.dropdown .dropbtn {
+	    font-size: 16px;
+	    border: none;
+	    outline: none;
+	    color: white;
+	    padding: 14px 16px;
+	    background-color: inherit;
+	}
+
+	.navbar a:hover, .dropdown:hover .dropbtn {
+	    background-color: red;
+	}
+
+	.dropdown-content {
+	    display: none;
+	    position: absolute;
+	    background-color: #f9f9f9;
+	    min-width: 160px;
+	    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	    z-index: 1;
+	}
+
+	.dropdown-content a {
+	    float: none;
+	    color: black;
+	    padding: 12px 16px;
+	    text-decoration: none;
+	    display: block;
+	    text-align: left;
+	}
+
+	.dropdown-content a:hover {
+	    background-color: #ddd;
+	}
+
+	.dropdown:hover .dropdown-content {
+	    display: block;
+	}
+	</style>
+
 	<style>
 	#tableName {
 	  text-decoration: none;
@@ -28,7 +76,7 @@
 	  font-size: 1em;
 	  color:#FFFFFF;
 	  padding:5px 15px;
-	  background:#848484;
+	  background:#333;
 	  border:0 none;
 	  cursor:pointer;
 	}
@@ -56,8 +104,114 @@
 	  border:0 none;
 	  cursor:pointer;
 	}
+
+	table{
+			width: 90%;
+			border: 2px solid #ffffff;
+			border-collapse: collapse;
+			background: #566788;
+	}
+
+	th, td{
+		border: 2px solid #ffffff;
+		padding: 10px;
+	}
+	th{
+		background: #323c50;
+		text-align: center;
+		color: #ffffff;
+	}
+	td{
+		color: #efefef;
+	}
 	</style>
+
+	<style>
+	#left{
+		float:left;
+		width:250px;
+		display:inline-block;
+		line-height: 1px;
+	}
+
+	#left .title{
+		width: 250px;
+		display:table-cell;
+		vertical-align:middle;
+		font-size:25pt;
+		height:80px;
+		text-align:center;
+	}
+
+	#left .box{
+		width: 250px;
+		display:table-cell;
+		vertical-align:middle;
+		height:50px;
+		background-color: #ffffff;
+	}
+
+	#left .box div:nth-child(1){
+		background-color:#555555;
+		width:10px;
+		height:50px;
+	}
+
+	#left .box div:nth-child(2){
+		text-align:center;
+		position:relative;
+		width:240px;
+		height:0px;
+		top: -25px;
+		left:10px;
+	}
+
+	#left div a{
+		font-size:20pt;
+		text-decoration: none;
+		color:#333333;
+	}
+
+	#middle{
+		float:left;
+		position:relative;
+	}
+
+	</style>
+
 	<script>
+	var current='';
+
+	$(window).resize(function (){
+		$('#middle').css('width',$(window).width()-$('#left').width()-20);
+		$('#middle').css('left','10px');
+		$('#middle').css('top','10px');
+	});
+	$(window).ready( function() {
+		$('#middle').css('width',$(window).width()-$('#left').width()-20);
+		$('#middle').css('left','10px');
+		$('#middle').css('top','10px');
+	});
+
+	$(window).on('hashchange', function() {
+			if(location.hash != ('#'+current)){
+				checkForHash();
+			}
+	});
+
+	function checkForHash() {
+	    if(document.location.hash){
+	        var hashName = document.location.hash;
+	        hashName = hashName.replace("#","");
+					var res = hashName.split("&");
+					var method = res[1].split("=")[1];
+					if(method == '/coding/printDir'){
+						view_printDir(res[0].split("=")[1],res[1].split("=")[1],res[2].split("=")[1],res[3].split("=")[1]);
+					}
+	    } else {
+					$("#content").load('/coding/printDir');
+			}
+	}
 
 	function view_createTable(url) {
 		$.sweetModal.prompt('*please Enter your database name*', null, null, function(tableName)
@@ -85,14 +239,24 @@
 </head>
 
 <body>
+	<div id ="left">
+		<div class="title">VDB</div>
+			<br>
+			<div class="box 0">
+			<div></div>
+				<div>
+					<a>Database</a>
+				</div>
+			</div>
+			<br>
+		</div>
+	<div id="middle">
 
 	<center>
-	<table>
+
 		<br><br>
-		<a id='Create' href="javascript:view_createTable('/vdb/createTable');">CREATE</a>
-		 &nbsp;
-		<a id='Update' href="javascript:view_createTable('/vdb/createTable');">UPDATE</a>
-	<br><br>
+		<a id='Create' href="javascript:view_createTable('/vdb/createTable');">+Table</a>
+		<br><br>
 
 	<table class="container">
 		<thead>
@@ -108,12 +272,19 @@
 				 <a id='tableName' href="javascript:view_viewTable('/vdb/viewTable','{{ each.0 }}')">{{ each.0 }}</a>
 			 </td>
 			<td>  <!-- 2nd column -->
-				 <a id='Delete' href="javascript:view_deleteTable('/vdb/deleteTable', '{{ each.0 }}');">DELETE</a>
-	    </td>
+				<div class="navbar">
+				  <div class="dropdown">
+				    <button class="dropbtn">Functions</button>
+				    <div class="dropdown-content">
+							<a href="javascript:view_deleteTable('/vdb/deleteTable', '{{ each.0 }}');">DELETE</a>
+				 		  <a href="javascript:view_createTable('/vdb/createTable');">UPDATE</a>
+					  </div>
+				  </div>
+				</div>
+			</td>
    </tr>
  	 </tbody>
 	 {% endfor %}
   </table>
-</table>
 </body>
 </html>
