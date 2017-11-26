@@ -4,20 +4,33 @@
 <head>
 <meta charset="utf-8">
 <script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+<style>
+  #problem_box{
+    margin: 10px;
+    padding: 10px;
+    background-color: #ffffff;
+    overflow: auto;
+  }
+</style>
 <script>
 $(window).resize(function (){
   $('#frame').css('width',$('#middle').width());
   $('#frame').css('height',$(document).height()-140);
+  $('#problem_box').css('width',$('#middle').width()-30);
 });
 $(window).ready( function() {
   $('#frame').css('width',$('#middle').width());
   $('#frame').css('height',$(document).height()-140);
+  $('#problem_box').css('width',$('#middle').width()-30);
+  $('#problem_box').css('height',100);
 });
 </script>
 </head>
 <body>
-<div>Problem</div>
-<iframe id="frame" src="coding/solveEdit" width="100%" frameborder="0"  scrolling = "no"></iframe>
-<div>Result</div>
+<h3><b style="margin:10px;">Problem : {{problem_name}}</b></h3>
+<div id ="problem_box">
+  <pre>{{problem_desc}}</pre>
+</div>
+<iframe id="frame" src="coding/solveEdit" width="100%" frameborder="0"  scrolling = "no"></iframe><br>
 </body>
 </html>

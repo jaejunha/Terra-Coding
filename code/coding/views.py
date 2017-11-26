@@ -31,10 +31,10 @@ ERR_SECURITY_BREACH = 0x30;
 @csrf_exempt
 def solveProblem(request):
 	problem_no = request.POST.get('problem_no',0)
-#	token = {'problem_no': problem_no}
-#	return render(request, 'coding/templates/solveProblem.html',token)
 
-	response = render(request, 'coding/templates/solveProblem.html')
+	result = Problem.objects.filter(no = problem_no)
+	token = {'problem_name': result[0].name, 'problem_desc': result[0].desc}
+	response = render(request, 'coding/templates/solveProblem.html',token)
 	response.set_cookie('problem_no', problem_no)
 	return response
 
