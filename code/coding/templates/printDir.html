@@ -109,6 +109,8 @@
 	var select_no;
 
 	$(window).resize(function (){
+		$('#problem').css('visibility','hidden');
+		$('#project').css('visibility','hidden');
 		$('#middle').css('width',$(window).width()-$('#left').width()-20);
 		$('#middle').css('left','10px');
 		$('#middle').css('top','10px');
@@ -156,11 +158,11 @@
 
 		if(sessionStorage.getItem('coding')==0){
 			$('#left div a').text('Problem');
-			$('#project').hide();
+			$('#problem').css('visibility','visible');
 			mode = 'problem';
 		}else{
 			$('#left div a').text('Project');
-			$('#problem').hide();
+			$('#project').css('visibility','visible');
 			mode = 'project';
 		}
 		sessionStorage.removeItem('coding');
@@ -229,8 +231,8 @@ document.location.hash = "#" + current;
 }
 
 function view_solveProblem(){
-	$('#content').load('coding/solveProblem',{
-		no : select_no
+	$('#middle').load('coding/solveProblem',{
+		problem_no : select_no
 	});
 	$(dialog_detail).dialog("close");
 }

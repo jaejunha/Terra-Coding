@@ -73,18 +73,34 @@
 			editAreaLoader.execCommand(id, 'set_editable', !editAreaLoader.execCommand(id, 'is_editable'));
 		}
 
+		function editAreaLoaded(id){
+			open_file1();
+		}
+
+		function open_file1()
+		{
+			var new_file= {id: "test", text: "{% autoescape off %}{% filter escapejs %}{{ code }}{% endfilter %}{% endautoescape %}", syntax: 'c'};
+			editAreaLoader.openFile('sourceEditorArea', new_file);
+		}
+
+		function close_file1()
+		{
+			editAreaLoader.closeFile('sourceEditorArea', "test");
+		}
+
 	</script>
 </head>
 <!--_______________ END OF HEAD _______________-->
 
 <body>
-		<form action="/coding/solveEdit.html" method="POST" style="display:inline;">
+		<form action="/coding/solveEdit" method="POST" style="display:inline;">
 			{% csrf_token %}
-				<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 60%; width: 100%;" name="edit_data"></textarea>
+				<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 60%; width: 100%;" name="edit_data">{{code}}</textarea>
 				<input type="hidden" name="operation" value="Write"/>
 				<div align="right">
 				<input id="submit" type="submit" value="Submit" onclick="return confirm('Are you sure want to submit this code? :)')"/>
 				</div>
 		</form>
+		{{result}}
 </body>
 </html>

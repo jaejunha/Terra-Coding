@@ -6,12 +6,12 @@
 <script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
 <script>
 $(window).resize(function (){
-  $('#frame').css('width',$(document).width());
-  //$('#frame').css('height',$(document).height()-140);
+  $('#frame').css('width',$('#middle').width());
+  $('#frame').css('height',$(document).height()-140);
 });
 $(window).ready( function() {
-  $('#frame').css('width',$(document).width());
-  //$('#frame').css('height',$(document).height()-140);
+  $('#frame').css('width',$('#middle').width());
+  $('#frame').css('height',$(document).height()-140);
 });
 </script>
 </head>
