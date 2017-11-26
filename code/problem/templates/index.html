@@ -71,7 +71,7 @@
 
         dialog_problem = $("#dialog_problem").dialog({
           width:'auto',
-          height: 800,
+          height: 750,
           autoOpen: true,
           modal:	true,
           disabled:	true,
@@ -112,6 +112,8 @@
         if(no == 1){
           mode = 0;
           $(dialog_problem).dialog("open");
+          $('#problem_box').html('');
+          add_testcase();
         }else if(no == 2){
           if(select_el==null){
             alert('choose problem first');
@@ -151,8 +153,6 @@
               problem_menu(0);
               $('textarea').val('');
               $('input:nth-of-type(1)').val('');
-              $('input:nth-of-type(2)').val('');
-              $('input:nth-of-type(3)').val('');
               $(dialog_problem).dialog("close");
             }
         }else if(o=='modify'){
@@ -189,6 +189,21 @@
       function cancel(){
         problem_menu(0);
         $(dialog_delete).dialog("close");
+      }
+
+      function add_testcase(){
+        var text = $('#problem_box').html();
+        text+='<div><input placeholder="enter the problem" style="width:275px; margin-right:10px;">';
+        text+='<input placeholder="enter the solution" style="width:275px; margin-right:10px;">';
+        text+='<button type="button" style="width:40px;" onclick="javascript:add_testcase();">+</button>';
+        text+='<button type="button" class="minus" style="width:40px;">-</button></div';
+        $('#problem_box').html(text);
+
+        $(".minus").click(function(){
+          var index = $(".minus").index($(this));
+          if($("#problem_box div").length > 1)
+            $('#problem_box div:nth-of-type('+(index+1)+')').remove();
+        });
       }
       </script>
   </head>
@@ -233,15 +248,8 @@
         <br>
         <textarea id="desc" width="700px" height="300px"></textarea><br>
         <br>
-        Problem<br>
-        <br>
-        <input placeholder="enter the problem" style="width:700px;"><br>
-        <br>
-        Solution<br>
-        <br>
-        <input placeholder="enter the solution" style="width:700px;"><br>
-        <br>
-        <br>
+        <div id="problem_box" style="height:150px; overflow:auto;">
+        </div>
         <div align="right">
           <button type="button" onclick="javascript:view_problem(mode==0?'save':'modify');">Make</button>
         </div>
