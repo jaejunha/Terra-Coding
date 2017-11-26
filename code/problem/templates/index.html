@@ -124,8 +124,8 @@
             edit = $(select_el).html().replace(/<td>/gi,'').split('</td>');
             $('input:nth-of-type(1)').val(edit[1].trim());
             $('textarea').val(edit[2].trim());
-            $('input:nth-of-type(2)').val(edit[3].trim().replace('<td style="display:none;">',''));
-            $('input:nth-of-type(3)').val(edit[4].trim().replace('<td style="display:none;">',''));
+            $('#problem_box input:nth-of-type(1)').val(edit[3].trim().replace('<td style="display:none;">',''));
+            $('#problem_box input:nth-of-type(2)').val(edit[4].trim().replace('<td style="display:none;">',''));
             $(dialog_problem).dialog("open");
           }
         }
@@ -143,12 +143,18 @@
             if($('input:nth-of-type(1)').val() == '')
               alert('Please enter the title');
             else{
-          		$('#middle').load('/problem/list',{
-          			op : o,
+              var examples='';
+              var solutions='';
+              for(var i=0;i<$("#problem_box div").length;i++){
+                examples += $('#problem_box div:nth-of-type('+(i+1)+') input:nth-of-type(1)').val()+'&';
+                solutions += $('#problem_box div:nth-of-type('+(i+1)+') input:nth-of-type(2)').val()+'&';
+              }
+            	$('#middle').load('/problem/list',{
+            		op : o,
                 title : $('input:nth-of-type(1)').val(),
                 desc : $('textarea').val(),
-                example : $('input:nth-of-type(2)').val(),
-                solution : $('input:nth-of-type(3)').val()
+                example : examples,
+                solution : solutions
           		});
               problem_menu(0);
               $('textarea').val('');
@@ -164,14 +170,14 @@
               no : select_no,
               title : $('input:nth-of-type(1)').val(),
               desc : $('textarea').val(),
-              example : $('input:nth-of-type(2)').val(),
-              solution : $('input:nth-of-type(3)').val()
+              example : $('#problem_box input:nth-of-type(1)').val(),
+              solution : $('#problem_box input:nth-of-type(2)').val()
         		});
             problem_menu(0);
             $('textarea').val('');
             $('input:nth-of-type(1)').val('');
-            $('input:nth-of-type(2)').val('');
-            $('input:nth-of-type(3)').val('');
+            $('#problem_box input:nth-of-type(1)').val('');
+            $('#problem_box input:nth-of-type(2)').val('');
             $(dialog_problem).dialog("close");
           }
         }

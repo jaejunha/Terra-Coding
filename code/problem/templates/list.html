@@ -22,7 +22,9 @@
 
           $(dialog_detail).dialog("open");
           var text = $(select_el).html().replace(/<td>/gi,'').split('</td>');
-          $(dialog_detail).html('<b>'+text[1]+'</b><br><br>'+text[2]+'<br>'+text[3]+'<br>'+text[4]);
+          var example = text[3].replace(/'|\[|\]| |u/gi,"").replace(/,/gi,'<br>').trim();
+          var solution = text[4].replace(/'|\[|\]| |u/gi,"").replace(/,/gi,'<br>').trim();
+          $(dialog_detail).html('<b>'+text[1]+'</b><br><br>'+text[2]+'<br><pre>'+example+'</pre><br><pre>'+solution+'</pre>');
         });
       });
       </script>
