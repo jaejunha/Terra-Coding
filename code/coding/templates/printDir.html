@@ -7,7 +7,7 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<link rel="stylesheet" href="{% static 'package/sweet/jquery.sweet-modal.min.css' %}" />
 	<script src="{% static 'package/sweet/jquery.sweet-modal.min.js' %}"></script>
-	
+
 	<title>::T - HUB::</title>
 	<style>
 
@@ -300,7 +300,7 @@
 	function view_do_compile(url, operation, fileName, dirName) {
 		current = 'url='+url+'&operation='+operation+'&fileName='+fileName+'&dirName='+dirName;
 		document.location.hash = "#" + current;
-		$('#content').load(url,{
+		$('#middle').load(url,{
 			operation : operation,
 			fileName : fileName,
 			dirName : dirName
@@ -390,7 +390,7 @@
 
 	<!-- Select project attribute -->
 	<select name="project_attribute" id="project_attribute" onchange="view_printDir('categorization','/coding/printDir','{{dirName}}','')">
-		<option value="Select">Select</option>
+		<option value="Select">Extension</option>
 		<option value="ALL">ALL</option>
     <option value="C_Lang">C</option>
     <option value="CPP_LANG">C++</option>
@@ -461,44 +461,19 @@
 		</td>
 		<!-- 4th column ___ Button Family -->
 		<td width=25%>
-		<!--<button id='darkBut' data-dropdown="#dropdown-dark-with-icons-{{info.1}}">Action</button>
-
-		{% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
-		<div class="dropdown-menu dropdown-anchor-left-center dark" id="dropdown-dark-with-icons-{{info.1}}">
-			 <ul>
-				 <li><a href="javascript:view_do_compile('/coding/compile_res', 'selected','{{info.1}}', '{{ dirName }}')">Compile</a></li>
-				 <li><a href="javascript:view_sourceDel('/coding/sourceDel.html', '{{info.1}}', '{{ dirName }}')">Delete</a></li>
-			 </ul>
-		 </div>
-		 {% elif info.0 == 'd' %}
-		<div class="dropdown-menu dropdown-anchor-left-center dark" id="dropdown-dark-with-icons-{{info.1}}">
- 			 <ul>
-				 <li><a href="javascript:view_do_compile('/coding/compile_res', 'directory', '{{info.1}}', '{{ dirName }}')">Compile this project as C</a></li>
- 				 <li><a href="javascript:view_sourceDel('/coding/sourceDel.html', '{{info.1}}', '{{ dirName }}')">Delete</a></li>
-				 </ul>
- 		 </div>
-		 {% else %}
-		 <div class="dropdown-menu dropdown-anchor-left-center dark" id="dropdown-dark-with-icons-{{info.1}}">
- 			 <ul>
- 				 <li><a href="javascript:view_sourceDel('/coding/sourceDel.html', '{{info.1}}', '{{ dirName }}')">Delete</a></li>
- 			 </ul>
- 		 </div>
-		 {% endif %}
-		 	-->
 			<div class="navbar">
 			  <div class="dropdown">
 			    <button class="dropbtn">Functions</button>
 			    <div class="dropdown-content">
 						{% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
-						<a href="javascript:view_do_compile('/coding/compile_res', 'selected','{{info.1}}', '{{ dirName }}')">Compile</a>
+						<a href="javascript:view_do_compile('/coding/compile_res', 'selected', '{{info.1}}', '{{ dirName }}')">Compile</a>
  					  {% elif info.0 == 'd' %}
-						<li><a href="javascript:view_do_compile('/coding/compile_res', 'directory', '{{info.1}}', '{{ dirName }}')">Compile this project as C</a></li>
+						<a href="javascript:view_do_compile('/coding/compile_res', 'directory', '{{info.1}}', '{{ dirName }}')">Compile this project as C</a>
 	  				{% endif %}
 						<a href="javascript:view_sourceDel('/coding/sourceDel.html', '{{info.1}}', '{{ dirName }}')">Delete</a>
 			    </div>
 			  </div>
 			</div>
-
 		</td>
    </tr>
  	 </tbody>

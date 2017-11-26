@@ -92,6 +92,8 @@ def printDir(request):
 	# __ FOR FILE DATE __START__ #
 	command = "ls -l " + "'" + directoryName + "'"  + " | awk '{print $6, $7, $8}'"
 	fileDate = os.popen(command).read().split('\n')[1:-1]
+	print command
+	print fileDate
 
 	# __ EXTENSION FILTER IS ON __START__#
 	if operation == 'categorization':
