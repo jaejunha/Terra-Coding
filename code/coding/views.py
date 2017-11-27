@@ -289,18 +289,24 @@ def compiler_connector(request):
 		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
 		return render(request, 'coding/templates/error.html', token)
 
-	extension = os.path.splitext(fileName)[1]
-	# case of C langunage
-	if extension == '.c' or extension == '.C':
-		(result, status, directoryName) = do_compile_c_language(operation, fileName, directoryName)
-	# case of JAVA langunage
-	elif extension == '.java' or extension == '.JAVA':
-		(result, status, directoryName) = do_compile_java_language(operation, fileName, directoryName)
-	elif extension == '.py' or extension == '.PY':
-		(result, status, directoryName) = do_compile_python_language(operation, fileName, directoryName)
+	if operation != 'directory':
+		extension = os.path.splitext(fileName)[1]
+		# case of C langunage
+		if extension == '.c' or extension == '.C':
+			(result, status, directoryName) = do_compile_c_language(operation, fileName, directoryName)
+		# case of JAVA langunage
+		elif extension == '.java' or extension == '.JAVA':
+			(result, status, directoryName) = do_compile_java_language(operation, fileName, directoryName)
+		elif extension == '.py' or extension == '.PY':
+			(result, status, directoryName) = do_compile_python_language(operation, fileName, directoryName)
+		else:
+			result = "out of service :)"
+			status = 'F'
+
 	else:
-		result = "out of service :)"
-		status = 'F'
+		(result, status, directoryName) = do_compile_c_language(operation, fileName, directoryName)
+
+
 
 	token = {'result': result, 'status': status, 'directoryName': directoryName}
 	return render(request, 'coding/templates/compile_res.html', token)
@@ -327,7 +333,7 @@ def do_compile_c_language(operation, fileName, directoryName):
 
 	# __ GCC COMPILER & GET RESULT __START__#
 	gcc_compile_command = "gcc -o " + directoryName + "/.main " + path + ' -I/usr/include/mysql -L/usr/local/lib/mysql -lmysqlclient ' + " 2> " + directoryName + "/.compile_message"
-	result = os.popen(gcc_compile_command).read() # executable file will be created in manage.py directory
+	result = os.popen(gcc_compile_command).read()
 	result = os.popen("cat " + directoryName + "/.compile_message").read() # show a error message
 
 	# __ COMPILE STATUS __START__#
