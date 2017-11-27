@@ -26,12 +26,15 @@ def vdbIndex(request):
         return render(request, 'coding/templates/error.html', token)
     owner_id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest())
 
+    print '@@@@@@@@@@@@ OWNER ID [%s]' % owner_id
     # Establish connection between python and mysql __ START __
     root_connection = pymysql.connect(host='localhost', user=MYSQL_ADMIN_ID, password=MYSQL_ADMIN_PASSWD,
                        db=MYSQL_ADMIN_DB, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
+
     row = str(VDB.objects.filter(owner_id = owner_id).first())
+    result = ''
     if row == owner_id:
         sql = "SELECT TABLE_NAME, UPDATE_TIME FROM information_schema.tables WHERE TABLE_SCHEMA = '_%s';" % request.session['number']
         (status, result)= do_sql_commit(sql, root_connection, curs, "GET_SELECT_ALL")
@@ -39,11 +42,18 @@ def vdbIndex(request):
             print status
             return vdbIndex(request)
     else:
-        # VDB Creatation
+        VDB(owner_id=owner_id).save()
         create_external_vdb(request, root_connection, curs)
 
-    curs.close()
-    root_connection.close()
+    try:
+        curs.close()
+    except:
+        print 'Error[curs, already closed?]'
+    try:
+        root_connection.close()
+    except:
+        print 'Error[root_connection, already closed?]'
+
     token = {'result': result}
     return render(request, 'vdb/templates/index.html', token)
 
@@ -182,6 +192,7 @@ def create_external_table(request, _table_name, _column_data):
     curs = root_connection.cursor()
 
     # Assemble sql syntax from web request
+    print '@@@@@ TABLE NAME [%s] ' % tableName
     sql = "CREATE TABLE %s (" % (tableName)
     for value in columnData:
         sql += " %s VARCHAR(30) ," % (value)
@@ -229,8 +240,6 @@ def do_sql_commit(_sql, _root_connection, _curs, error_type='[DEFAULT]'):
         curs.execute(sql)
     except Exception as e:
         print '*****[%s] ____> %s' % (error_type, e)
-        curs.close()
-        root_connection.close()
         error_type = ERR_NO_DABABASE
         return (error_type, '')
 
