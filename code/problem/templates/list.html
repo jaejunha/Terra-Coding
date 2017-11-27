@@ -22,9 +22,14 @@
 
           $(dialog_detail).dialog("open");
           var text = $(select_el).html().replace(/<td>/gi,'').split('</td>');
-          var example = text[3].replace(/'|\[|\]| |u/gi,"").replace(/,/gi,'<br>').trim();
-          var solution = text[4].replace(/'|\[|\]| |u/gi,"").replace(/,/gi,'<br>').trim();
-          $(dialog_detail).html('<b>'+text[1]+'</b><br><br>'+text[2]+'<br><pre>'+example+'</pre><br><pre>'+solution+'</pre>');
+          var examples = text[3].replace('<td style="display:none;">','').replace(/'|\[|\]|u/gi,"").split(',');
+          var solutions = text[4].replace('<td style="display:none;">','').replace(/'|\[|\]|u/gi,"").split(',');
+          var detail = '<b>Title)</b><br>'+text[1]+'<br><br><b>Contents)</b><br><pre>'+text[2].trim()+'</pre><br><br>';
+          detail+='<table><tr><th>example</th><th>solution</th></tr>';
+          for (var i=0;i<examples.length;i++)
+            detail+='<tr><td>'+examples[i].trim()+'</td><td>'+solutions[i].trim()+'</td></tr>';
+          detail+='</table>';
+          $(dialog_detail).html(detail);
         });
       });
       </script>
