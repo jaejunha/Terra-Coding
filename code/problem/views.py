@@ -37,9 +37,13 @@ def list(request):
 		p.update(name=title)
 		p.update(desc=desc)
 
-		s = Solution.objects.filter(sNo=p)
-		s.update(ex=example)
-		s.update(sol=solution)
+		list_example = example.split('&')
+		list_solution = solution.split('&')
+
+		p = Problem.objects.get(no=no)
+		Solution.objects.filter(sNo=p).delete()
+		for i in range(0,len(list_example)-1):
+			Solution(sNo=p,ex=list_example[i],sol=list_solution[i]).save()
 
 	elif op == 'delete':
 		number = request.POST.get('number', '')
@@ -56,10 +60,10 @@ def list(request):
 		list.append((str(r[0].sNo.no),r[0].sNo.name,r[0].sNo.desc,r[0].ex,r[0].sol))
 		return render(request, 'problem/templates/list.html',{'list':list})
 
-	for i in range (0,length-2):
+	for i in range (0,length-1):
+		list_example.append(r[i].ex)
+		list_solution.append(r[i].sol)
 		if (i+1) != (length-1):
-			list_example.append(r[i].ex)
-			list_solution.append(r[i].sol)
 			if r[i].sNo.no != r[i+1].sNo.no:
 				list.append((str(r[i].sNo.no),r[i].sNo.name,r[i].sNo.desc,list_example,list_solution))
 				list_example =[]

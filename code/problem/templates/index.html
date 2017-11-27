@@ -124,8 +124,16 @@
             edit = $(select_el).html().replace(/<td>/gi,'').split('</td>');
             $('input:nth-of-type(1)').val(edit[1].trim());
             $('textarea').val(edit[2].trim());
-            $('#problem_box input:nth-of-type(1)').val(edit[3].trim().replace('<td style="display:none;">',''));
-            $('#problem_box input:nth-of-type(2)').val(edit[4].trim().replace('<td style="display:none;">',''));
+            var number_testcase = edit[3].split(',').length;
+            $('#problem_box').html('');
+            for(var i = 0;i<number_testcase;i++)
+              add_testcase();
+            examples = edit[3].trim().replace('<td style="display:none;">','').replace(/\[|\]|u|'/gi,'').split(',');
+            solutions = edit[4].trim().replace('<td style="display:none;">','').replace(/\[|\]|u|'/gi,'').split(',');
+            for(var i =0;i<number_testcase;i++){
+              $('#problem_box div:nth-of-type('+(i+1)+') input:nth-of-type(1)').val(examples[i].trim());
+              $('#problem_box div:nth-of-type('+(i+1)+') input:nth-of-type(2)').val(solutions[i].trim());
+            }
             $(dialog_problem).dialog("open");
           }
         }
@@ -165,19 +173,23 @@
           if($('input:nth-of-type(1)').val() == '')
             alert('Please enter the title');
           else{
+            var examples='';
+            var solutions='';
+            for(var i=0;i<$("#problem_box div").length;i++){
+              examples += $('#problem_box div:nth-of-type('+(i+1)+') input:nth-of-type(1)').val()+'&';
+              solutions += $('#problem_box div:nth-of-type('+(i+1)+') input:nth-of-type(2)').val()+'&';
+            }
             $('#middle').load('/problem/list',{
         			op : o,
               no : select_no,
               title : $('input:nth-of-type(1)').val(),
               desc : $('textarea').val(),
-              example : $('#problem_box input:nth-of-type(1)').val(),
-              solution : $('#problem_box input:nth-of-type(2)').val()
+              example : examples,
+              solution : solutions
         		});
             problem_menu(0);
             $('textarea').val('');
             $('input:nth-of-type(1)').val('');
-            $('#problem_box input:nth-of-type(1)').val('');
-            $('#problem_box input:nth-of-type(2)').val('');
             $(dialog_problem).dialog("close");
           }
         }
@@ -198,12 +210,26 @@
       }
 
       function add_testcase(){
+        var examples = '';
+        var solutions = '';
+        for(var i=0 ; i<$("#problem_box div").length;i++){
+          examples += $('#problem_box div:nth-of-type('+(i+1)+') input:nth-of-type(1)').val()+'&';
+          solutions += $('#problem_box div:nth-of-type('+(i+1)+') input:nth-of-type(2)').val()+'&';
+        }
         var text = $('#problem_box').html();
         text+='<div><input placeholder="enter the problem" style="width:275px; margin-right:10px;">';
         text+='<input placeholder="enter the solution" style="width:275px; margin-right:10px;">';
         text+='<button type="button" style="width:40px;" onclick="javascript:add_testcase();">+</button>';
         text+='<button type="button" class="minus" style="width:40px;">-</button></div';
         $('#problem_box').html(text);
+
+        var list_example = examples.split('&');
+        var list_solution = solutions.split('&');
+
+        for(var i=0 ; i<list_example.length;i++){
+          $('#problem_box div:nth-of-type('+(i+1)+') input:nth-of-type(1)').val(list_example[i].trim());
+          $('#problem_box div:nth-of-type('+(i+1)+') input:nth-of-type(2)').val(list_solution[i].trim());
+        }
 
         $(".minus").click(function(){
           var index = $(".minus").index($(this));
