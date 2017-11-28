@@ -106,7 +106,6 @@
 		<br>
 	</div>
 	<div id ="middle">
-		{% if picture %}
 		<br>
 		<div style="text-align:center;">
 			<img src="{% static 'img/ajou.png' %}" width="5%">
@@ -119,31 +118,72 @@
 		<table id="summary">
 			<tr>
 				<td>Name</td>
+				{% if picture %}
 				<td>{{name}}</td>
+				{% else %}
+				<td>Administrator</td>
+				{% endif %}
 			</tr>
 			<tr>
 				<td>Number</td>
+				{% if picture %}
 				<td>{{number}}</td>
+				{% else %}
+				<td>201700000</td>
+				{% endif %}
 			</tr>
 			<tr>
 				<td>Grade</td>
+				{% if picture %}
 				<td>{{grade}}</td>
+				{% else %}
+				<td>-</td>
+				{% endif %}
 			</tr>
 			<tr>
 				<td>School</td>
+				{% if picture %}
 				<td>{{school}}</td>
+				{% else %}
+				<td>-</td>
+				{% endif %}
 			</tr>
 			<tr>
 				<td>Major</td>
+				{% if picture %}
 				<td>{{major}}</td>
+				{% else %}
+				<td>-</td>
+				{% endif %}
 			</tr>
 		</table>
+		{% if picture %}
 		<img id="picture" src="{{ picture }}">
+		{% else %}
+		<img id="picture" src="{% static 'favicon/T-HUB.png' %}" style="background-color:#ffffff;">
+		{% endif %}
 		<br>
 		<br>
 		<span class="sub">Record</span>
 		<hr style="opacity:0.5;">
+		{% if picture %}
 		{% else %}
+		Total {{problem_counter}} problems<br>
+		<br>
+		<table width="100%">
+			<tr>
+				<th width="200px" style="padding: 10px; text-align: center;">Date</th>
+				<th width="100px" style="padding: 10px; text-align: center;">No</th>
+				<th width="700px" style="padding: 10px; text-align: center;">Name</th>
+			</tr>
+			{% for l in list_problem %}
+			<tr>
+				<td style="padding: 10px;">{{l.0}}</td>
+				<td style="padding: 10px; text-align: center;">{{l.1}}</td>
+				<td style="padding: 10px; text-align: center;">{{l.2}}</td>
+			</tr>
+			{% endfor %}
+		</table>
 		{% endif %}
 		</div>
 </body>

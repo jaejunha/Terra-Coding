@@ -49,7 +49,7 @@ def list(request):
 		number = request.POST.get('number', '')
 		Problem.objects.get(no=number).delete()
 
-	r = Solution.objects.all()
+	r = Solution.objects.all().order_by('sNo_id')
 	list = []
 	list_example =[]
 	list_solution =[]
