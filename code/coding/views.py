@@ -5,6 +5,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
+from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.db import connection
 
@@ -15,6 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 import pymysql
 import hashlib
 import os
+import threading
 from os.path import abspath, dirname
 from subprocess import call
 
@@ -204,10 +206,11 @@ def sourceEdit(request):
 		# Save a sourceFile as translated version
 		if check_db_syntax != '':
 			translate_edit_data = replace_psuedo_syntax_to_db_syntax(request, edit_data)
-			editPath = directoryName + "." + fileName
-			f = open(editPath, 'w')
+			f = open(directoryName + "." + fileName, 'w')
 			f.write(translate_edit_data)
 			f.close()
+		else:
+			os.popen("rm -rf " + "'" + directoryName + "." + fileName + "'")
 
 #		token = {'fileName': fileName, 'directoryName': directoryName}
 	#	return render(request, 'coding/templates/sourceEdit.html', token)
@@ -236,6 +239,26 @@ def sourceDel(request):
 	path = directoryName + fileName
 	os.popen("rm -rf " + "'" + path + "'")
 	return printDir(request)
+
+@csrf_exempt
+def renameFile(request):
+	fileName = request.POST.get('fileName', '')
+	newFileName = request.POST.get('newFileName', '')
+	directoryName = request.POST.get('dirName', '')
+
+	if ('../' in directoryName) or ('*' in directoryName) or directoryName == '/':
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_SECURITY_BREACH}
+		return render(request, 'coding/templates/error.html', token)
+
+	(directoryName, status) = normalize_directory_path(request, directoryName)
+	if status == ERR_NO_SESSION_ID or status == ERR_ROOT_ACCESSING:
+		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
+		return render(request, 'coding/templates/error.html', token)
+
+	path = directoryName + fileName
+	os.popen("mv " + "'" + path + "' " + directoryName + newFileName)
+	return printDir(request)
+
 
 @csrf_exempt
 def createNewFile(request):
@@ -291,10 +314,8 @@ def compiler_connector(request):
 
 	if operation != 'directory':
 		extension = os.path.splitext(fileName)[1]
-		# case of C langunage
 		if extension == '.c' or extension == '.C':
 			(result, status, directoryName) = do_compile_c_language(operation, fileName, directoryName)
-		# case of JAVA langunage
 		elif extension == '.java' or extension == '.JAVA':
 			(result, status, directoryName) = do_compile_java_language(operation, fileName, directoryName)
 		elif extension == '.py' or extension == '.PY':
@@ -304,11 +325,12 @@ def compiler_connector(request):
 			status = 'F'
 
 	else:
+		extension = '.c' # Preventing error....
 		(result, status, directoryName) = do_compile_c_language(operation, fileName, directoryName)
 
-
-
-	token = {'result': result, 'status': status, 'directoryName': directoryName}
+	wettyURL = extension + '@' + directoryName + '@' + fileName
+	wettyURL = wettyURL.replace('/', ',')
+	token = {'result': result, 'status': status, 'directoryName': directoryName, 'wettyURL': wettyURL}
 	return render(request, 'coding/templates/compile_res.html', token)
 
 def do_compile_c_language(operation, fileName, directoryName):
@@ -330,19 +352,24 @@ def do_compile_c_language(operation, fileName, directoryName):
 		path = directoryName + fileName
 		if extension != '.c':
 			return ("out of service :)" , 'F', '')
+		execute_command = "ls -a1 " + directoryName
+		fileList = os.popen(execute_command).read().split('\n')
+
+		for eachFile in fileList:
+			if eachFile == ('.' + fileName):
+				path = directoryName + '.' + fileName
 
 	# __ GCC COMPILER & GET RESULT __START__#
-	gcc_compile_command = "gcc -o " + directoryName + "/.main " + path + ' -I/usr/include/mysql -L/usr/local/lib/mysql -lmysqlclient ' + " 2> " + directoryName + "/.compile_message"
+	gcc_compile_command = "gcc -o " + directoryName + "/.main " + path + ' -w -I/usr/include/mysql -L/usr/local/lib/mysql -lmysqlclient ' + " 2> " + directoryName + "/.compile_message"
 	result = os.popen(gcc_compile_command).read()
 	result = os.popen("cat " + directoryName + "/.compile_message").read() # show a error message
 
-	# __ COMPILE STATUS __START__#
-	if result == '': # which means error is none
+	if result == '':
 		status = 'S'
-		execute_command = directoryName + "/.main"
-		result = os.popen(execute_command).read()
 	else:
 		status = 'F'
+		index = result.index('.c') + 2
+		result = result[index:]
 
 	return (result, status, directoryName)
 
@@ -356,12 +383,11 @@ def do_compile_java_language(operation, fileName, directoryName):
 
 	if result == '': # which means error is none
 		status = 'S'
-		fileName = os.path.splitext(fileName)[0]
-		execute_command = "java -cp " + directoryName + " " + fileName
-		result = os.popen(execute_command).read()
-		os.popen("rm -rf " + directoryName + fileName + ".class" )
 	else:
 		status = 'F'
+		index = result.index('.java') + 6
+		result = result[index:]
+
 
 	return (result, status, directoryName)
 
@@ -376,10 +402,10 @@ def do_compile_python_language(operation, fileName, directoryName):
 
 	if result == '': # which means error is none
 		status = 'S'
-		execute_command = "python " + path
-		result = os.popen(execute_command).read()
 	else:
 		status = 'F'
+		index = result.index('.py') + 5
+		result = result[index:]
 
 	return (result, status, directoryName)
 
@@ -493,15 +519,27 @@ def do_file_upload(req, _directoryName):
 
 def replace_psuedo_syntax_to_db_syntax(request, _data):
 	# Make database information
-	hostName = "\"127.0.0.1\""
-	databaseName = "_\"" + str(request.session['number']) + "\""
+	hostName = "\"localhost\""
+	databaseName = "\"_" + str(request.session['number']) + "\""
 	databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
 	userName = "\"" + str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest())  + "\""
 	userPass = "\"" + str(hashlib.md5(request.session['number']).hexdigest())  + "\""
 
-	_data = _data.replace('__DB_HOST__', userName)
-	_data = _data.replace('__DB_USER__', hostName)
+	_data = _data.replace('__DB_HOST__', hostName)
+	_data = _data.replace('__DB_USER__', userName)
 	_data = _data.replace('__DB_PASS__', userPass)
 	_data = _data.replace('__DB_NAME__', databaseName);
 
 	return _data
+'''
+def start_wetty_server():
+	print '[WETTY] thread running.....'
+	execute_command = "node wetty/app.js"
+	result = os.popen(execute_command).read()
+	print 'Running wetty-----...... [%s]' % result
+	return
+
+t1 = threading.Thread(target=start_wetty_server, args=())
+t1.daemon = True
+t1.start()
+'''

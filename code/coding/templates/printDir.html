@@ -144,7 +144,7 @@
 		position:relative;
 	}
 	table{
-			width: 90%;
+			width: 80%;
 			border: 2px solid #ffffff;
 			border-collapse: collapse;
 			background: #566788;
@@ -281,6 +281,20 @@
 		});
 	}
 
+	function view_renameFile(url, fileName, dirName){
+	$.sweetModal.prompt('*Desinate your file name*', null, null, function(newFileName)
+	{
+		current = 'url='+url+'&dir='+dirName+'&file='+fileName;
+		document.location.hash = "#" + current;
+				current = 'url='+url;
+				$('#content').load(url, {
+					fileName : fileName,
+					dirName : dirName,
+					newFileName : newFileName
+				});
+	});
+	}
+
 	function view_sourceDel(url, fileName, dirName) {
 
 		$.sweetModal.confirm('Deleting ' + fileName, 'Are you sure?', function() {
@@ -337,6 +351,12 @@ function view_solveProblem(){
 		});
 	}
 
+	function view_testtest(url) {
+		alert(url);
+		$('#content').load(url);
+	}
+
+
 	</script>
 	</head>
 
@@ -378,6 +398,7 @@ function view_solveProblem(){
 	<center>
 	<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'file', '{{dirName}}')">+File</a>
 	<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'directory', '{{dirName}}')">+Directory</a>
+
 	<br><br><br>
 
 	<!-- Upload Newfile
@@ -397,7 +418,7 @@ function view_solveProblem(){
     <option value="Python_Lang">Python</option>
 	</select>
 	</center>
-
+	<center>
 	<table class="container">
 		<thead>
 			<tr>
@@ -419,7 +440,7 @@ function view_solveProblem(){
 		<tbody>
 		<tr>
 		 <!-- 1st column ___ type icon -->
-		 <td class="IMG_TD">
+		 <td width="5%">
 				{% if info.0 == 'd' %}
 	      	<img style="width: 70px; height: auto;" src="{% static 'ico/folder_ico.png' %}">
 				{% elif info.0 == 'l' %}
@@ -460,17 +481,18 @@ function view_solveProblem(){
 			<center>{{ info.2 }}</center>
 		</td>
 		<!-- 4th column ___ Button Family -->
-		<td width=25%>
+		<td width=8%>
 			<div class="navbar">
 			  <div class="dropdown">
 			    <button class="dropbtn">Functions</button>
 			    <div class="dropdown-content">
 						{% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
-						<a href="javascript:view_do_compile('/coding/compile_res', 'selected', '{{info.1}}', '{{ dirName }}')">Compile</a>
+						<a href="javascript:view_do_compile('/coding/compile_res', 'selected', '{{info.1}}', '{{ dirName }}')">Compile & Run</a>
  					  {% elif info.0 == 'd' %}
 						<a href="javascript:view_do_compile('/coding/compile_res', 'directory', '{{info.1}}', '{{ dirName }}')">Compile this project as C</a>
 	  				{% endif %}
-						<a href="javascript:view_sourceDel('/coding/sourceDel.html', '{{info.1}}', '{{ dirName }}')">Delete</a>
+						<a href="javascript:view_renameFile('/coding/renameFile', '{{info.1}}', '{{ dirName }}')">Rename</a>
+						<a href="javascript:view_sourceDel('/coding/sourceDel', '{{info.1}}', '{{ dirName }}')">Delete</a>
 			    </div>
 			  </div>
 			</div>
@@ -479,6 +501,7 @@ function view_solveProblem(){
  	 </tbody>
 	 	{% endfor %}
   </table>
+</center>
 </div>
 </div>
 <div id="dialog_detail" title="information"></div>

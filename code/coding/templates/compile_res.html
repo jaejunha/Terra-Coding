@@ -9,6 +9,12 @@
 	<script src="{% static 'package/sweet/jquery.sweet-modal.min.js' %}"></script>
 
 	<style>
+
+	#wettyLoader{
+		height:600px;
+		width:90%;
+	}
+
 	#prev{
 	  text-decoration: none;
 	  font-family: 'Open Sans', sans-serif;
@@ -21,57 +27,6 @@
 	  cursor:pointer;
 	}
 
-	form, p, span {
-	    color:#FE2E2E;
-	    margin:0;
-	    padding:0;
-	  }
-
-	input { font:15px arial; }
-
-	a {
-	    color:#0000FF;
-	    text-decoration:none; }
-
-	    a:hover { text-decoration:underline; }
-
-	#wrapper, #loginform {
-	    margin:0 auto;
-	    padding-bottom:25px;
-	    background:#000000;
-	    width:70%;
-	    border:1px solid #FE2E2E; }
-
-	#loginform { padding-top:18px; }
-
-	#loginform p { margin: 5px; }
-
-	#chatbox {
-	    text-align:left;
-	    margin:0 auto;
-	    margin-bottom:25px;
-	    padding:10px;
-	    background:#fff;
-	    height:600px;
-	    width:90%;
-	    border:1px solid #FE2E2E;
-	    overflow:auto; }
-
-	#usermsg {
-	    width:395px;
-	    border:1px solid #ACD8F0; }
-
-	#submit { width: 60px; }
-
-	.error { color: #ff0000; }
-
-	#menu { padding:12.5px 25px 12.5px 25px; }
-
-	.welcome { float:left; }
-
-	.logout { float:right; }
-
-	.msgln { margin:0 0 2px 0; }
 	</style>
 
 	<script>
@@ -102,7 +57,9 @@
 				_label = 'Cheer UP! :)'
 				_classed = 'redB';
 			}
+
 			result = unescape(result);
+
 			$.sweetModal({
 				content: result,
 				title: _title,
@@ -112,7 +69,8 @@
 					{
 						label: _label,
 						classes: _classed,
-						action: function() {
+						action: function()
+						{
 								if (status == 'F')
 									return view_printDir('/coding/printDir', 'ReDirect', '{{directoryName}}');
 						}
@@ -120,15 +78,6 @@
 				]
 			});
 		}
-
-		// jQuery Document
-		$("#submitmsg").click(function(){
-			var clientmsg = $("#usermsg").val();
-			$.post("views.py", {text: clientmsg});
-			$("#usermsg").attr("value", "");
-			return false;
-		});
-
 	</script>
 </head>
 
@@ -137,36 +86,17 @@
 <center>
 <br><br><br><br>
 
-{% if status == 'S' %}
-<script> sweet_result('{{status}}'); </script>
-<div>
 <a id='prev' href="javascript:view_printDir('/coding/printDir', 'ReDirect', '{{directoryName}}')">Prev</a>
-
-	<div id="wrapper">
-	    <div id="menu">
-	        <p class="welcome">Welcome, <b></b></p>
-
-	        <div style="clear:both"></div>
-	    </div>
-	    <div id="chatbox">
-				<pre><font size=15>{{ result }}</font></pre>
-			</div>
-	    <form name="message" action="">
-	        <input name="usermsg" type="text" id="usermsg" size="63" />
-	        <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
-	    </form>
-	</div>
-</div>
+{% if status == 'S' %}
+	<script> sweet_result('{{status}}'); </script>
+	<script>
+		$("#wettyLoader").html('<object width="80%"; height="70%"; data="http://127.0.0.1:3000/wetty/ssh/{{wettyURL}}">');;
+	</script>
+	<div id="wettyLoader"></div>​
 {% elif status == 'F' %}
-
-<script> sweet_result('{{status}}', '<pre>{{result | escapejs}}</pre>'); </script>
-
-	<hr color="red" width=100%>
-	<font size=3 style="Lucida Blackletter">
-	<pre> {{ result }} </pre>
-	</font>
-	<hr color="red" width=100%>
-	</center>
+	<script> sweet_result('{{status}}', '<pre>{{result | escapejs}}</pre>'); </script>
 {% endif %}
+
+</center>
 </body>
 </html>

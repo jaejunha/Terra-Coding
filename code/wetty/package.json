@@ -1,0 +1,87 @@
+{
+  "_args": [
+    [
+      "wetty",
+      ""
+    ]
+  ],
+  "_from": "wetty@latest",
+  "_id": "wetty@0.2.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/wetty",
+  "_nodeVersion": "0.12.7",
+  "_npmUser": {
+    "email": "krishna.srinivas@gmail.com",
+    "name": "krishnasrinivas"
+  },
+  "_npmVersion": "2.11.3",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "wetty",
+    "raw": "wetty",
+    "rawSpec": "",
+    "scope": null,
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/wetty/-/wetty-0.2.0.tgz",
+  "_shasum": "20c30210c07b4510bbd4ef5e43a619118835f4d0",
+  "_shrinkwrap": null,
+  "_spec": "wetty",
+  "_where": "",
+  "author": {
+    "email": "krishna.srinivas@gmail.com",
+    "name": "Krishna Srinivas",
+    "url": "https://github.com/krishnasrinivas"
+  },
+  "bin": {
+    "wetty": "./bin/wetty.js"
+  },
+  "bugs": {
+    "url": "https://github.com/krishnasrinivas/wetty/issues"
+  },
+  "dependencies": {
+    "express": "3.5.1",
+    "optimist": "^0.6",
+    "pty.js": "^0.3.0",
+    "socket.io": "^1.3.7"
+  },
+  "description": "Wetty = Web + tty. Terminal access in browser over http/https ",
+  "devDependencies": {
+    "grunt": "^0.4",
+    "grunt-contrib-clean": "^0.6",
+    "grunt-git": "^0.3",
+    "grunt-mkdir": "^0.1",
+    "grunt-shell": "^1.1",
+    "load-grunt-tasks": "^3.0"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "20c30210c07b4510bbd4ef5e43a619118835f4d0",
+    "tarball": "https://registry.npmjs.org/wetty/-/wetty-0.2.0.tgz"
+  },
+  "gitHead": "7157422aec3db8e93b9a688062ab2b92ad87bd7d",
+  "homepage": "https://github.com/krishnasrinivas/wetty",
+  "license": "MIT",
+  "main": "app.js",
+  "maintainers": [
+    {
+      "name": "krishnasrinivas",
+      "email": "krishna.srinivas@gmail.com"
+    }
+  ],
+  "name": "wetty",
+  "optionalDependencies": {},
+  "preferGlobal": "true",
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/krishnasrinivas/wetty.git"
+  },
+  "scripts": {},
+  "version": "0.2.0"
+}

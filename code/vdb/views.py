@@ -26,7 +26,6 @@ def vdbIndex(request):
         return render(request, 'coding/templates/error.html', token)
     owner_id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest())
 
-    print '@@@@@@@@@@@@ OWNER ID [%s]' % owner_id
     # Establish connection between python and mysql __ START __
     root_connection = pymysql.connect(host='localhost', user=MYSQL_ADMIN_ID, password=MYSQL_ADMIN_PASSWD,
                        db=MYSQL_ADMIN_DB, charset=MYSQL_CHAR_SET)

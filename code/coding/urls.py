@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^/sourceView', views.sourceView, name='sourceView'),
     url(r'^/sourceEdit', views.sourceEdit, name='sourceEdit'),
     url(r'^/sourceDel', views.sourceDel, name='sourceDel'),
+    url(r'^/renameFile', views.renameFile, name='renameFile'),
     url(r'^/createNewFile', views.createNewFile, name='createNewFile'),
-    url(r'^/compile_res', views.compiler_connector, name='compile_res'),
+    url(r'^/compile_res', views.compiler_connector, name='compile_res')
 ]

@@ -217,20 +217,20 @@
 		$.sweetModal.prompt('*please Enter your database name*', null, null, function(tableName)
 		{
 					current = 'url='+url;
-					$('#content').load(url, {
+					$('#middle').load(url, {
 						table_name : tableName
 					});
 	  });
 	}
 
 	function view_deleteTable(url, tableName) {
-		$('#content').load(url, {
+		$('#middle').load(url, {
 			tableName : tableName
 		});
 	}
 
 	function view_viewTable(url, tableName) {
-		$('#content').load(url, {
+		$('#middle').load(url, {
 			tableName : tableName
 		});
 	}
