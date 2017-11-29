@@ -167,15 +167,15 @@
 	var mode;
 	var select_el;
 	var select_no;
-
 	$(window).resize(function (){
 		$('#middle').css('width',$(window).width()-$('#left').width()-20);
 		$('#middle').css('left','10px');
 		$('#middle').css('top','10px');
 	});
 	$(window).ready( function() {
-		$('#problem').css('visibility','hidden');
-		$('#project').css('visibility','hidden');
+		$('#problem').css('display','none');
+		$('#project').css('display','none');
+
 		$('#middle').css('width',$(window).width()-$('#left').width()-20);
 		$('#middle').css('left','10px');
 		$('#middle').css('top','10px');
@@ -218,11 +218,11 @@
 
 		if(sessionStorage.getItem('coding')==0){
 			$('#left div a').text('Problem');
-			$('#problem').css('visibility','visible');
+			$('#problem').css('display','inline');
 			mode = 'problem';
 		}else{
 			$('#left div a').text('Project');
-			$('#project').css('visibility','visible');
+			$('#project').css('display','inline');
 			mode = 'project';
 		}
 		sessionStorage.removeItem('coding');
@@ -395,6 +395,7 @@ function view_solveProblem(){
 		</div>
 		<div id="project">
 	<!-- Most Top&Left ___ Directory Input form -->
+	<br>
 	<center>
 	<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'file', '{{dirName}}')">+File</a>
 	<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'directory', '{{dirName}}')">+Directory</a>
@@ -415,6 +416,7 @@ function view_solveProblem(){
 		<option value="ALL">ALL</option>
     <option value="C_Lang">C</option>
     <option value="CPP_LANG">C++</option>
+    <option value="Java_Lang">Java</option>
     <option value="Python_Lang">Python</option>
 	</select>
 	</center>
@@ -452,6 +454,8 @@ function view_solveProblem(){
 					<img style="width: 70px; height: auto;" src="{% static 'ico/c_ico.png' %}">
 					{% elif info.0 == '.cpp' %}
 					<img style="width: 70px; height: auto;" src="{% static 'ico/cpp_ico.png' %}">
+					{% elif info.0 == '.java' %}
+					<img style="width: 70px; height: auto;" src="{% static 'ico/java_ico.png' %}">
 					{% elif info.0 == '.h' %}
 					<img style="width: 70px; height: auto;" src="{% static 'ico/header_ico.png' %}">
 					{% elif info.0 == '.pyc' %}

@@ -129,6 +129,8 @@ def printDir(request):
 			fileInfo = make_file_info(fileType, fileName, fileDate, 'C')
 		elif project_attr == 'CPP_LANG':
 			fileInfo = make_file_info(fileType, fileName, fileDate, 'CPP')
+		elif project_attr == 'Java_Lang':
+			fileInfo = make_file_info(fileType, fileName, fileDate, 'JAVA')
 		elif project_attr == 'Python_Lang':
 			fileInfo = make_file_info(fileType, fileName, fileDate, 'PYTHON')
 		if project_attr == 'ALL':
@@ -450,6 +452,9 @@ def make_file_info(_fileType, _fileName, _fileDate, _filter):
 		elif _filter == 'CPP':
 			FILTER.append('.cpp')
 			FILTER.append('.h')
+		elif _filter == 'JAVA':
+			FILTER.append('.java')
+			FILTER.append('.class')
 		elif _filter == 'PYTHON':
 			FILTER.append('.py')
 			FILTER.append('.pyc')

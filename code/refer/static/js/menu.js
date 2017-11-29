@@ -52,20 +52,11 @@ function terra_menu(no){
     $('#selector').css('left',$('#info').offset().left+'px');
     $('#selector').css('width',$('#info').width()+'px');
   }else if(no == 2){
-    $('#info').css('color','#cccccc');
-    $('#coding').css('color','#aaaaaa');
-    $('#vdb').css('color','#cccccc');
-    $('#feedback').css('color','#cccccc');
-    $('#selector').css('left',$('#coding').offset().left+'px');
-    $('#selector').css('width',$('#coding').width()+'px');
     $("#dialog_coding").dialog({
       autoOpen: true,
       modal:	true,
       disabled:	true,
-      closeOnEscape: false,
-      open: function(event, ui) {
-        $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
-    }
+      closeOnEscape: false
     });
   }else if(no == 3){
     loadDiv('/vdb');
