@@ -55,8 +55,7 @@ function terra_menu(no){
     $("#dialog_coding").dialog({
       autoOpen: true,
       modal:	true,
-      disabled:	true,
-      closeOnEscape: false
+      disabled:	true
     });
   }else if(no == 3){
     loadDiv('/vdb');

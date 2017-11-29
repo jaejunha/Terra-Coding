@@ -28,8 +28,6 @@ function login_move(error){
 }
 
 function terra_move(){
-	$('#top').css('left', $(window).width() - $('#top').width() +'px' );
-
 	var width = 0.3574*$('#banner').width();
 	var height = 0.4314*$('#banner').height();
 	$('.simple_banner_wrap').css('width',width);

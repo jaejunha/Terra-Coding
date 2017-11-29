@@ -8,11 +8,17 @@
 	<title>::T - HUB::</title>
 	<style>
 		#left{
-			float:left;
-			width:250px;
-			display:inline-block;
-			line-height: 1px;
-		}
+        	        position: absolute;
+                	top: 0;
+               	 	left: 0;
+              	  	height: 100%;
+                	width:250px;
+                	margin-top:120px;
+
+                	display:inline-block;
+                	line-height: 1px;
+        	}
+
 
 		#left .title{
 			width: 250px;
@@ -51,18 +57,27 @@
 			text-decoration: none;
 			color:#333333;
 		}
-
+		
 		#middle{
-			float:left;
-			position:relative;
-		}
-
+                	position: absolute;
+              	 	width: auto;
+                	height: auto;
+                	top: 0px;
+                	left: 0px;
+                	bottom: 0px;
+                	right: 0px;
+                	margin-top:120px;
+                	margin-left:250px;
+                	padding:10px;
+       		}
+	
 		.sub{
 			font-weight:bold;
 			font-size:20pt;
 		}
 		#summary{
 			margin-left: 10px;
+			float:left;
 		}
 		#summary td:nth-child(1){
 			width:100px;
@@ -71,25 +86,13 @@
 			width:200px;
 		}
 		#picture{
-			float:left;
-			position:absolute;
+			float:right;
 		}
 		</style>
 		<script>
-		$(window).resize(function (){
-			$('#middle').css('width',$(window).width()-$('#left').width()-20);
-			$('#middle').css('left','10px');
-			$('#middle').css('top','10px');
-		});
 		$(window).ready( function() {
-			$('#middle').css('width',$(window).width()-$('#left').width()-20);
-			$('#middle').css('left','10px');
-			$('#middle').css('top','10px');
-
 			$('#picture').css('width',$('#summary').height());
 			$('#picture').css('height',$('#summary').height());
-			$('#picture').css('top',$('#summary').offset().top-$('#summary').height());
-			$('#picture').css('left',$(window).width()-$('#picture').width()-$('#left').width()-50);
 		});
 		</script>
 </head>
@@ -115,6 +118,7 @@
 		<span class="sub">Personal</span>
 		<hr style="opacity:0.5;">
 		<br>
+		<div style="overflow: auto;">
 		<table id="summary">
 			<tr>
 				<td>Name</td>
@@ -162,6 +166,7 @@
 		{% else %}
 		<img id="picture" src="{% static 'favicon/T-HUB.png' %}" style="background-color:#ffffff;">
 		{% endif %}
+		</div>
 		<br>
 		<br>
 		<span class="sub">Record</span>

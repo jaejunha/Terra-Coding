@@ -3,11 +3,16 @@
 <html lang="en">
   <head>
     <style>
-      #left{
-        float:left;
-        width:250px;
-        display:inline-block;
-        line-height: 1px;
+
+	#left{
+		position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width:250px;
+                margin-top:120px;
+                display:inline-block;
+                line-height: 1px;
       }
 
       #left .title{
@@ -42,8 +47,16 @@
       }
 
       #middle{
-        float:left;
-        position:relative;
+        position: absolute;
+        width: auto;
+        height: auto;
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
+        right: 0px;
+        margin-top:120px;
+        margin-left: 250px;
+		    padding: 10px;
       }
 
       #left div a{
@@ -53,49 +66,30 @@
       }
       </style>
       <script>
-      var dialog_problem;
-      var dialog_delete;
-      var select_no;
-      var select_el;
-      var mode = 0;
-      $(window).resize(function (){
-        $('#middle').css('width',$(window).width()-$('#left').width()-20);
-        $('#middle').css('left','10px');
-        $('#middle').css('top','10px');
-		  });
-			$(window).ready( function() {
-        $('#middle').css('width',$(window).width()-$('#left').width()-20);
-        $('#middle').css('left','10px');
-        $('#middle').css('top','10px');
+	var dialog_problem;
+	var dialog_delete;
+	var dialog_detail;
+	var select_no;
+	var select_el;
+	var mode = 0;
+
+	$(window).ready( function() {
         $('#middle').load('/problem/list');
-
-        dialog_problem = $("#dialog_problem").dialog({
-          width:'auto',
-          height: 750,
-          autoOpen: true,
-          modal:	true,
-          disabled:	true,
-        });
-
-        dialog_detail = $("#dialog_detail").dialog({
-          width:'200px',
-          height: 'auto',
-          autoOpen: true,
-          modal:	true,
-          disabled:	true,
-        });
-
         dialog_delete = $("#dialog_delete").dialog({
           width:'auto',
           height: 100,
-          autoOpen: true,
+          autoOpen: false,
           modal:	true,
           disabled:	true,
         });
 
-        $(dialog_problem).dialog("close");
-        $(dialog_detail).dialog("close");
-        $(dialog_delete).dialog("close");
+        dialog_problem = $("#dialog_problem").dialog({
+    	     width:'auto',
+           height:750,
+           autoOpen:false,
+           modal:true,
+           disabled:true,
+        });
 
         $('textarea').css('width','700px');
         $('textarea').css('height','400px');
@@ -111,10 +105,12 @@
 
         if(no == 1){
           mode = 0;
-          $(dialog_problem).dialog("open");
           $('#problem_box').html('');
+          $('input:nth-of-type(1)').val('');
           $('textarea').val('contents:\n\ninput:\n\noutput:')
           add_testcase();
+          $(dialog_problem).dialog("open");
+          $(dialog_problem).css("display","block");
         }else if(no == 2){
           if(select_el==null){
             alert('choose problem first');
@@ -136,6 +132,7 @@
               $('#problem_box div:nth-of-type('+(i+1)+') input:nth-of-type(2)').val(solutions[i].trim());
             }
             $(dialog_problem).dialog("open");
+            $(dialog_problem).css("display","block");
           }
         }
         else if(no == 3){
@@ -143,8 +140,10 @@
             alert('choose problem first');
             problem_menu(0);
           }
-          else
-            $(dialog_delete).dialog("open");
+        else{
+          $(dialog_delete).dialog("open");
+          $(dialog_delete).css("display","block");
+			  }
         }
       }
         function view_problem(o){
@@ -273,7 +272,7 @@
       </div>
     </div>
     <div id ="middle"></div>
-    <div id="dialog_problem" title="enter the problem">
+    <div id="dialog_problem" title="enter the problem" style="display:none;">
       <div width="700px" style="margin-top:10px;">
         <span width="50px">Title</span><input placeholder="enter the title" style="display:inline; width:600px; margin-left:50px"/><br>
         <br>
@@ -288,11 +287,11 @@
         </div>
       </div>
     </div>
-    <div id="dialog_detail" title="information">
+    <div id="dialog_detail" title="information" style="display:none;">
       <div width="700px" style="margin-top:10px;">
       </div>
     </div>
-    <div id="dialog_delete" title="Delete?">
+    <div id="dialog_delete" title="Delete?" style="display:none;">
       <div width="300px" style="margin-top:10px;">
           <button type="button" onclick="javascript:view_problem('delete');">Yes</button>
           <button type="button" onclick="javascript:cancel();">No</button>

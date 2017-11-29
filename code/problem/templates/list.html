@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
       <script>
-			$(window).ready( function() {
+	$(window).ready( function() {
         $("tr").click(function(event) {
           if(select_el!=null){
               select_el.css('background','#566788');
@@ -20,7 +20,13 @@
           $(event.target).parent().css('background','#434d61');
           select_el = $(event.target).parent();
 
-          $(dialog_detail).dialog("open");
+	dialog_detail = $("#dialog_detail").dialog({
+          width:'200px',
+          height: 'auto',
+          autoOpen: true,
+          modal:        true,
+          disabled:     true,
+        });
           var text = $(select_el).html().replace(/<td>/gi,'').split('</td>');
           var examples = text[3].replace('<td style="display:none;">','').replace(/'|\[|\]|u/gi,"").split(',');
           var solutions = text[4].replace('<td style="display:none;">','').replace(/'|\[|\]|u/gi,"").split(',');

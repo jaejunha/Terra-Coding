@@ -1,12 +1,12 @@
 html{
-  width:	100%;
+  width: 100%;
   height: 100%;
 }
 body{
   margin:0;
   overflow-y:hidden;
-	overflow-x:hidden;
-  width:	100%;
+  overflow-x:hidden;
+  width: 100%;
   height: 100%;
   font-family : 'Lucida grande';
 }
@@ -28,7 +28,7 @@ body{
 }
 #title {
   position: absolute;
-	transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
   left: 0px;
   top:  40px;
   width:400px;
@@ -49,14 +49,14 @@ body{
 }
 
 #top{
-  position: absolute;
-	transform-origin: 0% 0%;
+  float: right;
+  transform-origin: 0% 0%;
   width:	800px;
   top:    40px;
   text-align:	right;
   line-height:	80px;
   font-size:	24pt;
-  color:		#dddddd;
+  color: #dddddd;
 }
 #top > a{
   position:	relative;
