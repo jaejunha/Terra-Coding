@@ -44,17 +44,19 @@
  					 $(this).attr( 'src', "{% static 'img/normal_folder.png' %}" );
  				 } );
 			});
-			function view_coding(url, menu){
-				sessionStorage.setItem('coding',menu);
-				$('#content').load(url);
+			function view_coding(menu){
+				if(menu == 0)
+					$('#content').load('coding/printProblem');
+				else
+					$('#content').load('coding/printDir');
 				$("#dialog_coding").dialog("close");
 
-			  $('#info').css('color','#cccccc');
-			  $('#coding').css('color','#aaaaaa');
-			  $('#vdb').css('color','#cccccc');
-			  $('#feedback').css('color','#cccccc');
-			  $('#selector').css('left',$('#coding').offset().left+'px');
-			  $('#selector').css('width',$('#coding').width()+'px');
+				$('#info').css('color','#cccccc');
+			  	$('#coding').css('color','#aaaaaa');
+			  	$('#vdb').css('color','#cccccc');
+			  	$('#feedback').css('color','#cccccc');
+			  	$('#selector').css('left',$('#coding').offset().left+'px');
+			  	$('#selector').css('width',$('#coding').width()+'px');
 			}
 	</script>
 	<title>::T - HUB::</title>
@@ -112,11 +114,11 @@
 			What do you want to do?<br>
 			<br>
 			<div style="text-align: center;">
-				<a href="javascript:view_coding('/coding',0)">
+				<a href="javascript:view_coding(0)">
 				<img id="problem" src="{% static 'img/normal_problem.png' %}" width="120px">
 				</a>
 				<span style="margin-right:20px;"></span>
-				<a href="javascript:view_coding('/coding',1)">
+				<a href="javascript:view_coding(1)">
 				<img id="folder" src="{% static 'img/normal_folder.png' %}" width="120px">
 				</a>
 			</div>

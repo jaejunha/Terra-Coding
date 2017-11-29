@@ -14,7 +14,7 @@
 	.dropdown {
 	    float: left;
 	    overflow: hidden;
-			background-color: #333;
+            background-color: #333;
 	}
 
 	.dropdown .dropbtn {
@@ -95,11 +95,16 @@
 	}
 
 	#left{
-		float:left;
-		width:250px;
-		display:inline-block;
-		line-height: 1px;
-	}
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width:250px;
+                margin-top:120px;
+
+                display:inline-block;
+                line-height: 1px;
+        }
 
 	#left .title{
 		width: 250px;
@@ -140,14 +145,23 @@
 	}
 
 	#middle{
-		float:left;
-		position:relative;
-	}
+                position: absolute;
+                width: auto;
+                height: auto;
+                top: 0px;
+                left: 0px;
+                bottom: 0px;
+                right: 0px;
+                margin-top:120px;
+                margin-left: 250px;
+		padding: 10px;
+        }
+
 	table{
-			width: 80%;
-			border: 2px solid #ffffff;
-			border-collapse: collapse;
-			background: #566788;
+		width: 80%;
+		border: 2px solid #ffffff;
+		border-collapse: collapse;
+		background: #566788;
 	}
 	th, td{
 		border: 2px solid #ffffff;
@@ -164,70 +178,8 @@
 	</style>
 	<script>
 	var current='';
-	var mode;
 	var select_el;
 	var select_no;
-	$(window).resize(function (){
-		$('#middle').css('width',$(window).width()-$('#left').width()-20);
-		$('#middle').css('left','10px');
-		$('#middle').css('top','10px');
-	});
-	$(window).ready( function() {
-		$('#problem').css('display','none');
-		$('#project').css('display','none');
-
-		$('#middle').css('width',$(window).width()-$('#left').width()-20);
-		$('#middle').css('left','10px');
-		$('#middle').css('top','10px');
-
-		dialog_detail = $("#dialog_detail").dialog({
-			width:'700px',
-			height: 'auto',
-			autoOpen: true,
-			modal:	true,
-			disabled:	true,
-		});
-		$(dialog_detail).dialog("close");
-
-		$("tr").click(function(event) {
-			if(mode ==  'problem'){
-				if(select_el!=null){
-						select_el.css('background','#566788');
-				}
-				select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
-				$(event.target).parent().css('background','#434d61');
-				select_el = $(event.target).parent();
-			}
-		});
-		$("tr").dblclick(function(event) {
-			if(mode == 'problem'){
-				if(select_el!=null){
-						select_el.css('background','#566788');
-				}
-				select_no = event.target.parentElement.innerHTML.split('<td>')[1].split('</td>')[0];
-				$(event.target).parent().css('background','#434d61');
-				select_el = $(event.target).parent();
-
-				$(dialog_detail).dialog("open");
-				var text = $(select_el).html().replace(/<td>/gi,'').split('</td>');
-				var html = '<b>'+text[1].trim()+'</b><br><br><pre>'+text[2].trim()+'</pre><br><br><div align="right">';
-				html+='<button type="button" onclick="javascript:view_solveProblem();">Solve it</button></div>'
-				$(dialog_detail).html(html);
-			}
-		});
-
-		if(sessionStorage.getItem('coding')==0){
-			$('#left div a').text('Problem');
-			$('#problem').css('display','inline');
-			mode = 'problem';
-		}else{
-			$('#left div a').text('Project');
-			$('#project').css('display','inline');
-			mode = 'project';
-		}
-		sessionStorage.removeItem('coding');
-	});
-
 	$(window).on('hashchange', function() {
 			if(location.hash != ('#'+current)){
 				checkForHash();
@@ -323,13 +275,6 @@
 		});
 	}
 
-function view_solveProblem(){
-	$('#middle').load('coding/solveProblem',{
-		problem_no : select_no
-	});
-	$(dialog_detail).dialog("close");
-}
-
 	function view_createNewFile(url, operation, dirName)
 	{
 		var question = '';
@@ -373,26 +318,6 @@ function view_solveProblem(){
 			<br>
 		</div>
 	<div id="middle">
-		<div id="problem">
-			<table>
-	      <thead>
-	        <tr>
-	          <th width="50px">Number</th>
-	          <th width="300px">Title</th>
-	          <th>Contents</th>
-	        </tr>
-	      </thead>
-	      <tbody>
-	  {% for l in list %}
-	  <tr>
-	    <td>{{l.0}}</td>
-	    <td>{{l.1}}</td>
-	    <td>{{l.2}}</td>
-	  </tr>
-	  {% endfor %}
-	  </tbody>
-	  </table>
-		</div>
 		<div id="project">
 	<!-- Most Top&Left ___ Directory Input form -->
 	<br>
@@ -508,6 +433,5 @@ function view_solveProblem(){
 </center>
 </div>
 </div>
-<div id="dialog_detail" title="information"></div>
 </body>
 </html>

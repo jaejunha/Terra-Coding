@@ -19,6 +19,7 @@ from . import views
 urlpatterns = [
 	url(r'^$', views.printDir, name='printDir'),
     url(r'^/printDir', views.printDir, name='sourceView'),
+    url(r'^/printProblem', views.printProblem, name='printProblem'),
     url(r'^/solveProblem', views.solveProblem, name='solveProblem'),
     url(r'^/solveEdit', views.solveEdit, name='solveEdit'),
     url(r'^/sourceView', views.sourceView, name='sourceView'),

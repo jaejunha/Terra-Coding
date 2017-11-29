@@ -72,6 +72,17 @@ def solveEdit(request):
 	token = {'code': code, 'result':result}
 	return render(request, 'coding/templates/solveEdit.html',token)
 
+def printProblem(request):
+	result = Problem.objects.filter()
+        list = []
+        for r in result:
+                list.append((str(r.no),r.name,r.desc))
+
+        token = {'list': list}
+
+        return render(request, 'coding/templates/printProblem.html', token)
+
+
 @csrf_exempt
 def printDir(request):
 
@@ -138,13 +149,7 @@ def printDir(request):
 	else:
 		fileInfo = make_file_info(fileType, fileName, fileDate, 'NULL')
 
-	result = Problem.objects.filter()
-	list = []
-	for r in result:
-		list.append((str(r.no),r.name,r.desc))
-
-	token = {'fileInfo': fileInfo, 'dirName': directoryName, 'list': list}
-
+	token = {'fileInfo': fileInfo, 'dirName': directoryName}
 	return render(request, 'coding/templates/printDir.html', token)
 
 @csrf_exempt
