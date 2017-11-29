@@ -143,7 +143,9 @@ def deleteTable(request):
 
 @csrf_exempt
 def updateTable(request):
+    tableName = request.POST.get('tableName', '')
 
+    # rename table [SR] to [DS];
     return
 
 @csrf_exempt
@@ -191,13 +193,10 @@ def create_external_table(request, _table_name, _column_data):
     curs = root_connection.cursor()
 
     # Assemble sql syntax from web request
-    print '@@@@@ TABLE NAME [%s] ' % tableName
     sql = "CREATE TABLE %s (" % (tableName)
     for value in columnData:
         sql += " %s VARCHAR(30) ," % (value)
     sql += ");"; sql = sql.replace(',)', ')');
-
-    print "sql syntax ===> %s ........." % sql
 
     (status, result) = do_sql_commit(sql, root_connection, curs, "CREATE TABLE")
     if status != '':

@@ -128,11 +128,17 @@
 
 	<style>
 	#left{
-		float:left;
-		width:250px;
-		display:inline-block;
-		line-height: 1px;
-	}
+								position: absolute;
+								top: 0;
+								left: 0;
+									height: 100%;
+								width:250px;
+								margin-top:120px;
+
+								display:inline-block;
+								line-height: 1px;
+				}
+
 
 	#left .title{
 		width: 250px;
@@ -173,9 +179,17 @@
 	}
 
 	#middle{
-		float:left;
-		position:relative;
-	}
+								position: absolute;
+								width: auto;
+								height: auto;
+								top: 0px;
+								left: 0px;
+								bottom: 0px;
+								right: 0px;
+								margin-top:120px;
+								margin-left:250px;
+								padding:10px;
+				}
 
 	</style>
 
@@ -224,7 +238,13 @@
 	}
 
 	function view_deleteTable(url, tableName) {
-		$('#middle').load(url, {
+		$('#content').load(url, {
+			tableName : tableName
+		});
+	}
+
+	function view_updateTable(url, tableName) {
+		$('#content').load(url, {
 			tableName : tableName
 		});
 	}
@@ -276,8 +296,9 @@
 				  <div class="dropdown">
 				    <button class="dropbtn">Functions</button>
 				    <div class="dropdown-content">
-							<a href="javascript:view_deleteTable('/vdb/deleteTable', '{{ each.0 }}');">DELETE</a>
-				 		  <a href="javascript:view_createTable('/vdb/createTable');">UPDATE</a>
+							<a href="javascript:view_deleteTable('/vdb/deleteTable', '{{ each.0 }}');">Delete</a>
+						  <a href="javascript:view_deleteTable('/vdb/deleteTable', '{{ each.0 }}');">Rename</a>
+							<a href="javascript:view_updateTable('/vdb/createTable', '{{ each.0 }}');">Update</a>
 					  </div>
 				  </div>
 				</div>

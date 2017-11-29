@@ -106,7 +106,7 @@ io.on('connection', function(socket){
 	var extension = tempResult[0];
 	var execute_command = tempResult[1];
 	var fileName = tempResult[2];
-	console.log('pathFromUser -->' + pathFromUser);
+	var django_execute_path = tempResult[3];
 	}
     var term;
     if (process.getuid() == 0) {
@@ -125,8 +125,14 @@ io.on('connection', function(socket){
         });
     }
 
+	
+	/* TEST CODE */
+	term.write('source /root/__bashrc\n');
+
+	/* Change Execution Directory */
+	term.write('cd ' + django_execute_path +'\n');
+	
 	/* Initial Settings for connected user */
-	term.write('cd /root/Desktop/git_t/code/\n');
 	term.write('clear\n');
 
 	/* Execute Command */
@@ -145,7 +151,7 @@ io.on('connection', function(socket){
 	}else{
 		term.write('exit\n');
 	}
-	
+
     term.on('data', function(data) {
 		socket.emit('output', data);
     });
@@ -162,7 +168,18 @@ io.on('connection', function(socket){
         	term.write(data);
 		}
     });
+
+	/*process.stdout.on('error', function( err ) {
+		if (err.code == "EPIPE")
+		{
+			process.exit(0);
+		}
+	});
+
+
+
+
     socket.on('disconnect', function() {
         term.end();
-    });
+    });*/
 });

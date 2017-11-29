@@ -296,14 +296,8 @@
 		});
 	}
 
-	function view_testtest(url) {
-		alert(url);
-		$('#content').load(url);
-	}
-
-
 	</script>
-	</head>
+</head>
 
 <body>
 	<div id ="left">
@@ -319,11 +313,16 @@
 		</div>
 	<div id="middle">
 		<div id="project">
+
 	<!-- Most Top&Left ___ Directory Input form -->
 	<br>
 	<center>
-	<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'file', '{{dirName}}')">+File</a>
-	<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'directory', '{{dirName}}')">+Directory</a>
+		{% if isTop == 'true' %}
+			<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'directory', '{{dirName}}')">+Project</a>
+		{% else %}
+			<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'file', '{{dirName}}')">+File</a>
+			<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'directory', '{{dirName}}')">+Directory</a>
+		{% endif %}
 
 	<br><br><br>
 

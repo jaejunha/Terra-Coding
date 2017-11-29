@@ -90,7 +90,7 @@
 {% if status == 'S' %}
 	<script> sweet_result('{{status}}'); </script>
 	<script>
-		$("#wettyLoader").html('<object width="80%"; height="70%"; data="http://127.0.0.1:3000/wetty/ssh/{{wettyURL}}">');;
+		$("#wettyLoader").html('<object width="80%"; height="70%"; data="http://127.0.0.1:3000/wetty/ssh/{{wettyURL}}">');
 	</script>
 	<div id="wettyLoader"></div>​
 {% elif status == 'F' %}

@@ -149,7 +149,13 @@ def printDir(request):
 	else:
 		fileInfo = make_file_info(fileType, fileName, fileDate, 'NULL')
 
-	token = {'fileInfo': fileInfo, 'dirName': directoryName}
+	rootDirectory = "./userDirectory/" + request.session['Directory'] + '/'
+
+	isTopDirectory = 'false'
+	if directoryName == rootDirectory:
+		isTopDirectory = 'true'
+
+	token = {'fileInfo': fileInfo, 'dirName': directoryName, 'isTop': isTopDirectory}
 	return render(request, 'coding/templates/printDir.html', token)
 
 @csrf_exempt
@@ -335,8 +341,11 @@ def compiler_connector(request):
 		extension = '.c' # Preventing error....
 		(result, status, directoryName) = do_compile_c_language(operation, fileName, directoryName)
 
-	wettyURL = extension + '@' + directoryName + '@' + fileName
+	django_execute_path = os.popen('pwd').read().replace('\n', '')
+	django_execute_path = django_execute_path.replace('\r', '')
+	wettyURL = extension + '@' + directoryName + '@' + fileName + '@' + django_execute_path
 	wettyURL = wettyURL.replace('/', ',')
+
 	token = {'result': result, 'status': status, 'directoryName': directoryName, 'wettyURL': wettyURL}
 	return render(request, 'coding/templates/compile_res.html', token)
 
@@ -375,8 +384,12 @@ def do_compile_c_language(operation, fileName, directoryName):
 		status = 'S'
 	else:
 		status = 'F'
-		index = result.index('.c') + 2
-		result = result[index:]
+		try:
+			index = result.index('userDirectory/')
+			result = result[index + 55:]
+		except:
+			print 'compile error message <c> --> out of range'
+
 
 	return (result, status, directoryName)
 
@@ -392,9 +405,11 @@ def do_compile_java_language(operation, fileName, directoryName):
 		status = 'S'
 	else:
 		status = 'F'
-		index = result.index('.java') + 6
-		result = result[index:]
-
+		try:
+			index = result.index('userDirectory/')
+			result = result[index + 55:]
+		except:
+			print 'compile error message <java> --> out of range'
 
 	return (result, status, directoryName)
 
@@ -411,8 +426,11 @@ def do_compile_python_language(operation, fileName, directoryName):
 		status = 'S'
 	else:
 		status = 'F'
-		index = result.index('.py') + 5
-		result = result[index:]
+		try:
+			index = result.index('userDirectory/')
+			result = result[index + 55:]
+		except:
+			print 'compile error message <python> --> out of range'
 
 	return (result, status, directoryName)
 
@@ -541,10 +559,11 @@ def replace_psuedo_syntax_to_db_syntax(request, _data):
 	_data = _data.replace('__DB_NAME__', databaseName);
 
 	return _data
+
 '''
 def start_wetty_server():
 	print '[WETTY] thread running.....'
-	execute_command = "node wetty/app.js"
+	execute_command = "node wetty/app.js | tee /dev/null | head"
 	result = os.popen(execute_command).read()
 	print 'Running wetty-----...... [%s]' % result
 	return
