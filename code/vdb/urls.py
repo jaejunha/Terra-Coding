@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^/updateTable', views.updateTable, name='updateTable'),
     url(r'^/deleteTable', views.deleteTable, name='deleteTable'),
     url(r'^/viewTable', views.viewTable, name='viewTable'),
+    url(r'^/renameTable', views.renameTable, name='renameTable')
 ]

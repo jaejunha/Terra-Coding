@@ -150,7 +150,8 @@ def printDir(request):
 		fileInfo = make_file_info(fileType, fileName, fileDate, 'NULL')
 
 	rootDirectory = "./userDirectory/" + request.session['Directory'] + '/'
-
+	#TEST code
+	print os.popen('ls -la').read()
 	isTopDirectory = 'false'
 	if directoryName == rootDirectory:
 		isTopDirectory = 'true'

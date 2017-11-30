@@ -5,6 +5,17 @@
 	<link rel="stylesheet" href="{% static 'css/vdb/directory_list.css' %}">
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::T - HUB::</title>
+
+	<script>
+	function view_index(url, operation, table_name) {
+
+		$('#content').load(url, {
+			column : column,
+			operation : operation,
+			table_name : table_name
+		});
+	}
+	</script>
 </head>
 
 <body>

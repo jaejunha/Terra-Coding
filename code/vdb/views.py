@@ -101,12 +101,12 @@ def createTable(request):
         # Extract one or multiple column name
         column_data = []
         for key, values in request.POST.lists():
-            print '@KEY ===> %s ||| %s' % (key, values)
             if key == 'csrfmiddlewaretoken' or key == 'operation' or key == 'submit' or key == 'table_name':
                 continue
             column_data = values
 
         create_external_table(request, table_name, column_data)
+        
         try:
             owner_id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest())
         except:
@@ -142,11 +142,37 @@ def deleteTable(request):
     return vdbIndex(request)
 
 @csrf_exempt
+def renameTable(request):
+    tableName = request.POST.get('tableName', '')
+    newTableName = request.POST.get('newTableName', '')
+
+    databaseName = str(request.session['number']) # make databaseName
+    databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+
+    tableName = request.POST.get('tableName', '')
+
+    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
+                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    curs = root_connection.cursor()
+
+    # rename table [SR] to [DS];
+    sql = "rename table %s to %s" % (tableName, newTableName)
+    (status, columns)= do_sql_commit(sql, root_connection, curs, "rename table")
+    if status != '':
+        print status
+        return vdbIndex(request)
+
+    return vdbIndex(request)
+
+@csrf_exempt
 def updateTable(request):
     tableName = request.POST.get('tableName', '')
 
     # rename table [SR] to [DS];
     return
+
 
 @csrf_exempt
 def viewTable(request):

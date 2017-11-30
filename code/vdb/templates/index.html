@@ -227,20 +227,20 @@
 			}
 	}
 
+	function view_viewTable(url, tableName) {
+		$('#middle').load(url, {
+			tableName : tableName
+		});
+	}
+
 	function view_createTable(url) {
-		$.sweetModal.prompt('*please Enter your database name*', null, null, function(tableName)
+		$.sweetModal.prompt('*please Enter your table name*', null, null, function(tableName)
 		{
-					current = 'url='+url;
+			current = 'url='+url;
 					$('#middle').load(url, {
 						table_name : tableName
 					});
 	  });
-	}
-
-	function view_deleteTable(url, tableName) {
-		$('#content').load(url, {
-			tableName : tableName
-		});
 	}
 
 	function view_updateTable(url, tableName) {
@@ -249,10 +249,29 @@
 		});
 	}
 
-	function view_viewTable(url, tableName) {
-		$('#middle').load(url, {
-			tableName : tableName
-		});
+	function view_renameTable(url, tableName) {
+		$.sweetModal.prompt('*please Enter your table name*', null, null, function(newTableName)
+		{
+					current = 'url='+url;
+					$('#content').load(url, {
+						tableName : tableName,
+						newTableName : newTableName
+					});
+	  });
+	}
+
+	function view_deleteTable(url, tableName) {
+		$.sweetModal.confirm('Deleting ' + tableName, 'Are you sure?', function() {
+				$.sweetModal({
+					content: 'Deleted!',
+					icon: $.sweetModal.ICON_SUCCESS,
+				});
+				current = 'url='+url+'&tableName='+tableName;
+				document.location.hash = "#" + current;
+				$('#content').load(url,{
+					tableName : tableName
+				});
+			});
 	}
 
 	</script>
@@ -296,10 +315,10 @@
 				  <div class="dropdown">
 				    <button class="dropbtn">Functions</button>
 				    <div class="dropdown-content">
-							<a href="javascript:view_deleteTable('/vdb/deleteTable', '{{ each.0 }}');">Delete</a>
-						  <a href="javascript:view_deleteTable('/vdb/deleteTable', '{{ each.0 }}');">Rename</a>
+							<a href="javascript:view_renameTable('/vdb/renameTable', '{{ each.0 }}');">Rename</a>
 							<a href="javascript:view_updateTable('/vdb/createTable', '{{ each.0 }}');">Update</a>
-					  </div>
+							<a href="javascript:view_deleteTable('/vdb/deleteTable', '{{ each.0 }}');">Delete</a>
+						</div>
 				  </div>
 				</div>
 			</td>

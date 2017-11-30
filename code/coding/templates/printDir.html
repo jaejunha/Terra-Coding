@@ -282,6 +282,11 @@
 			question = "@_ Enter new file name _@";
 		else if(operation == 'directory')
 			question = "@_ Enter new directory name _@";
+		else if(operation == 'project')
+		{
+			question = "@_ Project Name _@";
+			operation = 'directory';
+		}
 
 		$.sweetModal.prompt(question, null, null, function(fileName)
 		{
@@ -318,7 +323,7 @@
 	<br>
 	<center>
 		{% if isTop == 'true' %}
-			<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'directory', '{{dirName}}')">+Project</a>
+			<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'project', '{{dirName}}')">+Project</a>
 		{% else %}
 			<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'file', '{{dirName}}')">+File</a>
 			<a id='Create' href="javascript:view_createNewFile('/coding/createNewFile', 'directory', '{{dirName}}')">+Directory</a>
@@ -334,6 +339,7 @@
 		<input type="file" onchange="form.submit()"/>
   </form>-->
 
+	{% if isTop == 'false' %}
 	<!-- Select project attribute -->
 	<select name="project_attribute" id="project_attribute" onchange="view_printDir('categorization','/coding/printDir','{{dirName}}','')">
 		<option value="Select">Extension</option>
@@ -343,6 +349,7 @@
     <option value="Java_Lang">Java</option>
     <option value="Python_Lang">Python</option>
 	</select>
+	{% endif %}
 	</center>
 	<center>
 	<table class="container">
@@ -360,7 +367,7 @@
 			<center><a id='directName' href="javascript:view_printDir('GoBack','/coding/printDir','{{dirName}}','../')">../</a></center>
 		  </td>
 			<td><center>NONE</center></td>
-			<td>GO TO PARENT DIRECTORY</td>
+			<td> </td>
 		</tr>
 		{% for info in fileInfo %}
 		<tbody>

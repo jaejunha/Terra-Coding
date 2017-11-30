@@ -5,22 +5,105 @@
 	<link rel="stylesheet" href="{% static 'css/vdb/directory_list.css' %}">
 	<title>::T - HUB::</title>
 
+
+	<!--<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">-->
+	<style class="cp-pen-styles">
+ol,
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline
+}
+
+fieldset {
+	 width: 50px;
+   border:0 none;
+	 display: inline-block;
+}
+
+fieldset > * {
+    display:inline-block;
+}
+
+.select_wrapper {
+  background: white no-repeat top 15px right 12px;
+  line-height: 36px;
+  cursor: pointer;
+  position: relative;
+}
+
+.select_wrapper:hover { background: white no-repeat top 15px right 12px; }
+
+.select_wrapper span {
+  display: block;
+  margin: 0 30px 0 15px;
+}
+
+.select_wrapper .select_inner {
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  color: #687278;
+  display: none;
+  position: absolute;
+  left: 0;
+  top: -100%;
+  width: 100%;
+  z-index: 3;
+}
+
+.select_wrapper .select_inner li {
+  border-bottom: 1px solid #eee;
+  padding: 0 15px;
+}
+
+.select_wrapper .select_inner li:hover { background: #eee; }
+
+.select_wrapper .select_inner li:last-child {
+  border: none;
+  border-radius: 0 0 5px 5px;
+}
+
+.select_wrapper .select_inner li:first-child { border-radius: 5px 5px 0 0; }
+</style>
+
+	<!-- Custom style -->
 	<style>
 	#create{
+		left: 75px;
+		width: 200px;
+		height: 50px;
 	  text-decoration: none;
 	  font-family: 'Open Sans', sans-serif;
 	  font-weight: normal;
-	  font-size: 1em;
+	  font-size: 2em;
 	  color:#FFFFFF;
 	  padding:5px 15px;
-	  background:#848484;
+	  background:#FA5858;
 	  border:0 none;
 	  cursor:pointer;
+		display: block;
+		text-align: center;
+		border-radius: 20px;
+		position: relative;
 	}
 
-	body {
+	#middle {
 	 font-family: "Open Sans", Helvetica;
 	}
+
+	#myDiv {
+		top: 100px;
+    left: 600px;
+		position: relative;
+	}
+
+	</style>
+
+	<!-- <input> tag's style -->
+	<style>
 
 	form {
 	  text-align: center;
@@ -32,6 +115,7 @@
 	  padding-top: 30px;
 	  text-align: left;
 	}
+
 	label .label-text {
 	  color: #9B9B9B;
 	  cursor: text;
@@ -44,11 +128,12 @@
 	  transform: translateY(-34px);
 	  transition: all 0.3s;
 	}
+
 	label input {
 	  background-color: transparent;
 	  border: 0;
 	  border-bottom: 2px solid #4A4A4A;
-	  color: white;
+	  color: black;
 	  font-size: 36px;
 	  letter-spacing: -1px;
 	  outline: 0;
@@ -77,7 +162,9 @@
 	  transform: translateY(-74px);
 	}
 
-	button {
+	#addCol {
+		left: 10px;
+		bottom: 25px;
 	  background-color: #333333;
 	  border: 2px solid white;
 	  border-radius: 27px;
@@ -88,15 +175,37 @@
 	  padding: 15px 30px;
 	  text-transform: uppercase;
 	  transition: all 200ms;
+		position: relative;
 	}
-	button:hover, button:focus {
+	#addCol:hover, #addCol:focus {
 	  background-color: white;
 	  color: #333333;
 	  outline: 0;
 	}
 
-	</style>
+	#delCol {
+		right: 10px;
+		bottom: 25px;
+	  background-color: #333333;
+	  border: 2px solid white;
+	  border-radius: 27px;
+	  color: white;
+	  cursor: pointer;
+	  font-size: 20px;
+	  margin-top: 20px;
+	  padding: 15px 30px;
+	  text-transform: uppercase;
+	  transition: all 200ms;
+		position: relative;
+	}
+	#delCol:hover, #delCol:focus {
+	  background-color: white;
+	  color: #333333;
+	  outline: 0;
+	}
 
+
+	</style>
 
 	<script>
 
@@ -105,13 +214,33 @@
 	function addColumn()
 	{
 	    limit++;
+			/*var wrapper_type = document.getElementById("wrapper_type");
+			var fieldset = document.createElement("fieldset");
+			var select = document.createElement("select");
+			select.id = "fieldType";
+			select.name = "fieldType"
+			var option_VARCHAR = document.createElement("option");
+			option_VARCHAR.value = "VARCHAR";
+			var option_INT = document.createElement("option");
+			option_INT.value = "INT";
+			var option_text_varchar = document.createTextNode("VARCHAR");
+			var option_text_int = document.createTextNode("INT");
+			option_VARCHAR.appendChild(option_text_varchar);
+			option_INT.appendChild(option_text_int);
+			select.appendChild(option_VARCHAR);
+			select.appendChild(option_INT);
+			fieldset.appendChild(select);
+			wrapper_type.appendChild(fieldset);*/
+
 	    var outerLabel = document.getElementById("inputFields");
 			var div_each = document.createElement("div")
 			var newInput = document.createElement("input");
 			var newText = document.createTextNode("COLUMN "+limit);
+			newInput.id = 'column' + limit
 	    newInput.type = "text";
 	    newInput.name = ("column");
 			div_each.className = 'label-text';
+			div_each.id = "div_column"+limit;
 			div_each.appendChild(newText);
 			outerLabel.appendChild(newInput);
 			outerLabel.appendChild(div_each);
@@ -119,23 +248,11 @@
 
 	function deleteColumn()
 	{
-	    document.getElementById("inputFields").remove();
+			document.getElementById("column"+limit).remove();
+			document.getElementById("div_column"+limit).remove();
+			limit--;
+			return;
 	}
-
-/* by table unit
-	function addColumn()
-	{
-	    limit++;
-	    var theList = document.getElementById("columnFields");
-	    var th = document.createElement("th");
-	    //var newText = document.createTextNode("column "+limit+":");
-			var input = document.createElement("input");
-			input.type = "text";
-			input.name = ("column" + limit);
-	    th.appendChild(input);
-	    theList.appendChild(th);
-	}
-*/
 
 	function view_createTable(url, operation, table_name) {
 
@@ -145,6 +262,14 @@
 				column.push(document.getElementsByName('column')[i].value);
 		}
 
+		type = [];
+		for (var i=0; i<document.getElementsByName('fieldType').length; i++)
+		{
+				type.push(document.getElementsByName('fieldType')[i].value);
+		}
+
+		//alert(type);
+
 		$('#content').load(url, {
 			column : column,
 			operation : operation,
@@ -153,28 +278,25 @@
 	}
 
 	</script>
-</head>
 
+
+</head>
 <body>
 
-<label id='inputFields'>
-	<input type='text' name="column">
-	<div class="label-text">COLUMN 1</div>
-</label>
-&nbsp;&nbsp;<button onclick="addColumn();">+</button><br><br>
-&nbsp;&nbsp;&nbsp;<a id='create' href="javascript:view_createTable('/vdb/createTable', 'createTable', '{{ table_name }}');">Save</a>
-<!--
-<button onclick="addColumn();">attach Column</button><br>
-<table class="container">
-	<thead>
-		<tr id="columnFields">
-			<th><h1>TABLE NAME</h1></th>
-			<th><h1>DATE</h1></th>
+<div id="myDiv"><!-- used for centralization of contents -->
 
-		</tr>
-	</thead>
-</table>
--->
+			<button id="delCol" onclick="deleteColumn();">-</button>
+	<label id='inputFields' style="display: inline-block;">
+		<input id='column1' type='text' name="column">
+		<div id='div_column1' class="label-text">COLUMN 1</div>
+	</label>
+		<button id="addCol" onclick="addColumn();">+</button>
+
+	<br>
+	<a id='create' href="javascript:view_createTable('/vdb/createTable', 'createTable', '{{ table_name }}');">Save</a>
+
+</div>
+
 
 
 </body>
