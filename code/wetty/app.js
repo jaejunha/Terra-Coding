@@ -123,15 +123,14 @@ io.on('connection', function(socket){
             cols: 80,
             rows: 30
         });
-    }
 
-	
+      }
 	/* TEST CODE */
 	term.write('source /root/__bashrc\n');
 
 	/* Change Execution Directory */
 	term.write('cd ' + django_execute_path +'\n');
-	
+
 	/* Initial Settings for connected user */
 	term.write('clear\n');
 
@@ -139,7 +138,7 @@ io.on('connection', function(socket){
 	if( extension == '.c')
 	{
 		console.log("This is extension of .c");
-		term.write(execute_command + '.main' +' && exit\n');
+		term.write(execute_command + '.main' +' && exit || exit \n');
 	}else if( extension == '.java')
 	{
 		fileName = fileName.replace('.java', '')

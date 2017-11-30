@@ -150,8 +150,6 @@ def printDir(request):
 		fileInfo = make_file_info(fileType, fileName, fileDate, 'NULL')
 
 	rootDirectory = "./userDirectory/" + request.session['Directory'] + '/'
-	#TEST code
-	print os.popen('ls -la').read()
 	isTopDirectory = 'false'
 	if directoryName == rootDirectory:
 		isTopDirectory = 'true'
@@ -561,7 +559,7 @@ def replace_psuedo_syntax_to_db_syntax(request, _data):
 
 	return _data
 
-'''
+
 def start_wetty_server():
 	print '[WETTY] thread running.....'
 	execute_command = "node wetty/app.js | tee /dev/null | head"
@@ -572,4 +570,3 @@ def start_wetty_server():
 t1 = threading.Thread(target=start_wetty_server, args=())
 t1.daemon = True
 t1.start()
-'''
