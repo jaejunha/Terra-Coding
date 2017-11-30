@@ -5,32 +5,144 @@
 	<link rel="stylesheet" href="{% static 'css/vdb/directory_list.css' %}">
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::T - HUB::</title>
+	<style>
 
+	#prev {
+		text-decoration: none;
+		font-family: 'Open Sans', sans-serif;
+		font-weight: normal;
+		font-size: 1em;
+		color:#FFFFFF;
+		padding:5px 15px;
+		background:#333;
+		border:0 none;
+		cursor:pointer;
+	}
+
+
+		table{
+			width: 80%;
+			border: 2px solid #ffffff;
+			border-collapse: collapse;
+			background: #566788;
+		}
+		th, td{
+			border: 2px solid #ffffff;
+			padding: 10px;
+		}
+		th{
+			background: #323c50;
+			text-align: center;
+			color: #ffffff;
+		}
+		td{
+			color: #efefef;
+		}
+
+		/*========================== DROP DOWN ==========================*/
+
+		.dropdown {
+		    float: left;
+		    overflow: hidden;
+				background-color: transparent;
+		}
+
+		.dropdown .dropbtn {
+		    font-size: 16px;
+		    border: none;
+		    outline: none;
+		    color: white;
+		    padding: 14px 16px;
+		    background-color: inherit;
+		}
+
+		.navbar a:hover, .dropdown:hover .dropbtn {
+				color: black;
+		    background-color: white;
+		}
+
+		.dropdown-content {
+		    display: none;
+		    position: absolute;
+		    background-color: #f9f9f9;
+		    min-width: 160px;
+		    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		    z-index: 1;
+		}
+
+		.dropdown-content a {
+		    float: none;
+		    color: black;
+		    padding: 12px 16px;
+		    text-decoration: none;
+		    display: block;
+		    text-align: left;
+		}
+
+		.dropdown-content a:hover {
+		    background-color: #ddd;
+		}
+
+		.dropdown:hover .dropdown-content {
+		    display: block;
+		}
+
+	</style>
 	<script>
-	function view_index(url, operation, table_name) {
+	function view_index(url) {
+		$('#content').load(url);
+	}
 
-		$('#content').load(url, {
-			column : column,
-			operation : operation,
-			table_name : table_name
+
+	function view_renameColumn(url, columnName, tableName) {
+		question = "Column name?"
+		$.sweetModal.prompt(question, null, null, function(newColumnName)
+		{
+					$('#content').load(url, {
+						tableName : tableName,
+						columnName : columnName,
+						newColumnName : newColumnName
+					});
 		});
+	}
+
+	function view_insertColumn(url, ) {
+		$('#content').load(url);
+	}
+
+	function view_deleteColumn(url) {
+		$('#content').load(url);
 	}
 	</script>
 </head>
 
 <body>
-
+<br><br>
 <center>
+	<a id="prev" href="javascript:view_index('/vdb');">PREV</a>
+	<br><br>
+
 	<table class="container">
-		<thead>
+		<thead> <!-- column name -->
 			<tr>
 			{% for column in columns %}
-					<th><h1> {{ column.0 }}</h1></th>
+					<th>
+						<div class="navbar">
+						  <div class="dropdown">
+						    <button class="dropbtn">{{ column.0 }}</button>
+						    <div class="dropdown-content">
+									<a href="javascript:view_renameColumn('/vdb/renameColumn', '{{ column.0 }}', '{{tableName}}');">Rename</a>
+									<a href="javascript:view_insertColumn('/vdb/createTable', '{{ column.0 }}');">Insert column</a>
+									<a href="javascript:view_deleteColumn('/vdb/deleteTable', '{{ column.0 }}}');">Delete</a>
+								</div>
+						  </div>
+						</div>
+					</th>
 			{% endfor %}
 			</tr>
 		</thead>
 	 {% for each in result %}
-			<tbody>
+			<tbody> <!-- contents of table -->
 				<tr>
 					{% for single in each %}
 				 		<td> {{ single }} </td>

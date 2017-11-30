@@ -106,7 +106,7 @@ def createTable(request):
             column_data = values
 
         create_external_table(request, table_name, column_data)
-        
+
         try:
             owner_id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest())
         except:
@@ -201,7 +201,7 @@ def viewTable(request):
         print status
         return vdbIndex(request)
 
-    token = {'columns': columns, 'result': result }
+    token = {'columns': columns, 'result': result , 'tableName': tableName}
     return render(request, 'vdb/templates/viewTable.html', token)
 
 
@@ -234,6 +234,40 @@ def create_external_table(request, _table_name, _column_data):
     curs.close()
     root_connection.close()
     return
+
+@csrf_exempt
+def renameColumn(request):
+    tableName = request.POST.get('tableName', '')
+    columnName = request.POST.get('columnName', '')
+    newColumnName = request.POST.get('newColumnName', '')
+
+    databaseName = str(request.session['number']) # make databaseName
+    databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+
+    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
+                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    curs = root_connection.cursor()
+
+    sql = "alter table '%s' change '%s' '%s' varchar(30)" % (tableName, columnName, newColumnName)
+    print sql
+    (status, result) = do_sql_commit(sql, root_connection, curs, "ALTER COLUMN")
+    if status != '':
+        return viewTable(reuqest)
+
+    return viewTable(reuqest)
+
+@csrf_exempt
+def insertColumn(request):
+
+    return
+
+@csrf_exempt
+def deleteColumn(request):
+
+    return
+
 
 # This function is test function and will be updated.
 def delete_external_user_test(request, _id, databaseName):

@@ -4,71 +4,6 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<link rel="stylesheet" href="{% static 'css/vdb/directory_list.css' %}">
 	<title>::T - HUB::</title>
-
-
-	<!--<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">-->
-	<style class="cp-pen-styles">
-ol,
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  vertical-align: baseline
-}
-
-fieldset {
-	 width: 50px;
-   border:0 none;
-	 display: inline-block;
-}
-
-fieldset > * {
-    display:inline-block;
-}
-
-.select_wrapper {
-  background: white no-repeat top 15px right 12px;
-  line-height: 36px;
-  cursor: pointer;
-  position: relative;
-}
-
-.select_wrapper:hover { background: white no-repeat top 15px right 12px; }
-
-.select_wrapper span {
-  display: block;
-  margin: 0 30px 0 15px;
-}
-
-.select_wrapper .select_inner {
-  background: #fff;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-  color: #687278;
-  display: none;
-  position: absolute;
-  left: 0;
-  top: -100%;
-  width: 100%;
-  z-index: 3;
-}
-
-.select_wrapper .select_inner li {
-  border-bottom: 1px solid #eee;
-  padding: 0 15px;
-}
-
-.select_wrapper .select_inner li:hover { background: #eee; }
-
-.select_wrapper .select_inner li:last-child {
-  border: none;
-  border-radius: 0 0 5px 5px;
-}
-
-.select_wrapper .select_inner li:first-child { border-radius: 5px 5px 0 0; }
-</style>
-
 	<!-- Custom style -->
 	<style>
 	#create{
@@ -94,10 +29,29 @@ fieldset > * {
 	 font-family: "Open Sans", Helvetica;
 	}
 
+	#tableNameDiv {
+		width: 500px;
+		height: 40px;
+		top: 30px;
+		left: 450px;
+		position: relative;
+		background: white;
+		border: 3px;
+		border-radius: 15px;
+	}
+
 	#myDiv {
 		top: 100px;
-    left: 600px;
+    left: 500px;
 		position: relative;
+	}
+
+	#h3_tableName {
+		font-family: 'Open Sans', sans-serif;
+		font-weight: normal;
+		text-align: center;
+	  font-size: 2em;
+	  color: #848484;
 	}
 
 	</style>
@@ -282,6 +236,8 @@ fieldset > * {
 
 </head>
 <body>
+
+<div id="tableNameDiv"> <h3 id="h3_tableName"> {{ table_name }} </h3> </div>
 
 <div id="myDiv"><!-- used for centralization of contents -->
 
