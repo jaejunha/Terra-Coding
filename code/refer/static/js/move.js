@@ -39,7 +39,6 @@ function terra_move(){
 	$('.simple_banner_wrap').css('left',left);
 	$('.simple_banner_wrap').css('top',top);
 
-
 	$('.nav_wrap li').css('margin-left','10px');
 	$('.nav_wrap li').css('margin-right','10px');
 	$('.nav_wrap').css('left',width/2-40);

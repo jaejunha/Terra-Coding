@@ -13,10 +13,12 @@ function index_intro(){
   $('#header').css('animation','header 1.5s');
   $('#header').css('animation-fill-mode','both');
 
-  $('#title').css('animation','title 2.5s');
+  $('#title').css('animation','title 5s');
   $('#title').css('animation-fill-mode','both');
 
   $('#top').css('top','-80px');
+  $('#top').css('position','absolute');
+  $('#top').css('left',$(window).width()-800);
   $('#top').css('animation','top 2.5s');
   $('#top').css('animation-fill-mode','both');
 
