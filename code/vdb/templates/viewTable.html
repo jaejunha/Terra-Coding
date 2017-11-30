@@ -95,24 +95,49 @@
 
 
 	function view_renameColumn(url, columnName, tableName) {
-		question = "Column name?"
+		question = "Column name?";
 		$.sweetModal.prompt(question, null, null, function(newColumnName)
 		{
-					$('#content').load(url, {
+					$('#middle').load(url, {
 						tableName : tableName,
 						columnName : columnName,
 						newColumnName : newColumnName
 					});
 		});
+		return;
 	}
 
-	function view_insertColumn(url, ) {
-		$('#content').load(url);
+	function view_insertColumn(url, columnName, tableName) {
+		question = "Column name?";
+		alert(url);
+		alert(columnName);
+		alert(tableName);
+		$.sweetModal.prompt(question, null, null, function(newColumnName) {
+					$('#middle').load(url, {
+						tableName : tableName,
+						columnName : columnName,
+						newColumnName : newColumnName
+					});
+		});
+		return;
 	}
 
-	function view_deleteColumn(url) {
-		$('#content').load(url);
+	function view_deleteColumn(url, columnName, tableName) {
+		$.sweetModal.confirm('Deleting ' + columnName, 'Are you sure?', function() {
+                                $.sweetModal({
+                                        content: 'Deleted!',
+                                        icon: $.sweetModal.ICON_SUCCESS,
+                                        //theme: $.sweetModal.THEME_DARK
+                                });
+				$('#middle').load(url, {
+					tableName : tableName,
+					columnName : columnName
+                        	});
+		}
+                           );
 	}
+
+
 	</script>
 </head>
 
@@ -132,8 +157,8 @@
 						    <button class="dropbtn">{{ column.0 }}</button>
 						    <div class="dropdown-content">
 									<a href="javascript:view_renameColumn('/vdb/renameColumn', '{{ column.0 }}', '{{tableName}}');">Rename</a>
-									<a href="javascript:view_insertColumn('/vdb/createTable', '{{ column.0 }}');">Insert column</a>
-									<a href="javascript:view_deleteColumn('/vdb/deleteTable', '{{ column.0 }}}');">Delete</a>
+									<a href="javascript:view_insertColumn('/vdb/insertColumn', '{{ column.0 }}', '{{tableName}}');">Insert column</a>
+									<a href="javascript:view_deleteColumn('/vdb/deleteColumn', '{{ column.0 }}', '{{tableName}}');">Delete</a>
 								</div>
 						  </div>
 						</div>

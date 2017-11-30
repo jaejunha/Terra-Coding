@@ -250,23 +250,62 @@ def renameColumn(request):
                        db='_'+databaseName, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
-    sql = "alter table '%s' change '%s' '%s' varchar(30)" % (tableName, columnName, newColumnName)
+    sql = "alter table %s change %s %s varchar(30)" % (tableName, columnName, newColumnName)
     print sql
     (status, result) = do_sql_commit(sql, root_connection, curs, "ALTER COLUMN")
     if status != '':
-        return viewTable(reuqest)
+        return viewTable(request)
 
-    return viewTable(reuqest)
+    return viewTable(request)
 
 @csrf_exempt
 def insertColumn(request):
+    tableName = request.POST.get('tableName', '')
+    columnName = request.POST.get('columnName', '')
+    newColumnName = request.POST.get('newColumnName', '')
+    
 
-    return
+    databaseName = str(request.session['number']) # make databaseName
+    databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+
+    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
+                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    curs = root_connection.cursor()
+
+    sql = "alter table %s add %s varchar(30) after %s" % (tableName, newColumnName, columnName)
+    print sql
+    (status, result) = do_sql_commit(sql, root_connection, curs, "INSERT COLUMN")
+    if status != '':
+        return viewTable(request)
+
+
+    return viewTable(request)
 
 @csrf_exempt
 def deleteColumn(request):
+    tableName = request.POST.get('tableName', '')
+    columnName = request.POST.get('columnName', '')
 
-    return
+
+    databaseName = str(request.session['number']) # make databaseName
+    databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+
+    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
+                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    curs = root_connection.cursor()
+
+    sql = "alter table %s drop %s;" % (tableName, columnName)
+    print sql
+    (status, result) = do_sql_commit(sql, root_connection, curs, "DORP COLUMN")
+    if status != '':
+        return viewTable(request)
+
+
+    return viewTable(request)
 
 
 # This function is test function and will be updated.
