@@ -44,6 +44,7 @@ def solveProblem(request):
 def solveEdit(request):
 	code = ''
 	result = ''
+	print request.POST.get('syntax','')
 	if request.POST.get('operation','') == 'Write':
 		code = request.POST.get('edit_data', '')
 		f = open('test.c','w')
