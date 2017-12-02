@@ -93,7 +93,13 @@
 		}
 
 		 function check_syntax(){
-                        $('#syntax').html('<input id="syntax" type="hidden" name="syntax" value="'+sessionStorage.getItem('syntax')+'"/>');
+			var syntax;
+			if(sessionStorage.getItem('syntax'))
+				syntax = sessionStorage.getItem('syntax');
+			else
+				syntax = 'c';
+                        $('#syntax').html('<input id="syntax" type="hidden" name="syntax" value="'+syntax+'"/>');
+			sessionStorage.clear();
                  }
 
 	</script>
