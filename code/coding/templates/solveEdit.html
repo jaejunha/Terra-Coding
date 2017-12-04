@@ -28,22 +28,44 @@
 	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
 	<script language="Javascript" type="text/javascript">
+		var syntax = 'java';
+		$(document).ready(function() {
+			if(sessionStorage.getItem('syntax')){
+				if(syntax != sessionStorage.getItem('syntax')){
+					syntax = sessionStorage.getItem('syntax');
+/*					if(syntax == 'java')
+						$('#sourceEditorArea').val('import java.util.Scanner;\n\npublic class test {\n\tpublic static void main(String args[]) {\n\t\tScanner scan = new Scanner(System.in);\n\n\t}\n}');
+					else if(syntax == 'c')
+						$('#sourceEditorArea').val('#include <stdio.h>\n\nint main(){\n\n\treturn 0;\n}');
+					else
+						$('#sourceEditorArea').val('');
+				}else{
+					$('#sourceEditorArea').val({{code}});
+				}
+			}else{
+				$('#sourceEditorArea').val('import java.util.Scanner;\n\npublic class test {\n\tpublic static void main(String args[]) {\n\t\tScanner scan = new Scanner(System.in);\n\n\t}\n}');
+			*/
+			}}
+
+			editAreaLoader.init({
+                        id: "sourceEditorArea"  // id of the textarea to transform
+                        ,start_highlight: true  // if start with highlight
+                        ,allow_resize: "both"
+                        ,allow_toggle: true
+                        ,word_wrap: true
+                        ,language: "en"
+                        ,syntax: syntax 
+                        ,toolbar: "search, go_to_line, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help"
+                        ,syntax_selection_allow: "java,python,c"
+                	});
+
+		});
+
+		
 		function resize(obj) {
 		  obj.style.height = "1px";
 		  obj.style.height = (12+obj.scrollHeight)+"px";
 		}
-
-		editAreaLoader.init({
-			id: "sourceEditorArea"	// id of the textarea to transform
-			,start_highlight: true	// if start with highlight
-			,allow_resize: "both"
-			,allow_toggle: true
-			,word_wrap: true
-			,language: "en"
-			,syntax: "c"
-			,toolbar: "search, go_to_line, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help"
-			,syntax_selection_allow: "css,html,java,js,php,python,vb,xml,c,cpp,sql,basic"
-		});
 
 		// callback functions
 		function my_save(id, content){
@@ -93,13 +115,9 @@
 		}
 
 		 function check_syntax(){
-			var syntax;
 			if(sessionStorage.getItem('syntax'))
 				syntax = sessionStorage.getItem('syntax');
-			else
-				syntax = 'c';
                         $('#syntax').html('<input id="syntax" type="hidden" name="syntax" value="'+syntax+'"/>');
-			sessionStorage.clear();
                  }
 
 	</script>
@@ -117,6 +135,6 @@
 				</div>
 		</form>
 		<h3><b>Result</b></h3>
-		<div class="result_box">{{result}}</div>
+		<div class="result_box"><pre>{{result}}</pre></div>
 </body>
 </html>

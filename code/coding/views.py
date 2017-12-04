@@ -44,32 +44,69 @@ def solveProblem(request):
 def solveEdit(request):
 	code = ''
 	result = ''
-	print request.POST.get('syntax','')
+	syntax = request.POST.get('syntax','java')
+	
 	if request.POST.get('operation','') == 'Write':
 		code = request.POST.get('edit_data', '')
-		f = open('test.c','w')
+		if syntax =='c':
+			f = open('test.c','w')
+		elif syntax == 'python':
+			f = open('test.py','w')
+		else:
+			f = open('test.java','w')
 		f.write(code)
 		f.close()
-		gcc_compile_command = "gcc -o test test.c 2> error"
-		os.popen(gcc_compile_command)
-		result = os.popen("cat error").read()
-		#have error
-		if result.find('error')>=0:
-			os.popen("rm test.c test error")
-			token = {'code': code, 'result':result}
-			return render(request, 'coding/templates/solveEdit.html',token)
-		else:
-			problem_no = request.COOKIES.get('problem_no')
-			result = Solution.objects.all()
-			for r in result:
-				if int(r.sNo.no) == int(problem_no):
+		if syntax != 'python':
+			if syntax == 'c':
+				compile_command = "gcc -o test test.c 2> error"
+			else:
+				compile_command = "javac test.java 2> error"
+			os.popen(compile_command)
+			result = os.popen("cat error").read()
+			#have error
+			if result.lower().find('error')>=0:
+				if syntax == 'c':
+					os.popen("rm test.c test error")
+				else:
+					os.popen("rm test.java test.class error")	
+				token = {'code': code, 'result':result}
+				return render(request, 'coding/templates/solveEdit.html',token)
+		problem_no = request.COOKIES.get('problem_no')
+		result = Solution.objects.all()
+		for r in result:
+			if int(r.sNo.no) == int(problem_no):
+				if syntax == 'c':
 					if os.popen('echo "'+r.ex+'\n" | ./test').read() != r.sol :
 						result = 'Wrong Answer'
 						os.popen("rm test.c test error")
 						token = {'code': code, 'result':result}
 						return render(request, 'coding/templates/solveEdit.html',token)
-			result = 'Correct Answer'
+				elif syntax == 'java':
+					if os.popen('echo "'+r.ex+'\n" | java -classpath . test 2> error').read() != r.sol :
+                                                result = os.popen("cat error").read()
+                                                #have error
+                                                if result.find('Error')<0:
+                                                        result = 'Wrong Answer'
+                                                os.popen("rm test.java test.class error")
+                                                token = {'code': code, 'result':result}
+                                                return render(request, 'coding/templates/solveEdit.html',token)
+				elif syntax == 'python':
+					if os.popen('echo "'+r.ex+'\n" | python test.py 2> error').read().split('\n')[0] != r.sol :
+						result = os.popen("cat error").read()
+						#have error
+						if result.find('Error')<0:
+                                                	result = 'Wrong Answer'
+                                                os.popen("rm test.py error")
+                                                token = {'code': code, 'result':result}
+                                                return render(request, 'coding/templates/solveEdit.html',token)
+
+		result = 'Correct Answer'
+		if syntax == 'c':
 			os.popen("rm test.c test error")
+		elif syntax == 'python':
+			os.popen("rm test.py error")
+		else:
+			os.popen("rm test.java test.class error")
 	token = {'code': code, 'result':result}
 	return render(request, 'coding/templates/solveEdit.html',token)
 
