@@ -7,7 +7,7 @@
 	<title>::T - HUB::</title>
 	<style>
 
-	#prev {
+	#prev, #Record {
 		text-decoration: none;
 		font-family: 'Open Sans', sans-serif;
 		font-weight: normal;
@@ -89,6 +89,7 @@
 
 	</style>
 	<script>
+
 	function view_index(url) {
 		$('#content').load(url);
 	}
@@ -109,9 +110,6 @@
 
 	function view_insertColumn(url, columnName, tableName) {
 		question = "Column name?";
-		alert(url);
-		alert(columnName);
-		alert(tableName);
 		$.sweetModal.prompt(question, null, null, function(newColumnName) {
 					$('#middle').load(url, {
 						tableName : tableName,
@@ -124,27 +122,26 @@
 
 	function view_deleteColumn(url, columnName, tableName) {
 		$.sweetModal.confirm('Deleting ' + columnName, 'Are you sure?', function() {
-                                $.sweetModal({
-                                        content: 'Deleted!',
-                                        icon: $.sweetModal.ICON_SUCCESS,
-                                        //theme: $.sweetModal.THEME_DARK
-                                });
+	      $.sweetModal({
+	              content: 'Deleted!',
+	              icon: $.sweetModal.ICON_SUCCESS,
+	              //theme: $.sweetModal.THEME_DARK
+	      });
+
 				$('#middle').load(url, {
 					tableName : tableName,
 					columnName : columnName
-                        	});
-		}
-                           );
+      	});
+		});
 	}
-
-
 	</script>
 </head>
 
 <body>
 <br><br>
 <center>
-	<a id="prev" href="javascript:view_index('/vdb');">PREV</a>
+	<a id="prev" href="javascript:view_index('/vdb');">PREV</a> <br><br>
+	<a id="Record" href="javascript:view_index('/insertRecordIntoColumn');">+RECORD</a>
 	<br><br>
 
 	<table class="container">

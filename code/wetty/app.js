@@ -132,7 +132,7 @@ io.on('connection', function(socket){
 	term.write('cd ' + django_execute_path +'\n');
 
 	/* Initial Settings for connected user */
-	term.write('clear\n');
+	term.write('clear\n\n\n');
 
 	/* Execute Command */
 	if( extension == '.c')
@@ -152,17 +152,22 @@ io.on('connection', function(socket){
 	}
 
     term.on('data', function(data) {
-		socket.emit('output', data);
+        if(data.search(execute_command) == -1 && data.search('logout') == -1 && data.search('Connection to localhost closed.') == -1)
+        {
+          socket.emit('output', data);
+        }
     });
+
     term.on('exit', function(code) {
         console.log((new Date()) + " PID=" + term.pid + " ENDED")
     });
+
     socket.on('resize', function(data) {
         term.resize(data.col, data.row);
     });
 
     socket.on('input', function(data) {
-		if( data.charCodeAt(0) != 3 && data.charCodeAt(0) != 26) // which means CTRL+C
+		if( data.charCodeAt(0) != 3 && data.charCodeAt(0) != 26) // which means CTRL+C && CTRL+Z
 		{
         	term.write(data);
 		}
@@ -174,9 +179,6 @@ io.on('connection', function(socket){
 			process.exit(0);
 		}
 	});
-
-
-
 
     socket.on('disconnect', function() {
         term.end();

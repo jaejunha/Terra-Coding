@@ -35,7 +35,7 @@ def vdbIndex(request):
     row = str(VDB.objects.filter(owner_id = owner_id).first())
     result = ''
     if row == owner_id:
-        sql = "SELECT TABLE_NAME, UPDATE_TIME FROM information_schema.tables WHERE TABLE_SCHEMA = '_%s';" % request.session['number']
+        sql = "SELECT TABLE_NAME, TABLE_ROWS, UPDATE_TIME FROM information_schema.tables WHERE TABLE_SCHEMA = '_%s';" % request.session['number']
         (status, result)= do_sql_commit(sql, root_connection, curs, "GET_SELECT_ALL")
         if status != '':
             print status
@@ -263,7 +263,7 @@ def insertColumn(request):
     tableName = request.POST.get('tableName', '')
     columnName = request.POST.get('columnName', '')
     newColumnName = request.POST.get('newColumnName', '')
-    
+
 
     databaseName = str(request.session['number']) # make databaseName
     databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
@@ -288,7 +288,6 @@ def deleteColumn(request):
     tableName = request.POST.get('tableName', '')
     columnName = request.POST.get('columnName', '')
 
-
     databaseName = str(request.session['number']) # make databaseName
     databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
     _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
@@ -304,9 +303,7 @@ def deleteColumn(request):
     if status != '':
         return viewTable(request)
 
-
     return viewTable(request)
-
 
 # This function is test function and will be updated.
 def delete_external_user_test(request, _id, databaseName):

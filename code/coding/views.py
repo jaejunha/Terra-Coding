@@ -45,7 +45,7 @@ def solveEdit(request):
 	code = ''
 	result = ''
 	syntax = request.POST.get('syntax','java')
-	
+
 	if request.POST.get('operation','') == 'Write':
 		code = request.POST.get('edit_data', '')
 		if syntax =='c':
@@ -68,7 +68,7 @@ def solveEdit(request):
 				if syntax == 'c':
 					os.popen("rm test.c test error")
 				else:
-					os.popen("rm test.java test.class error")	
+					os.popen("rm test.java test.class error")
 				token = {'code': code, 'result':result}
 				return render(request, 'coding/templates/solveEdit.html',token)
 		problem_no = request.COOKIES.get('problem_no')
@@ -597,7 +597,7 @@ def replace_psuedo_syntax_to_db_syntax(request, _data):
 
 	return _data
 
-
+'''
 def start_wetty_server():
 	print '[WETTY] thread running.....'
 	execute_command = "node wetty/app.js | tee /dev/null | head"
@@ -608,3 +608,4 @@ def start_wetty_server():
 t1 = threading.Thread(target=start_wetty_server, args=())
 t1.daemon = True
 t1.start()
+'''

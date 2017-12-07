@@ -284,7 +284,7 @@
 			<div class="box 0">
 			<div></div>
 				<div>
-					<a>Database</a>
+					<a>Manager</a>
 				</div>
 			</div>
 			<br>
@@ -302,6 +302,7 @@
 			<tr>
 				<th><h1>TABLE NAME</h1></th>
 				<th><h1>OPTION</h1></th>
+				<th><h1># OF RECORDS</h1></th>
 			</tr>
 		</thead>
 		{% for each in result %}
@@ -310,18 +311,20 @@
 			 <td> <!-- 1st column -->
 				 <a id='tableName' href="javascript:view_viewTable('/vdb/viewTable','{{ each.0 }}')">{{ each.0 }}</a>
 			 </td>
-			<td>  <!-- 2nd column -->
+			<td>  <!-- 3rd column -->
 				<div class="navbar">
 				  <div class="dropdown">
 				    <button class="dropbtn">Functions</button>
 				    <div class="dropdown-content">
 							<a href="javascript:view_renameTable('/vdb/renameTable', '{{ each.0 }}');">Rename</a>
-							<a href="javascript:view_updateTable('/vdb/createTable', '{{ each.0 }}');">Update</a>
 							<a href="javascript:view_deleteTable('/vdb/deleteTable', '{{ each.0 }}');">Delete</a>
 						</div>
 				  </div>
 				</div>
 			</td>
+			<td WIDTH="5%"> <!-- 2nd column -->
+				 {{ each.1 }}
+			 </td>
    </tr>
  	 </tbody>
 	 {% endfor %}

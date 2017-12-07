@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^/renameTable', views.renameTable, name='renameTable'),
     url(r'^/renameColumn', views.renameColumn, name='renameColumn'),
     url(r'^/insertColumn', views.insertColumn, name='insertColumn'),
-    url(r'^/deleteColumn', views.deleteColumn, name='deleteColumn')
+    url(r'^/deleteColumn', views.deleteColumn, name='deleteColumn'),
+    #url(r'^/insertRecordIntoColumn', views.insertRecordIntoColumn, name='insertRecordIntoColumn')
 ]
