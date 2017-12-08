@@ -24,6 +24,7 @@ from subprocess import call
 import sys
 sys.path.insert(0,'..')
 from problem.models import *
+from terra.models import *
 
 FORBIDDEN_TEXT_EXTENSION = ['.pyc', '.sqlite3'] # may be white list is more efficient...
 ALLOWED_IMG_EXTENSION = ['.png', '.jpg']
@@ -42,6 +43,7 @@ def solveProblem(request):
 
 @csrf_exempt
 def solveEdit(request):
+	number = request.session['number']
 	code = ''
 	result = ''
 	syntax = request.POST.get('syntax','java')
@@ -78,6 +80,15 @@ def solveEdit(request):
 				if syntax == 'c':
 					if os.popen('echo "'+r.ex+'\n" | ./test').read() != r.sol :
 						result = 'Wrong Answer'
+						u = User.objects.get(number=number)
+                                                s = Solve.objects.filter(sUser=u)
+                                                if s:
+                                                	s.update(wrong=s[0].wrong+1)
+                                                else:
+                                                        Solve(sUser=u,wrong=1,correct=0).save()
+                                                p = Problem.objects.filter(no = problem_no)
+                                                p.update(wrong=p[0].wrong+1)
+
 						os.popen("rm test.c test error")
 						token = {'code': code, 'result':result}
 						return render(request, 'coding/templates/solveEdit.html',token)
@@ -87,6 +98,15 @@ def solveEdit(request):
                                                 #have error
                                                 if result.find('Error')<0:
                                                         result = 'Wrong Answer'
+							u = User.objects.get(number=number)
+
+							s = Solve.objects.filter(sUser=u)
+							if s:
+								s.update(wrong=s[0].wrong+1)
+							else:
+								Solve(sUser=u,wrong=1,correct=0).save()
+							p = Problem.objects.filter(no = problem_no)
+							p.update(wrong=p[0].wrong+1)
                                                 os.popen("rm test.java test.class error")
                                                 token = {'code': code, 'result':result}
                                                 return render(request, 'coding/templates/solveEdit.html',token)
@@ -96,11 +116,30 @@ def solveEdit(request):
 						#have error
 						if result.find('Error')<0:
                                                 	result = 'Wrong Answer'
+							u = User.objects.get(number=number)
+
+                                                        s = Solve.objects.filter(sUser=u)
+                                                        if s:
+                                                                s.update(wrong=s[0].wrong+1)
+                                                        else:
+                                                                Solve(sUser=u,wrong=1,correct=0).save()
+                                                        p = Problem.objects.filter(no = problem_no)
+                                                        p.update(wrong=p[0].wrong+1)
+
                                                 os.popen("rm test.py error")
                                                 token = {'code': code, 'result':result}
                                                 return render(request, 'coding/templates/solveEdit.html',token)
 
 		result = 'Correct Answer'
+		u = User.objects.get(number=number)
+                s = Solve.objects.filter(sUser=u)
+                if s:
+                	s.update(correct=s[0].correct+1)
+                else:
+                        Solve(sUser=u,wrong=0,correct=1).save()
+                p = Problem.objects.filter(no = problem_no)
+              	p.update(correct=p[0].correct+1)
+
 		if syntax == 'c':
 			os.popen("rm test.c test error")
 		elif syntax == 'python':

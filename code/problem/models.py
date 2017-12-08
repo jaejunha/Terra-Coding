@@ -8,6 +8,8 @@ class Problem(models.Model):
     name = models.CharField(max_length=50)
     desc = models.TextField(max_length=100, null = True)
     date = models.DateTimeField(default=datetime.datetime.now)
+    wrong = models.IntegerField(default=0)
+    correct = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
