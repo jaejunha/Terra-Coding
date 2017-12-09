@@ -1,0 +1,38 @@
+import requests
+from bs4 import BeautifulSoup
+
+def get_single_item_data():
+    item_url = "http://localhost:9000/sonar/dashboard/index/1"
+    source_code = requests.get(item_url)
+    plain_text = source_code.text.encode('ascii', 'replace')
+    soup = BeautifulSoup(plain_text, "html.parser")
+    #print(soup)
+    # for item_name in soup.findAll('div', {'id': 'dashboard-column-1'}):
+    #    issue_message=item_name.string
+    #    print(issue_message)
+
+    for i in soup.findAll('div', {'id': 'dashboard-column-1'}):
+        print('-------------block1-------------\n')
+        for item_name in soup.findAll('div', {'id': 'block_1'}):
+            issue_message=item_name.text
+            print(issue_message)
+        print('-------------block2-------------\n')
+        for item_name in soup.findAll('div', {'id': 'block_2'}):
+            issue_message=item_name.text
+            print(issue_message)
+        print('-------------block3-------------\n')
+        for item_name in soup.findAll('div', {'id': 'block_3'}):
+            issue_message=item_name.text
+            print(issue_message)
+            for photo in soup.findAll('img', {'id': 'chart_img_function_complexity_distribution'}):
+                photo_src=photo.get('src')
+                print(photo_src)
+
+    print('-------------block6-------------\n')
+    for i in soup.findAll('div', {'id': 'dashboard-column-2'}):
+        for item_name in soup.findAll('div', {'id': 'block_6'}):
+            issue_message=item_name.text
+            print(issue_message)
+
+get_single_item_data()
+
