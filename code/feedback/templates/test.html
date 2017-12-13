@@ -3,84 +3,13 @@
 <html lang="en">
 {% load staticfiles %}
 <head>
-	<link rel="stylesheet" href="{% static 'css/coding/directory_list.css' %}">
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<link rel="stylesheet" href="{% static 'package/sweet/jquery.sweet-modal.min.css' %}" />
 	<script src="{% static 'package/sweet/jquery.sweet-modal.min.js' %}"></script>
-
+        <script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
 	<title>::T - HUB::</title>
 	<style>
-
-	.dropdown {
-	    float: left;
-	    overflow: hidden;
-            background-color: #333;
-	}
-
-	.dropdown .dropbtn {
-	    font-size: 16px;
-	    border: none;
-	    outline: none;
-	    color: white;
-	    padding: 14px 16px;
-	    background-color: inherit;
-	}
-
-	.navbar a:hover, .dropdown:hover .dropbtn {
-	    background-color: red;
-	}
-
-	.dropdown-content {
-	    display: none;
-	    position: absolute;
-	    background-color: #f9f9f9;
-	    min-width: 160px;
-	    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-	    z-index: 1;
-	}
-
-	.dropdown-content a {
-	    float: none;
-	    color: black;
-	    padding: 12px 16px;
-	    text-decoration: none;
-	    display: block;
-	    text-align: left;
-	}
-
-	.dropdown-content a:hover {
-	    background-color: #ddd;
-	}
-
-	.dropdown:hover .dropdown-content {
-	    display: block;
-	}
-	</style>
-	<style>
-
-	#directName, #date{
-	  text-decoration: none;
-	  font-family: 'Open Sans', sans-serif;
-	  font-weight: bold;
-	  font-size: 1em;
-	  color:#FFFFFF;
-	  padding:5px 15px;
-	  background:transparent;
-	  border:0 none;
-	  cursor:pointer;
-	}
-
-	#Compile, #Delete, #Create {
-		text-decoration: none;
-		font-family: 'Open Sans', sans-serif;
-		font-weight: normal;
-		font-size: 1em;
-		color:#FFFFFF;
-		padding:5px 15px;
-		background:#000000;
-		border:0 none;
-		cursor:pointer;
-	}
 
 	#darkBut {
 		text-decoration: none;
@@ -123,7 +52,7 @@
 		background-color: #ffffff;
 	}
 
-	 #left .box:nth-of-type(2){
+	#left .box:nth-of-type(2){
                 background: rgb(228, 233, 236);
         }
 
@@ -166,79 +95,19 @@
                 margin-top:120px;
                 margin-left: 250px;
 		padding: 10px;
+		overflow: auto;
         }
-
-	table{
-		width: 80%;
-		border: 2px solid #ffffff;
-		border-collapse: collapse;
-		background: #566788;
-	}
-	th, td{
-		border: 2px solid #ffffff;
-		padding: 10px;
-	}
-	th{
-		background: #323c50;
-		text-align: center;
-		color: #ffffff;
-	}
-	td{
-		color: #efefef;
-	}
 	</style>
 	<script>
-	var current='';
-	var select_el;
-	var select_no;
-	$(window).on('hashchange', function() {
-			if(location.hash != ('#'+current)){
-				checkForHash();
-			}
+	$(window).resize(function (){
+  		$('#frame').css('width',$('#middle').width());
+  		$('#frame').css('height',$(document).height()+200);
 	});
-
-	function checkForHash() {
-	    if(document.location.hash){
-	        var hashName = document.location.hash;
-	        hashName = hashName.replace("#","");
-					var res = hashName.split("&");
-					var method = res[1].split("=")[1];
-					if(method == '/coding/printDir'){
-						view_printDir(res[0].split("=")[1],res[1].split("=")[1],res[2].split("=")[1],res[3].split("=")[1]);
-					}
-	    } else {
-					$("#content").load('/coding/printDir');
-			}
-	}
-
-	function view_printDir(op,url,dir,file){
-	current = 'op='+op+'&url='+url+'&dir='+dir;
-		if(op == 'categorization'){
-			var sel = document.getElementById("project_attribute");
-			var val = sel.options[sel.selectedIndex].value+'';
-			current+='&project_attribute='+val;
-			document.location.hash = "#" + current;
-			$('#content').load(url,{
-				dirName : dir,
-				operation : op,
-				project_attribute : val
-			});
-		}
-		else{
-		current+='&file='+file;
-		document.location.hash = "#" + current;
-			$('#content').load(url,{
-				dirName : dir,
-				operation : op,
-				folder : file
-			});
-		}
-	}
-
-	function loadDiv(url) {
-                $('#content').load(url);
-        }
-
+	$(window).ready( function() {
+ 		 $('#frame').css('width',$('#middle').width());
+  		$('#frame').css('height',$(document).height()+200);
+	});
+	
 	</script>
 	</head>
 
@@ -262,104 +131,8 @@
 			<br>
 		</div>
 	<div id="middle">
-		<div id="project">
-	<!-- Most Top&Left ___ Directory Input form -->
-	<br>
-	<!-- Select project attribute -->
-	<select name="project_attribute" id="project_attribute" onchange="view_printDir('categorization','/coding/printDir','{{dirName}}','')">
-		<option value="Select">Extension</option>
-		<option value="ALL">ALL</option>
-    <option value="Java_Lang">Java</option>
-	</select>
-	</center>
-	<center>
-	<table class="container">
-		<thead>
-			<tr>
-				<th>Type</th>
-				<th>Name</th>
-				<th>Date</th>
-				<th>Function</th>
-			</tr>
-		</thead>
-		<tr>
-			<td><img style="width: 70px; height: auto;" src="{% static 'ico/upper_arrow.png' %}"></td>
-			<td>
-			<center><a id='directName' href="javascript:view_printDir('GoBack','/coding/printDir','{{dirName}}','../')">../</a></center>
-		  </td>
-			<td><center>NONE</center></td>
-			<td>GO TO PARENT DIRECTORY</td>
-		</tr>
-		{% for info in fileInfo %}
-		<tbody>
-		<tr>
-		 <!-- 1st column ___ type icon -->
-		 <td width="5%">
-				{% if info.0 == 'd' %}
-	      	<img style="width: 70px; height: auto;" src="{% static 'ico/folder_ico.png' %}">
-				{% elif info.0 == 'l' %}
-	      	<img style="width: 70px; height: auto;" src="{% static 'ico/link_ico.png' %}">
-				{% else %}
-					{% if info.0 == '.py' %}
-					<img style="width: 70px; height: auto;" src="{% static 'ico/py_ico.png' %}">
-					{% elif info.0 == '.c' %}
-					<img style="width: 70px; height: auto;" src="{% static 'ico/c_ico.png' %}">
-					{% elif info.0 == '.cpp' %}
-					<img style="width: 70px; height: auto;" src="{% static 'ico/cpp_ico.png' %}">
-					{% elif info.0 == '.java' %}
-					<img style="width: 70px; height: auto;" src="{% static 'ico/java_ico.png' %}">
-					{% elif info.0 == '.h' %}
-					<img style="width: 70px; height: auto;" src="{% static 'ico/header_ico.png' %}">
-					{% elif info.0 == '.pyc' %}
-					<img style="width: 70px; height: auto;" src="{% static 'ico/pyc_ico.png' %}">
-					{% elif info.0 == '.sqlite3' %}
-					<img style="width: 70px; height: auto;" src="{% static 'ico/sql_ico.png' %}">
-					{% elif info.0 == '.png' %}
-					<img style="width: 70px; height: auto;" src="{% static 'ico/png_ico.png' %}">
-					{% elif info.0 == '.jpg' %}
-					<img style="width: 70px; height: auto;" src="{% static 'ico/jpg_ico.png' %}">
-					{% else %}
-					<img style="width: 70px; height: auto;" src="{% static 'ico/file_ico.png' %}">
-					{% endif %}
-				{% endif %}
-		 </td>
-
-		<!-- 2nd column ___ FileName -->
-		<td><center>
-				{% if info.0 == 'd' %}
-				<a id='directName' href="javascript:view_printDir('ReDirect','/coding/printDir','{{dirName}}','{{info.1}}')">{{info.1}}</a>
-				{% else %}
-				<a id='directName' href="javascript:view_sourceView('/coding/sourceView','{{ dirName }}','{{ info.1 }}')">{{info.1}}</a>
-				{% endif %}
-    </center></td>
-		<!-- 3rd column ___ DATE -->
-		<td>
-			<center>{{ info.2 }}</center>
-		</td>
-		<!-- 4th column ___ Button Family -->
-		<td width=8%>
-			<a id="create">test</a>
-			<div class="navbar">
-			  <div class="dropdown">
-			    <button class="dropbtn">Evaluate</button>
-			    <div class="dropdown-content">
-						{% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
-						<a href="javascript:view_do_compile('/coding/compile_res', 'selected', '{{info.1}}', '{{ dirName }}')">Compile & Run</a>
- 					  {% elif info.0 == 'd' %}
-						<a href="javascript:view_do_compile('/coding/compile_res', 'directory', '{{info.1}}', '{{ dirName }}')">Compile this project as C</a>
-	  				{% endif %}
-						<a href="javascript:view_renameFile('/coding/renameFile', '{{info.1}}', '{{ dirName }}')">Rename</a>
-						<a href="javascript:view_sourceDel('/coding/sourceDel', '{{info.1}}', '{{ dirName }}')">Delete</a>
-			    </div>
-			  </div>
-			</div>
-		</td>
-   </tr>
- 	 </tbody>
-	 	{% endfor %}
-  </table>
-</center>
-</div>
-</div>
+		<br>
+		<iframe id="frame" src="feedback/feedbackEdit" width="100%" frameborder="0"  scrolling = "no"></iframe><br>
+	</div>
 </body>
 </html>

@@ -140,8 +140,6 @@
 	</style>
 	<script>
 	var current='';
-	var select_el;
-	var select_no;
 	$(window).on('hashchange', function() {
 			if(location.hash != ('#'+current)){
 				checkForHash();
@@ -214,15 +212,7 @@
 		</div>
 	<div id="middle">
 		<div id="project">
-	<!-- Most Top&Left ___ Directory Input form -->
 	<br>
-
-	<!-- Select project attribute -->
-	<select name="project_attribute" id="project_attribute" onchange="view_printDir('categorization','/coding/printDir','{{dirName}}','')">
-		<option value="Select">Extension</option>
-    <option value="Java_Lang">Java</option>
-	</select>
-	</center>
 	<center>
 	<table class="container">
 		<thead>
@@ -309,6 +299,7 @@
 	 	{% endfor %}
   </table>
 </center>
+</div>
 </div>
 </div>
 </body>

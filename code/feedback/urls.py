@@ -19,4 +19,5 @@ from . import views
 urlpatterns = [
     url(r'^$', views.feedback, name='feedback'),
     url(r'^/test', views.test, name='test'),
+    url(r'^/feedbackEdit', views.feedbackEdit, name='feedbackEdit'),
 ]

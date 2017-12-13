@@ -18,47 +18,34 @@
 			cursor:pointer;
 			margin-top: 5px;
 		}
-		#result_box{
+		.result_box{
 	    margin: 10px;
 	    padding: 10px;
-	    overflow: auto;
+	    height: auto;
+	    overflow: hidden;
 	  }
 	</style>
 	<script language="Javascript" type="text/javascript" src="{% static 'package/edit_area/edit_area_full.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
 	<script language="Javascript" type="text/javascript">
-		var syntax = 'c';
 		$(document).ready(function() {
-			if(sessionStorage.getItem('syntax')){
-				if(syntax != sessionStorage.getItem('syntax')){
-					syntax = sessionStorage.getItem('syntax');
-/*					if(syntax == 'java')
-						$('#sourceEditorArea').val('import java.util.Scanner;\n\npublic class test {\n\tpublic static void main(String args[]) {\n\t\tScanner scan = new Scanner(System.in);\n\n\t}\n}');
-					else if(syntax == 'c')
-						$('#sourceEditorArea').val('#include <stdio.h>\n\nint main(){\n\n\treturn 0;\n}');
-					else
-						$('#sourceEditorArea').val('');
-				}else{
-					$('#sourceEditorArea').val({{code}});
-				}
-			}else{
+			{% if code %}	
+				$('#sourceEditorArea').val({{code}});
+			{% else %}
 				$('#sourceEditorArea').val('import java.util.Scanner;\n\npublic class test {\n\tpublic static void main(String args[]) {\n\t\tScanner scan = new Scanner(System.in);\n\n\t}\n}');
-			*/
-			}}
-
+			{% endif %}
 			editAreaLoader.init({
-                        id: "sourceEditorArea"  // id of the textarea to transform
-                        ,start_highlight: true  // if start with highlight
-                        ,allow_resize: "both"
-                        ,allow_toggle: true
-                        ,word_wrap: true
-                        ,language: "en"
-                        ,syntax: syntax 
-                        ,toolbar: "search, go_to_line, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help"
-                        ,syntax_selection_allow: "c,java,python"
-                	});
-
+        	        id: "sourceEditorArea"  // id of the textarea to transform
+               	 	,start_highlight: true  // if start with highlight
+                	,allow_resize: "both"
+                	,allow_toggle: true
+                	,word_wrap: true
+                	,language: "en"
+                	,syntax: "java" 
+                	,toolbar: "search, go_to_line, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help"
+		        ,syntax_selection_allow: "java"
+			});
 		});
 
 		
@@ -113,28 +100,27 @@
 		{
 			editAreaLoader.closeFile('sourceEditorArea', "test");
 		}
-
-		 function check_syntax(){
-			if(sessionStorage.getItem('syntax'))
-				syntax = sessionStorage.getItem('syntax');
-                        $('#syntax').html('<input id="syntax" type="hidden" name="syntax" value="'+syntax+'"/>');
-                 }
-
 	</script>
 </head>
 <!--_______________ END OF HEAD _______________-->
 
 <body>
-		<form action="/coding/solveEdit" method="POST" style="display:inline;">
+		<form action="/feedback/feedbackEdit" method="POST" style="display:inline;">
 			{% csrf_token %}
-				<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 60%; width: 100%;" name="edit_data">{{code}}</textarea>
+				<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 40%; width: 100%;" name="edit_data">{{code}}</textarea>
 				<input type="hidden" name="operation" value="Write"/>
-				<input id="syntax" type="hidden" name="syntax" value="c"/>
 				<div align="right">
-				<input id="submit" type="submit" value="Submit" onclick="check_syntax();return confirm('Are you sure want to submit this code? :)')"/>
+				{% if success %}
+				{% else %}
+				<input id="submit" type="submit" value="Submit" onclick="return confirm('Are you sure want to submit this code? :)')"/>
+				{% endif %}
 				</div>
 		</form>
 		<h3><b>Result</b></h3>
-		<div class="result_box"><pre>{{result}}</pre></div>
+		<div class="result_box"><pre>{{result}}</pre>
+		{% for e in etc %}
+		{{e}}<br>
+		{% endfor %}
+		</div>
 </body>
 </html>
