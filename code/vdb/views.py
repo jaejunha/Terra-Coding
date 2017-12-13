@@ -24,25 +24,27 @@ def vdbIndex(request):
     except:
         token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
         return render(request, 'coding/templates/error.html', token)
-    owner_id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest())
+    owner_id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()[:13])
 
     # Establish connection between python and mysql __ START __
-    root_connection = pymysql.connect(host='localhost', user=MYSQL_ADMIN_ID, password=MYSQL_ADMIN_PASSWD,
-                       db=MYSQL_ADMIN_DB, charset=MYSQL_CHAR_SET)
+    root_connection = pymysql.connect(host='127.0.0.1', user=MYSQL_ADMIN_ID, password=MYSQL_ADMIN_PASSWD, db=MYSQL_ADMIN_DB, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
+    status = ''
+    # CHECK ROUTINE
+    # WHETHER USER'S DATABASE EXIST.
+    if status != '':
+        print status
+        return vdbIndex(request)
 
-    row = str(VDB.objects.filter(owner_id = owner_id).first())
+    create_external_vdb(request, root_connection, curs)
+
     result = ''
-    if row == owner_id:
-        sql = "SELECT TABLE_NAME, TABLE_ROWS, UPDATE_TIME FROM information_schema.tables WHERE TABLE_SCHEMA = '_%s';" % request.session['number']
-        (status, result)= do_sql_commit(sql, root_connection, curs, "GET_SELECT_ALL")
-        if status != '':
-            print status
-            return vdbIndex(request)
-    else:
-        VDB(owner_id=owner_id).save()
-        create_external_vdb(request, root_connection, curs)
+    sql = "SELECT TABLE_NAME, TABLE_ROWS, UPDATE_TIME FROM information_schema.tables WHERE TABLE_SCHEMA = '_%s';" % request.session['number']
+    (status, result)= do_sql_commit(sql, root_connection, curs, "GET USER'S TABLE INFORMATIONS")
+    if status != '':
+        print status
+        return vdbIndex(request)
 
     try:
         curs.close()
@@ -66,28 +68,20 @@ def create_external_vdb(request, root_connection, curs):
     # Make information for external database __ START __
     databaseName = str(request.session['number']) # make databaseName
     databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
-    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
-    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()[:13]) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()[:13]) # make _passwd using MD5 hashing
 
-    #delete_external_user_test(request, _id, databaseName)
-
-    # Create User __START__
-    sql = "create database _%s" % (databaseName)
-    (status, result) = do_sql_commit(sql, root_connection, curs, "CREATE VDB")
-    if status != '':
-        return
+    # Create DATABASE
+    sql = "CREATE DATABASE IF NOT EXISTS _%s" % databaseName
+    (status, result)= do_sql_commit(sql, root_connection, curs, "CREATE DATABASE IF NOT EXISTS")
 
     # Create external database's user & password
     sql = "create user '%s'@'%%' identified by '%s'" % (_id, _passwd)
     (status, result) = do_sql_commit(sql, root_connection, curs, "CREATE USER")
-    if status != '':
-        return
 
     # Set privileges for none super-user
     sql = "grant all privileges on _%s.* to %s@'%%' identified by '%s'; flush privileges;" % (databaseName, _id, _passwd)
     (status, result) = do_sql_commit(sql, root_connection, curs, "GRANT PRIVILEGES")
-    if status != '':
-        return
 
     return
 
@@ -108,7 +102,7 @@ def createTable(request):
         create_external_table(request, table_name, column_data)
 
         try:
-            owner_id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest())
+            owner_id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()[:13])
         except:
             token = {'ReDirectURL': '/terra', 'ERR_CODE': ERR_NO_SESSION_ID}
             return render(request, 'coding/templates/error.html', token)
@@ -125,11 +119,10 @@ def deleteTable(request):
 
     databaseName = str(request.session['number']) # make databaseName
     databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
-    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
-    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()[:13]) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()[:13]) # make _passwd using MD5 hashing
 
-    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
-                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd, db='_'+databaseName, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
     sql = "DROP table %s" % (tableName)
@@ -148,13 +141,12 @@ def renameTable(request):
 
     databaseName = str(request.session['number']) # make databaseName
     databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
-    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
-    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()[:13]) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()[:13]) # make _passwd using MD5 hashing
 
     tableName = request.POST.get('tableName', '')
 
-    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
-                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    root_connection = pymysql.connect(host='127.0.0.1', user=_id, password=_passwd, db='_'+databaseName, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
     # rename table [SR] to [DS];
@@ -180,11 +172,10 @@ def viewTable(request):
     # Extract user information and Create database information
     databaseName = str(request.session['number']) # make databaseName
     databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
-    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
-    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()[:13]) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()[:13]) # make _passwd using MD5 hashing
 
-    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
-                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    root_connection = pymysql.connect(host='127.0.0.1', user=_id, password=_passwd, db='_'+databaseName, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
     # Get Column name of Table __START__
@@ -211,11 +202,10 @@ def create_external_table(request, _table_name, _column_data):
     # Extract user information and Create database information
     databaseName = str(request.session['number']) # make databaseName
     databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
-    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
-    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()[:13]) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()[:13]) # make _passwd using MD5 hashing
 
-    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
-                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    root_connection = pymysql.connect(host='127.0.0.1', user=_id, password=_passwd, db='_'+databaseName, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
     # Assemble sql syntax from web request
@@ -243,11 +233,10 @@ def renameColumn(request):
 
     databaseName = str(request.session['number']) # make databaseName
     databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
-    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
-    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()[:13]) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()[:13]) # make _passwd using MD5 hashing
 
-    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
-                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    root_connection = pymysql.connect(host='127.0.0.1', user=_id, password=_passwd, db='_'+databaseName, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
     sql = "alter table %s change %s %s varchar(30)" % (tableName, columnName, newColumnName)
@@ -267,11 +256,10 @@ def insertColumn(request):
 
     databaseName = str(request.session['number']) # make databaseName
     databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
-    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
-    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()[:13]) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()[:13]) # make _passwd using MD5 hashing
 
-    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
-                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    root_connection = pymysql.connect(host='127.0.0.1', user=_id, password=_passwd, db='_'+databaseName, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
     sql = "alter table %s add %s varchar(30) after %s" % (tableName, newColumnName, columnName)
@@ -290,11 +278,10 @@ def deleteColumn(request):
 
     databaseName = str(request.session['number']) # make databaseName
     databaseName = databaseName.replace('\r', ''); databaseName = databaseName.replace('\n', ''); # Normalize Database Name
-    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()) # make _id using MD5 hashing
-    _passwd = str(hashlib.md5(request.session['number']).hexdigest()) # make _passwd using MD5 hashing
+    _id = str(hashlib.md5(request.session['number']+request.session['Directory']).hexdigest()[:13]) # make _id using MD5 hashing
+    _passwd = str(hashlib.md5(request.session['number']).hexdigest()[:13]) # make _passwd using MD5 hashing
 
-    root_connection = pymysql.connect(host='localhost', user=_id, password=_passwd,
-                       db='_'+databaseName, charset=MYSQL_CHAR_SET)
+    root_connection = pymysql.connect(host='127.0.0.1', user=_id, password=_passwd, db='_'+databaseName, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
     sql = "alter table %s drop %s;" % (tableName, columnName)
@@ -307,8 +294,7 @@ def deleteColumn(request):
 
 # This function is test function and will be updated.
 def delete_external_user_test(request, _id, databaseName):
-    root_connection = pymysql.connect(host='localhost', user=MYSQL_ADMIN_ID, password=MYSQL_ADMIN_PASSWD,
-                       db=MYSQL_ADMIN_DB, charset=MYSQL_CHAR_SET)
+    root_connection = pymysql.connect(host='127.0.0.1', user=MYSQL_ADMIN_ID, password=MYSQL_ADMIN_PASSWD, db=MYSQL_ADMIN_DB, charset=MYSQL_CHAR_SET)
     curs = root_connection.cursor()
 
     # clean up user information
@@ -333,9 +319,10 @@ def do_sql_commit(_sql, _root_connection, _curs, error_type='[DEFAULT]'):
     try:
         curs.execute(sql)
     except Exception as e:
-        print '*****[%s] ____> %s' % (error_type, e)
-        error_type = ERR_NO_DABABASE
-        return (error_type, '')
+        if int(e[0]) != 1396 and int(e[0]) != 1007: # Except things...
+            print '*****[%s] ____> %s' % (error_type, e)
+            error_type = ERR_NO_DABABASE
+            return (error_type, '')
 
     root_connection.commit() # Real execution
     result = curs.fetchall()
