@@ -91,7 +91,17 @@
 	</center>
 <div id="source_view">
 {% if service_type == 'text' %}
-	<pre><viewer class="C"><font size="4">{{ file_data }}</font></viewer></pre>
+	{% if extension == '.c' %}
+		<pre><viewer class="C"><font size="4">{{ file_data }}</font></viewer></pre>
+	{% elif extension == '.java' %}
+		<pre><viewer class="JAVA"><font size="4">{{ file_data }}</font></viewer></pre>
+	{% elif extension == '.py' %}
+		<pre><viewer class="PYTHON"><font size="4">{{ file_data }}</font></viewer></pre>
+	{% elif extension == '.cpp' %}
+		<pre><viewer class="PYTHON"><font size="4">{{ file_data }}</font></viewer></pre>
+	{% else %}
+		<pre><viewer class="C"><font size="4">{{ file_data }}</font></viewer></pre>
+	{% endif %}
 {% elif service_type == 'img' %}
 <img style="vertical-align: bottom;" src="{{ directoryName|add:fileName }}" width="30%" height="30%">
 {% else %}

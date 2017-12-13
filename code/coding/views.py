@@ -263,7 +263,9 @@ def sourceView(request):
 	file_data = f.read()
 	f.close()
 
-	token = {'file_data': file_data, 'fileName': fileName, 'directoryName': directoryName, 'service_type': "text"}
+	extension = os.path.splitext(fileName)[1].lower()
+
+	token = {'file_data': file_data, 'fileName': fileName, 'directoryName': directoryName, 'service_type': "text", 'extension': extension}
 	response = render(request, 'coding/templates/sourceView.html', token)
 	response.set_cookie('fileName', fileName)
 	response.set_cookie('directoryName', directoryName)
@@ -683,7 +685,7 @@ def replace_psuedo_syntax_to_db_syntax(request, _data):
 
 	return _data
 
-
+'''
 def start_wetty_server():
 	print '[WETTY] thread running.....'
 	execute_command = "node wetty/app.js | tee /dev/null | head"
@@ -694,3 +696,4 @@ def start_wetty_server():
 t1 = threading.Thread(target=start_wetty_server, args=())
 t1.daemon = True
 t1.start()
+'''

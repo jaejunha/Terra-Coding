@@ -14,10 +14,13 @@
 	    float: left;
 	    overflow: hidden;
 			background-color: #333;
+			border-radius: 20px;
 	}
 
 	.dropdown .dropbtn {
 	    font-size: 16px;
+			font-weight: bold;
+			text-align: center;
 	    border: none;
 	    outline: none;
 	    color: white;
@@ -60,7 +63,7 @@
 	#tableName {
 	  text-decoration: none;
 	  font-family: 'Open Sans', sans-serif;
-	  font-weight: normal;
+	  font-weight: bold;
 	  font-size: 1em;
 	  color:#FFFFFF;
 	  padding:5px 15px;
@@ -110,6 +113,7 @@
 			border: 2px solid #ffffff;
 			border-collapse: collapse;
 			background: #566788;
+			text-align: left;
 	}
 
 	th, td{
@@ -128,17 +132,15 @@
 
 	<style>
 	#left{
-								position: absolute;
-								top: 0;
-								left: 0;
-									height: 100%;
-								width:250px;
-								margin-top:120px;
-
-								display:inline-block;
-								line-height: 1px;
-				}
-
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width:250px;
+		margin-top:120px;
+		display:inline-block;
+		line-height: 1px;
+	}
 
 	#left .title{
 		width: 250px;
@@ -179,17 +181,17 @@
 	}
 
 	#middle{
-								position: absolute;
-								width: auto;
-								height: auto;
-								top: 0px;
-								left: 0px;
-								bottom: 0px;
-								right: 0px;
-								margin-top:120px;
-								margin-left:250px;
-								padding:10px;
-				}
+		position: absolute;
+		width: auto;
+		height: auto;
+		top: 0px;
+		left: 0px;
+		bottom: 0px;
+		right: 0px;
+		margin-top:120px;
+		margin-left:250px;
+		padding:10px;
+	}
 
 	</style>
 
@@ -300,18 +302,28 @@
 	<table class="container">
 		<thead>
 			<tr>
-				<th><h1>TABLE NAME</h1></th>
-				<th><h1>OPTION</h1></th>
-				<th><h1># OF RECORDS</h1></th>
+				<th>TABLE NAME</th>
+				<th>COMMENT</th>
+				<th># OF RECORDS</th>
+				<th>OPTION</th>
 			</tr>
 		</thead>
 		{% for each in result %}
 		<tbody>
 		<tr>
-			 <td> <!-- 1st column -->
+			 <td width="20%"> <!-- 1st column -->
 				 <a id='tableName' href="javascript:view_viewTable('/vdb/viewTable','{{ each.0 }}')">{{ each.0 }}</a>
 			 </td>
-			<td>  <!-- 3rd column -->
+
+			 <td> <!-- 2nd column -->
+					NONE
+			 </td>
+
+			<td WIDTH="5%"> <!-- 3rd column -->
+				 {{ each.1 }}
+			</td>
+
+			<td width="3%">  <!-- 4th column -->
 				<div class="navbar">
 				  <div class="dropdown">
 				    <button class="dropbtn">Functions</button>
@@ -322,9 +334,6 @@
 				  </div>
 				</div>
 			</td>
-			<td WIDTH="5%"> <!-- 2nd column -->
-				 {{ each.1 }}
-			 </td>
    </tr>
  	 </tbody>
 	 {% endfor %}

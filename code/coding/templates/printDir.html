@@ -16,11 +16,14 @@
 	.dropdown {
 	    float: left;
 	    overflow: hidden;
-            background-color: #333;
+      background-color: #333;
+			border-radius: 20px;
 	}
 
 	.dropdown .dropbtn {
-	    font-size: 16px;
+			font-size: 16px;
+			font-weight: bold;
+			text-align: center;
 	    border: none;
 	    outline: none;
 	    color: white;
@@ -177,19 +180,20 @@
 		padding: 10px;
 	}
 
-	#zeroPad{
-		padding: 0px;
-	}
-
 	th{
 		background: #323c50;
-		text-align: left;
+		text-align: center;
 		color: #ffffff;
 	}
 
 	td{
 		color: #efefef;
 	}
+
+	#zeroPad{
+		padding: 0px;
+	}
+
 	</style>
 
 	<script>
@@ -437,10 +441,10 @@
 			{{ info.2 }}
 		</td>
 		<!-- 5th column ___ Button Family -->
-		<td id="zeroPad" width=8%>
+		<td id="zeroPad" width="8%">
 			<div id="zeroPad" class="navbar">
-			  <div id="zeroPad" class="dropdown">
-			    <button class="dropbtn" >Functions</button>
+			  <div id="zeroPad" class="dropdown" >
+			    <button class="dropbtn">Functions</button>
 			    <div class="dropdown-content">
 						<!-- ### Case of FILE ### -->
 						{% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
