@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 
 
 def get_index(search):
+    print search
     item_url = "localhost:9000"
     con = httplib.HTTPConnection(item_url)
     con.request("GET", "/","",{})
@@ -12,7 +13,7 @@ def get_index(search):
     text = text[text.find('tbody'):text.find('/tbody')]
     href = ''
     for t in text.split('/tr'):
-	if t.find(search)>=0:
+	if t.find('"'+search+'"')>=0:
 		href = t[t.find('index/')+6:t.find('" title')]
 		print href
     return href
@@ -27,7 +28,6 @@ def get_single_item_data(index):
         print('-------------block1-------------\n')
         for item_name in soup.findAll('div', {'id': 'block_1'}):
             issue_message=item_name.text
-            print(issue_message)
 	    text = issue_message.replace(' ','').replace('\n','')
 	    text = text.replace('Linesofcode','')
 	    text = text.replace('JavaFiles','/')
@@ -42,7 +42,6 @@ def get_single_item_data(index):
         print('-------------block3-------------\n')
         for item_name in soup.findAll('div', {'id': 'block_3'}):
             issue_message=item_name.text
-            print(issue_message)
 	    text = issue_message.replace('Complexity','')
             text = text.replace(' /function','/')
             text = text.replace(' /class','/')
@@ -52,7 +51,6 @@ def get_single_item_data(index):
 		data.append(t)
             for photo in soup.findAll('img', {'id': 'chart_img_function_complexity_distribution'}):
                 photo_src=photo.get('src')
-               	print(photo_src)
 		text = os.popen('ifconfig').read()
 		text = text[text.find('inet addr:')+10:]
 		text = text.split(' ')[0]
@@ -61,14 +59,10 @@ def get_single_item_data(index):
     for i in soup.findAll('div', {'id': 'dashboard-column-2'}):
         for item_name in soup.findAll('div', {'id': 'block_6'}):
             issue_message=item_name.text
-            print(issue_message)
 	    text = issue_message.replace(' ','').replace('\n','')
 	    text = text.replace('SQALERating','')
 	    text = text.replace('TechnicalDebtRatio','/')
 	    for t in text.split('/'):
 		data.append(t)
-		
-	    for d in data:
-		print d
     return data
 get_single_item_data(get_index('testForFeedback'))

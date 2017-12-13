@@ -111,7 +111,7 @@
 <body>
 		<form action="/feedback/feedbackEdit" method="POST" style="display:inline;">
 			{% csrf_token %}
-				<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 40%; width: 100%;" name="edit_data">{{code}}</textarea>
+				<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 400px; width: 100%;" name="edit_data">{{code}}</textarea>
 				<input type="hidden" name="operation" value="Write"/>
 				<div align="right">
 				{% if success %}
