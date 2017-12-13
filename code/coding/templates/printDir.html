@@ -3,12 +3,14 @@
 <html lang="en">
 {% load staticfiles %}
 <head>
-	<link rel="stylesheet" href="{% static 'css/coding/directory_list.css' %}">
+
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<link rel="stylesheet" href="{% static 'package/sweet/jquery.sweet-modal.min.css' %}" />
 	<script src="{% static 'package/sweet/jquery.sweet-modal.min.js' %}"></script>
 
 	<title>::T - HUB::</title>
+
+
 	<style>
 
 	.dropdown {
@@ -95,16 +97,16 @@
 	}
 
 	#left{
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                width:250px;
-                margin-top:120px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width:250px;
+    margin-top:120px;
 
-                display:inline-block;
-                line-height: 1px;
-        }
+    display:inline-block;
+    line-height: 1px;
+	}
 
 	#left .title{
 		width: 250px;
@@ -145,38 +147,51 @@
 	}
 
 	#middle{
-                position: absolute;
-                width: auto;
-                height: auto;
-                top: 0px;
-                left: 0px;
-                bottom: 0px;
-                right: 0px;
-                margin-top:120px;
-                margin-left: 250px;
+	  position: absolute;
+	  width: auto;
+	  height: auto;
+	  top: 0px;
+	  left: 0px;
+	  bottom: 0px;
+	  right: 0px;
+	  margin-top:120px;
+	  margin-left: 250px;
 		padding: 10px;
 		overflow: scroll;
-        }
+  }
 
 	table{
-		width: 80%;
+		width: 90%;
 		border: 2px solid #ffffff;
 		border-collapse: collapse;
 		background: #566788;
+		text-align: left;
 	}
+
+	.container tr:hover {
+	   background-color: #464A52;
+	}
+
 	th, td{
 		border: 2px solid #ffffff;
 		padding: 10px;
 	}
+
+	#zeroPad{
+		padding: 0px;
+	}
+
 	th{
 		background: #323c50;
-		text-align: center;
+		text-align: left;
 		color: #ffffff;
 	}
+
 	td{
 		color: #efefef;
 	}
 	</style>
+
 	<script>
 	var current='';
 	var select_el;
@@ -358,6 +373,7 @@
 			<tr>
 				<th>Type</th>
 				<th>Name</th>
+				<th>Comment</th>
 				<th>Date</th>
 				<th>Function</th>
 			</tr>
@@ -365,9 +381,9 @@
 		<tr>
 			<td><img style="width: 70px; height: auto;" src="{% static 'ico/upper_arrow.png' %}"></td>
 			<td>
-			<center><a id='directName' href="javascript:view_printDir('GoBack','/coding/printDir','{{dirName}}','../')">../</a></center>
+			<a id='directName' href="javascript:view_printDir('GoBack','/coding/printDir','{{dirName}}','../')">../</a>
 		  </td>
-			<td><center>NONE</center></td>
+			<td>NONE</td>
 			<td> </td>
 		</tr>
 		{% for info in fileInfo %}
@@ -405,28 +421,35 @@
 		 </td>
 
 		<!-- 2nd column ___ FileName -->
-		<td><center>
+		<td width=20%>
 				{% if info.0 == 'd' %}
 				<a id='directName' href="javascript:view_printDir('ReDirect','/coding/printDir','{{dirName}}','{{info.1}}')">{{info.1}}</a>
 				{% else %}
 				<a id='directName' href="javascript:view_sourceView('/coding/sourceView','{{ dirName }}','{{ info.1 }}')">{{info.1}}</a>
 				{% endif %}
-    </center></td>
-		<!-- 3rd column ___ DATE -->
+    </td>
+		<!-- 3rd column ___ COMMENT  -->
 		<td>
-			<center>{{ info.2 }}</center>
+			NONE
 		</td>
-		<!-- 4th column ___ Button Family -->
-		<td width=8%>
-			<div class="navbar">
-			  <div class="dropdown">
-			    <button class="dropbtn">Functions</button>
+		<!-- 4rd column ___ DATE -->
+		<td width=10%>
+			{{ info.2 }}
+		</td>
+		<!-- 5th column ___ Button Family -->
+		<td id="zeroPad" width=8%>
+			<div id="zeroPad" class="navbar">
+			  <div id="zeroPad" class="dropdown">
+			    <button class="dropbtn" >Functions</button>
 			    <div class="dropdown-content">
+						<!-- ### Case of FILE ### -->
 						{% if info.0 == '.c' or info.0 == '.py' or info.0 == '.java' or info.0 == '.cpp' %}
-						<a href="javascript:view_do_compile('/coding/compile_res', 'selected', '{{info.1}}', '{{ dirName }}')">Compile & Run</a>
- 					  {% elif info.0 == 'd' %}
-						<a href="javascript:view_do_compile('/coding/compile_res', 'directory', '{{info.1}}', '{{ dirName }}')">Compile this project as C</a>
-	  				{% endif %}
+						<a href="javascript:view_do_compile('/coding/compile_res', 'file', '{{info.1}}', '{{ dirName }}')">Compile & Run</a>
+						{% endif %}
+						<!-- ### Case of Project ### -->
+						{% if isTop == 'true' %}
+						<a href="javascript:view_do_compile('/coding/compile_res', 'project', '{{info.1}}', '{{ dirName }}')">Compile this project as java</a>
+						{% endif %}
 						<a href="javascript:view_renameFile('/coding/renameFile', '{{info.1}}', '{{ dirName }}')">Rename</a>
 						<a href="javascript:view_sourceDel('/coding/sourceDel', '{{info.1}}', '{{ dirName }}')">Delete</a>
 			    </div>
@@ -437,6 +460,8 @@
  	 </tbody>
 	 	{% endfor %}
   </table>
+
+
 </center>
 </div>
 </div>

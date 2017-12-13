@@ -137,13 +137,11 @@ io.on('connection', function(socket){
 	/* Execute Command */
 	if( extension == '.c')
 	{
-		console.log("This is extension of .c");
-		term.write(execute_command + '.main' +' && exit || exit \n');
-	}else if( extension == '.java')
+		term.write(execute_command + '.main ' +' && exit || exit\n');
+  }else if( extension == '.java')
 	{
 		fileName = fileName.replace('.java', '')
-		console.log("This is extension of .java");
-		term.write('java -cp '+ execute_command + ' ' + fileName + ' && exit\n');
+		term.write('java -cp '+ execute_command + ' ' + fileName + ' && exit || exit\n');
 	}else if( extension == '.py')
 	{
 		term.write('python ' + execute_command + fileName + ' && exit\n');

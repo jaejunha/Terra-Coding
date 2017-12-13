@@ -377,6 +377,12 @@ def createNewFile(request):
 		path = directoryName + fileName
 		os.popen('mkdir ' + path)
 		request.POST['operation'] = ''
+		if len(path.split("/")) == 4:	#it is project
+			os.popen('touch '+path+'/sonar-project.properties')
+			os.popen('echo sonar.projectKey='+fileName+'>> '+path+'/sonar-project.properties')
+			os.popen('echo sonar.projectName='+fileName+'>> '+path+'/sonar-project.properties')
+			os.popen('echo sonar.projectVersion=2.0 >> '+path+'/sonar-project.properties')
+			p = os.popen('echo sonar.sources=. >> '+path+'/sonar-project.properties')
 
 	elif operation == 'upload':
 		status = do_file_upload(request, directoryName)
@@ -401,7 +407,7 @@ def compiler_connector(request):
 		token = {'ReDirectURL': '/terra', 'ERR_CODE': status}
 		return render(request, 'coding/templates/error.html', token)
 
-	if operation != 'directory':
+	if operation == 'file':
 		extension = os.path.splitext(fileName)[1]
 		if extension == '.c' or extension == '.C':
 			(result, status, directoryName) = do_compile_c_language(operation, fileName, directoryName)
@@ -413,14 +419,54 @@ def compiler_connector(request):
 			result = "out of service :)"
 			status = 'F'
 
-	else:
-		extension = '.c' # Preventing error....
-		(result, status, directoryName) = do_compile_c_language(operation, fileName, directoryName)
+		django_execute_path = os.popen('pwd').read().replace('\n', '')
+		django_execute_path = django_execute_path.replace('\r', '')
+		wettyURL = extension + '@' + directoryName + '@' + fileName + '@' + django_execute_path
+		wettyURL = wettyURL.replace('/', ',')
 
-	django_execute_path = os.popen('pwd').read().replace('\n', '')
-	django_execute_path = django_execute_path.replace('\r', '')
-	wettyURL = extension + '@' + directoryName + '@' + fileName + '@' + django_execute_path
-	wettyURL = wettyURL.replace('/', ',')
+	elif operation == 'project':
+		path = directoryName + fileName
+		execute_command = 'cd %s && sonar-scanner' % path
+		os.popen(execute_command)
+		execute_command = 'cd %s && ls -1 *.java' % path
+		arrayOfFile = os.popen(execute_command).read().replace('\r', '').split('\n')[:-1]
+
+		mainFileName = ''
+		for row in arrayOfFile:
+			execute_command = 'cd %s && pwd' % path
+			currentDir = os.popen(execute_command).read().replace('\n', '')
+			openName = currentDir + '/' + row
+
+			f = open(openName, 'r')
+			lines = f.readlines()
+			for line in lines:
+				mainKeyword = "voidmain("
+				line = line.replace(' ','')
+				isFind = line.find(mainKeyword)
+				if isFind != -1:
+					mainFileName = row
+					break
+			f.close()
+		extension = '.java'
+		django_execute_path = os.popen('pwd').read().replace('\n', '')
+		django_execute_path = django_execute_path.replace('\r', '')
+		wettyURL = extension + '@' + path + '@' + mainFileName + '@' + django_execute_path
+		wettyURL = wettyURL.replace('/', ',')
+
+		execute_command = "cd %s && javac %s 2> ./.compile_message" % (path, mainFileName)
+		os.popen(execute_command)
+		result = os.popen("cat " + path + "/.compile_message").read() # show a error message
+
+		if result == '': # which means error is none
+			status = 'S'
+		else:
+			status = 'F'
+			try:
+				index = result.index('userDirectory/')
+				result = result[index + 55:]
+			except:
+				print 'compile error message <java> --> out of range'
+
 
 	token = {'result': result, 'status': status, 'directoryName': directoryName, 'wettyURL': wettyURL}
 	return render(request, 'coding/templates/compile_res.html', token)
@@ -431,7 +477,7 @@ def do_compile_c_language(operation, fileName, directoryName):
 	status = ''
 
 	# __ COMPILE PER PROJECT UNIT __START__#
-	if operation == 'directory':
+	if operation == 'file':
 		command = 'ls -1 ' + directoryName
 		allName = os.popen(command).read().split('\n')
 		fileName_c = get_all_c_files_name(allName)
@@ -439,7 +485,7 @@ def do_compile_c_language(operation, fileName, directoryName):
 			path += (' ' + directoryName + _file)
 
 	# __ COMPILE PER FILE UNIT __START__#
-	elif operation == 'selected': # Compile on a file unit
+	elif operation == 'project': # Compile on a file unit
 		extension = os.path.splitext(fileName)[1]
 		path = directoryName + fileName
 		if extension != '.c':
@@ -533,6 +579,8 @@ def make_file_info(_fileType, _fileName, _fileDate, _filter):
 	for i in range(0, MAX):
 		if _fileType[i] == '-': # case of file
 			extension = os.path.splitext(_fileName[i])[1].lower()
+			if extension == '.class':
+				continue
 			row.append(extension)
 		else: # case of directory or other things
 			row.append(_fileType[i])
@@ -553,7 +601,6 @@ def make_file_info(_fileType, _fileName, _fileDate, _filter):
 			FILTER.append('.h')
 		elif _filter == 'JAVA':
 			FILTER.append('.java')
-			FILTER.append('.class')
 		elif _filter == 'PYTHON':
 			FILTER.append('.py')
 			FILTER.append('.pyc')
@@ -636,7 +683,7 @@ def replace_psuedo_syntax_to_db_syntax(request, _data):
 
 	return _data
 
-'''
+
 def start_wetty_server():
 	print '[WETTY] thread running.....'
 	execute_command = "node wetty/app.js | tee /dev/null | head"
@@ -647,4 +694,3 @@ def start_wetty_server():
 t1 = threading.Thread(target=start_wetty_server, args=())
 t1.daemon = True
 t1.start()
-'''
