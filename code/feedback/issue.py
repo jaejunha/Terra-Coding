@@ -13,7 +13,6 @@ def printTestIssue():
 	issue=[]
 	index = 0
 	print "[Index]\t[Severity]\t[Project]\t[Type]\t\t[Message]\n"
-	issue.append(('Severity','Type','Message'))
 	for msg in each:
    		tag = msg['tags'][0]
 		if msg['project'] == 'testForFeedback':
@@ -21,3 +20,4 @@ def printTestIssue():
 	                issue.append((msg['severity'],tag,msg['message']))
    		index = index + 1
 	return issue
+#printTestIssue();

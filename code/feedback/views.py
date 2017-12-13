@@ -15,6 +15,7 @@ def feedbackEdit(request):
 	code =''
 	result = ''
 	success = ''
+	issue=[]
 	etc = []
 	if request.POST.get('operation','') == 'Write':
                 code = request.POST.get('edit_data', '')
@@ -36,9 +37,10 @@ def feedbackEdit(request):
 		os.popen('echo sonar.sources=. >> sonar-project.properties').close()
 		os.popen('sonar-scanner')
 		os.popen("rm test.java test.class error sonar-project.properties")
+		result ='compile is finished'
 		for i in printTestIssue():
-			result+=i[0]+'\t'+i[1]+'\t'+i[2]+'\n'
+			issue.append((i[0],i[1],i[2]))
 		etc = get_single_item_data(get_index('testForFeedback'))
 		success='ok'
-        token = {'code': code, 'result':result, 'success':success,'etc':etc}
+        token = {'code': code, 'result':result, 'success':success,'issue':issue,'etc':etc}
         return render(request, 'feedback/templates/feedbackEdit.html',token)

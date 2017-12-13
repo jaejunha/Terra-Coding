@@ -1,6 +1,8 @@
 import requests
 import httplib
+import os
 from bs4 import BeautifulSoup
+
 
 def get_index(search):
     item_url = "localhost:9000"
@@ -51,7 +53,10 @@ def get_single_item_data(index):
             for photo in soup.findAll('img', {'id': 'chart_img_function_complexity_distribution'}):
                 photo_src=photo.get('src')
                	print(photo_src)
-		data.append(photo_src)
+		text = os.popen('ifconfig').read()
+		text = text[text.find('inet addr:')+10:]
+		text = text.split(' ')[0]
+		data.append('http://'+text+':9000'+photo_src)
     print('-------------block6-------------\n')
     for i in soup.findAll('div', {'id': 'dashboard-column-2'}):
         for item_name in soup.findAll('div', {'id': 'block_6'}):
