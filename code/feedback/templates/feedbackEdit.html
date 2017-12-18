@@ -5,7 +5,7 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::Source Editor::</title>
 	<style>
-		span{ 
+		span{
 			font-size:20px;
 			font-weight:bold;
 		}
@@ -34,7 +34,7 @@
 	<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
 	<script language="Javascript" type="text/javascript">
 		$(document).ready(function() {
-			{% if code %}	
+			{% if code %}
 				$('#sourceEditorArea').val({{code}});
 			{% else %}
 				$('#sourceEditorArea').val('import java.util.Scanner;\n\npublic class test {\n\tpublic static void main(String args[]) {\n\t\tScanner scan = new Scanner(System.in);\n\n\t}\n}');
@@ -46,13 +46,14 @@
                 	,allow_toggle: true
                 	,word_wrap: true
                 	,language: "en"
-                	,syntax: "java" 
+                	,syntax: "java"
+									,font_size: "14"
                 	,toolbar: "search, go_to_line, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help"
 		        ,syntax_selection_allow: "java"
 			});
 		});
 
-		
+
 		function resize(obj) {
 		  obj.style.height = "1px";
 		  obj.style.height = (12+obj.scrollHeight)+"px";
@@ -130,7 +131,7 @@
 				<td><span>Message</td>
 			</tr>
 		{% for i in issue %}
-			<tr>	
+			<tr>
 				<td width="200px">{{i.0}}</td>
                                 <td width="200px">{{i.1}}</td>
                                 <td>{{i.2}}</td>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+#from __future__ import unicode_literals
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from issue import *
@@ -103,7 +103,7 @@ def feedbackEdit(request):
 		os.popen('echo sonar.projectKey=testForFeedback>> sonar-project.properties')
 		os.popen('echo sonar.projectName=testForFeedback>> sonar-project.properties')
 		os.popen('echo sonar.projectVersion=2.0 >> sonar-project.properties')
-		os.popen('echo sonar.sources=. >> sonar-project.properties').close()
+		os.popen('echo sonar.sources=./test.java >> sonar-project.properties').close()
 		os.popen('sonar-scanner')
 		os.popen("rm test.java test.class error sonar-project.properties")
 		result ='compile is finished'
@@ -132,7 +132,6 @@ def normalize_directory_path(request, _dirName):
         return (_dirName, 'Normal')
 
 def block_top_directory(request, _currentDirectory):
-
         try:
                 if request.session['Directory'] == '': # Session itself exists, but there is no contents.
                         return (_currentDirectory, ERR_NO_SESSION_ID)
@@ -196,4 +195,3 @@ def make_file_info(_fileType, _fileName, _fileDate, _filter):
                 output = tempOut
 
         return output
-
