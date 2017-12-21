@@ -2,7 +2,7 @@
 - SW capstone at Ajou univ.
 ---
 # Topic
-- like+git+vdb+feedback 
+- school login+project+vdb+feedback 
 ---
 # Skill
 - Python, Django(python framework), Amazon Web Service 
