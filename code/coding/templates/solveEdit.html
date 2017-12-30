@@ -4,8 +4,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<title>::Source Editor::</title>
+
 	<style>
-		textarea.autosize { min-height: 50px; }
+
 		#submit{
 			text-decoration: none;
 			font-family: 'Open Sans', sans-serif;
@@ -18,114 +19,52 @@
 			cursor:pointer;
 			margin-top: 5px;
 		}
+
 		#result_box{
 	    margin: 10px;
 	    padding: 10px;
 	    overflow: auto;
 	  }
+
+		body {
+        overflow: hidden;
+    }
+
+    #editor {
+        margin: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
 	</style>
-	<script language="Javascript" type="text/javascript" src="{% static 'package/edit_area/edit_area_full.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
-	<script language="Javascript" type="text/javascript">
-		var syntax = 'c';
-		$(document).ready(function() {
-			if(sessionStorage.getItem('syntax')){
-				if(syntax != sessionStorage.getItem('syntax')){
-					syntax = sessionStorage.getItem('syntax');
-/*					if(syntax == 'java')
-						$('#sourceEditorArea').val('import java.util.Scanner;\n\npublic class test {\n\tpublic static void main(String args[]) {\n\t\tScanner scan = new Scanner(System.in);\n\n\t}\n}');
-					else if(syntax == 'c')
-						$('#sourceEditorArea').val('#include <stdio.h>\n\nint main(){\n\n\treturn 0;\n}');
-					else
-						$('#sourceEditorArea').val('');
-				}else{
-					$('#sourceEditorArea').val({{code}});
-				}
-			}else{
-				$('#sourceEditorArea').val('import java.util.Scanner;\n\npublic class test {\n\tpublic static void main(String args[]) {\n\t\tScanner scan = new Scanner(System.in);\n\n\t}\n}');
-			*/
-			}}
-
-			editAreaLoader.init({
-                        id: "sourceEditorArea"  // id of the textarea to transform
-                        ,start_highlight: true  // if start with highlight
-                        ,allow_resize: "both"
-                        ,allow_toggle: true
-                        ,word_wrap: true
-                        ,language: "en"
-                        ,syntax: syntax 
-                        ,toolbar: "search, go_to_line, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help"
-                        ,syntax_selection_allow: "c,java,python"
-                	});
-
-		});
-
-		
-		function resize(obj) {
-		  obj.style.height = "1px";
-		  obj.style.height = (12+obj.scrollHeight)+"px";
-		}
-
-		// callback functions
-		function my_save(id, content){
-			alert("Here is the content of the EditArea '"+ id +"' as received by the save callback function:\n"+content);
-		}
-
-		function my_load(id){
-			editAreaLoader.setValue(id, "The content is loaded from the load_callback function into EditArea");
-		}
-
-		function test_setSelectionRange(id){
-			editAreaLoader.setSelectionRange(id, 100, 150);
-		}
-
-		function test_getSelectionRange(id){
-			var sel =editAreaLoader.getSelectionRange(id);
-			alert("start: "+sel["start"]+"\nend: "+sel["end"]);
-		}
-
-		function test_setSelectedText(id){
-			text= "[REPLACED SELECTION]";
-			editAreaLoader.setSelectedText(id, text);
-		}
-
-		function test_getSelectedText(id){
-			alert(editAreaLoader.getSelectedText(id));
-		}
-
-		function toogle_editable(id)
-		{
-			editAreaLoader.execCommand(id, 'set_editable', !editAreaLoader.execCommand(id, 'is_editable'));
-		}
-
-		function editAreaLoaded(id){
-			open_file1();
-		}
-
-		function open_file1()
-		{
-			var new_file= {id: "test", text: "{% autoescape off %}{% filter escapejs %}{{ code }}{% endfilter %}{% endautoescape %}", syntax: 'c'};
-			editAreaLoader.openFile('sourceEditorArea', new_file);
-		}
-
-		function close_file1()
-		{
-			editAreaLoader.closeFile('sourceEditorArea', "test");
-		}
-
-		 function check_syntax(){
-			if(sessionStorage.getItem('syntax'))
-				syntax = sessionStorage.getItem('syntax');
-                        $('#syntax').html('<input id="syntax" type="hidden" name="syntax" value="'+syntax+'"/>');
-                 }
-
-	</script>
 </head>
-<!--_______________ END OF HEAD _______________-->
 
 <body>
-		<form action="/coding/solveEdit" method="POST" style="display:inline;">
+
+	<pre id="editor"></pre>
+
+	<script src="{% static 'package/aceEditor/src/ace.js' %}" type="text/javascript" charset="utf-8"></script>
+	<script>
+	    var editor = ace.edit("editor");
+	    editor.setTheme("ace/theme/monokai");
+	    editor.session.setMode("ace/mode/c_cpp");
+			document.getElementById('editor').style.fontSize='20px';
+
+			editor.insert("#include <stdio.h>\n\n");
+			editor.insert("int main(int argc, char** argv) {\n\n");
+			editor.insert('\tprintf("Hello World!\\n");\n');
+			editor.insert('\tscanf("%d %d", &a, &b);");\n');
+			editor.insert('\tprintf("%d + %d is %d", a, b, a+b);\n\n');
+			editor.insert("\treturn 0;\n\n");
+			editor.insert("}");
+	</script>
+
+	<h3><b>Result</b></h3>
+	<div class="result_box"><pre>{{result}}</pre></div>
+		<!-- <form action="/coding/solveEdit" method="POST" style="display:inline;">
 			{% csrf_token %}
 				<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 60%; width: 100%;" name="edit_data">{{code}}</textarea>
 				<input type="hidden" name="operation" value="Write"/>
@@ -133,8 +72,6 @@
 				<div align="right">
 				<input id="submit" type="submit" value="Submit" onclick="check_syntax();return confirm('Are you sure want to submit this code? :)')"/>
 				</div>
-		</form>
-		<h3><b>Result</b></h3>
-		<div class="result_box"><pre>{{result}}</pre></div>
+		</form> -->
 </body>
 </html>
