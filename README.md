@@ -38,8 +38,8 @@
 >https://www.pexels.com/photo/silver-imac-near-white-ceramic-kettle-205316/
 - SimpleBanner
 >http://hangunsworld.com/blog/1630/comment-page-1
-- EditArea
->https://www.cdolivet.com/editarea/
+- AecEditor
+>https://ace.c9.io/#nav=howto
 - SweetAlert
 >https://sweetalert.js.org/
 - wetty
