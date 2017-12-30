@@ -5,7 +5,7 @@
 - school login+project+vdb+feedback 
 ---
 # Skill
-- Python, Django(python framework), Amazon Web Service 
+- Python 2.7, Django(python framework) 1.8, Amazon Web Service 
 ---
 # Member
 | Avartar | Name | Role | Activity |
