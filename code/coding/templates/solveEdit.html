@@ -39,12 +39,18 @@
         right: 0;
     }
 
+		.scrollmargin {
+			height: 80px;
+	    text-align: center;
+		}
+
 	</style>
 </head>
 
 <body>
 
-	<pre id="editor"></pre>
+	<pre id="editor" style="width: 40%;"></pre>
+	<div class="scrollmargin"></div>
 
 	<script src="{% static 'package/aceEditor/src/ace.js' %}" type="text/javascript" charset="utf-8"></script>
 	<script>
@@ -52,6 +58,10 @@
 	    editor.setTheme("ace/theme/monokai");
 	    editor.session.setMode("ace/mode/c_cpp");
 			document.getElementById('editor').style.fontSize='20px';
+			editor.setOptions({
+	        autoScrollEditorIntoView: true,
+	        maxLines: 20
+	    });
 
 			editor.insert("#include <stdio.h>\n\n");
 			editor.insert("int main(int argc, char** argv) {\n\n");

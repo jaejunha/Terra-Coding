@@ -30,12 +30,20 @@
 	    left: 0;
 	    right: 0;
     }
+
+		.scrollmargin {
+			height: 80px;
+			text-align: center;
+		}
+
 	</style>
 </head>
 
 
 <body>
-	<pre id="editor"></pre>
+
+	<pre id="editor" style="width: 80%;">{{file_data}}</pre>
+	<div class="scrollmargin"></div>
 
 	<script src="{% static 'package/aceEditor/src/ace.js' %}" type="text/javascript" charset="utf-8"></script>
 	<script>
@@ -43,15 +51,19 @@
 	    editor.setTheme("ace/theme/monokai");
 	    editor.session.setMode("ace/mode/c_cpp");
 			document.getElementById('editor').style.fontSize='20px';
+			editor.setOptions({
+	        autoScrollEditorIntoView: true,
+					cursorStyle: "wide", // "ace"|"slim"|"smooth"|"wide"
+					animatedScroll: true,
+	        maxLines: 20
+	    });
 
-			editor.insert("#include <stdio.h>\n\n");
-			editor.insert("int main(int argc, char** argv) {\n\n");
-			editor.insert('\tprintf("Hello World!\\n");\n');
-			editor.insert('\tscanf("%d %d", &a, &b);");\n');
-			editor.insert('\tprintf("%d + %d is %d", a, b, a+b);\n\n');
-			editor.insert("\treturn 0;\n\n");
-			editor.insert("}");
+			//editor.selection.getCursor();
+			//editor.gotoLine(lineNumber);
+			//editor.setReadOnly(true);
 	</script>
+
+	<a href="" id="save">Save</a>
 		<!-- <form action="/coding/sourceEdit.html" method="POST" style="display:inline">
 			{% csrf_token %}
 				<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" id="sourceEditorArea" style="height: 60%; width: 100%;" name="edit_data">{{file_data}}</textarea>
