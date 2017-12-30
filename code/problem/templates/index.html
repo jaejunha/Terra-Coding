@@ -2,70 +2,71 @@
 {% load staticfiles %}
 <html lang="en">
   <head>
-    <style>
+  <style>
 
-	#left{
-		position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                width:250px;
-                margin-top:120px;
-                display:inline-block;
-                line-height: 1px;
-      }
+    #left{
+      width:250px;
+      height: 100%;
+      top: 0;
+      left: 0;
+      margin-top:120px;
+      line-height: 1px;
+      position: absolute;
+      display:inline-block;
+    }
 
-      #left .title{
-        width: 250px;
-        display:table-cell;
-        vertical-align:middle;
-        font-size:25pt;
-        height:80px;
-        text-align:center;
-      }
+    #left .title{
+      width: 250px;
+      display:table-cell;
+      vertical-align:middle;
+      font-size:25pt;
+      height:80px;
+      text-align:center;
+    }
 
-      #left .box{
-        width: 250px;
-        display:table-cell;
-        vertical-align:middle;
-        height:50px;
-      }
+    #left .box{
+      width: 250px;
+      display:table-cell;
+      vertical-align:middle;
+      height:50px;
+    }
 
-      #left .box div:nth-child(1){
-        background-color:#555555;
-        width:10px;
-        height:50px;
-      }
+    #left .box div:nth-child(1){
+      background-color:#555555;
+      width:10px;
+      height:50px;
+    }
 
-      #left .box div:nth-child(2){
-        text-align:center;
-        position:relative;
-        width:240px;
-        height:0px;
-        top: -25px;
-        left:10px;
-      }
+    #left .box div:nth-child(2){
+      text-align:center;
+      position:relative;
+      width:240px;
+      height:0px;
+      top: -25px;
+      left:10px;
+    }
 
-      #middle{
-        position: absolute;
-        width: auto;
-        height: auto;
-        top: 0px;
-        left: 0px;
-        bottom: 0px;
-        right: 0px;
-        margin-top:120px;
-        margin-left: 250px;
-		    padding: 10px;
-      }
+    #middle{
+      position: absolute;
+      width: auto;
+      height: auto;
+      top: 0px;
+      left: 0px;
+      bottom: 0px;
+      right: 0px;
+      margin-top:120px;
+      margin-left: 250px;
+	    padding: 10px;
+    }
 
-      #left div a{
-        font-size:20pt;
-        text-decoration: none;
-        color:#333333;
-      }
-      </style>
-      <script>
+    #left div a{
+      font-size:20pt;
+      text-decoration: none;
+      color:#333333;
+    }
+    </style>
+
+    <script>
 	var dialog_problem;
 	var dialog_delete;
 	var dialog_detail;

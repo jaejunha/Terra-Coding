@@ -8,94 +8,102 @@
 	<title>::T - HUB::</title>
 	<style>
 		#left{
-        	        position: absolute;
-                	top: 0;
-               	 	left: 0;
-              	  	height: 100%;
-                	width:250px;
-                	margin-top:120px;
-
-                	display:inline-block;
-                	line-height: 1px;
-        	}
-
+      position: absolute;
+    	top: 0;
+   	 	left: 0;
+			width: 250px;
+	  	height: 100%;
+    	margin-top: 120px;
+    	display: inline-block;
+    	line-height: 1px;
+  	}
 
 		#left .title{
 			width: 250px;
 			display:table-cell;
 			vertical-align:middle;
-			font-size:25pt;
-			height:80px;
-			text-align:center;
+			font-size: 25pt;
+			height: 80px;
+			text-align: center;
 		}
 
 		#left .box{
 			width: 250px;
-			display:table-cell;
-			vertical-align:middle;
-			height:50px;
+			height: 50px;
 			background-color: #ffffff;
+			display: table-cell;
+			vertical-align: middle;
 		}
 
 		#left .box div:nth-child(1){
-			background-color:#555555;
-			width:10px;
-			height:50px;
+			width: 10px;
+			height: 50px;
+			background-color: #555555;
 		}
 
 		#left .box div:nth-child(2){
-			text-align:center;
-			position:relative;
 			width:240px;
 			height:0px;
 			top: -25px;
 			left:10px;
+			position:relative;
+			text-align:center;
 		}
 
 		#left div a{
-			font-size:20pt;
+			font-size: 20pt;
 			text-decoration: none;
-			color:#333333;
+			color: #333333;
 		}
-		
+
 		#middle{
-                	position: absolute;
-              	 	width: auto;
-                	height: auto;
-                	top: 0px;
-                	left: 0px;
-                	bottom: 0px;
-                	right: 0px;
-                	margin-top:120px;
-                	margin-left:250px;
-                	padding:10px;
-       		}
-	
+    	position: absolute;
+  	 	width: auto;
+    	height: auto;
+    	top: 0px;
+    	left: 0px;
+    	bottom: 0px;
+    	right: 0px;
+    	margin-top: 120px;
+    	margin-left: 250px;
+    	padding: 10px;
+ 		}
+
 		.sub{
 			font-weight:bold;
 			font-size:20pt;
 		}
+
 		#summary{
 			margin-left: 10px;
-			float:left;
+			float: left;
 		}
+
 		#summary td:nth-child(1){
-			width:100px;
+			width: 100px;
 		}
+
 		#summary td:nth-child(2){
-			width:200px;
+			width: 200px;
 		}
+
 		#picture{
-			float:right;
+			float: right;
 		}
+
 		</style>
+
 		<script>
+
 		$(window).ready( function() {
 			$('#picture').css('width',$('#summary').height());
 			$('#picture').css('height',$('#summary').height());
 		});
+
 		</script>
 </head>
+
+
 <body>
 	<div id ="left">
 		<div class="title">Info</div>
@@ -108,11 +116,12 @@
 		</div>
 		<br>
 	</div>
-	<div id ="middle">
+
+	<div id="middle">
 		<br>
-		<div style="text-align:center;">
+		<div style="text-align: center;">
 			<img src="{% static 'img/ajou.png' %}" width="5%">
-			<span style="font-size:50pt;position:relative;top:-25px;left:10px;">Ajou University</span>
+			<span style="font-size: 50pt; position: relative; top: -25px; left: 10px;">Ajou University</span>
 		</div>
 		<br>
 		<span class="sub">Personal</span>

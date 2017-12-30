@@ -63,7 +63,7 @@
 </head>
 <body>
 	<div id="header" align="right">
-		{% if request.session.number is None %}
+		{% if request.session.number == None %}
        		<a href="terra/login">login</a>
 		{% else %}
 		<a href="terra/out">logout</a>
@@ -79,7 +79,7 @@
 		<font>Terra-Coding</font>
 	</div>
 	<div id="top">
-		{% if request.session.number is None %}
+		{% if request.session.number == None %}
 		<a href="javascript:alert('login please');">Info</a>
 		<a href="javascript:alert('login please');">Coding</a>
 		<a href="javascript:alert('login please');">VDB</a>
@@ -98,7 +98,7 @@
 	<div id="selector"></div>
 	{% endif %}
 	<div id="content" style="overflow:auto;">
-	{% if request.session.number is None %}
+	{% if request.session.number == None %}
 		<img id="banner" src="{% static 'img/banner.jpg' %}" width="100%" style="position:absolute;">
 		<div class="simple_banner_wrap">
 			<ul>

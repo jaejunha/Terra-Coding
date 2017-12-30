@@ -6,18 +6,18 @@
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 
 	<title>::T - HUB::</title>
-	<style>
-        #left{
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                width:250px;
-		margin-top:120px;
 
-                display:inline-block;
-                line-height: 1px;
-        }
+	<style>
+  #left{
+	  position: absolute;
+		width: 250px;
+		height: 100%;
+	  top: 0;
+	  left: 0;
+		margin-top: 120px;
+		line-height: 1px;
+	  display: inline-block;
+  }
 
 	#left .title{
 		width: 250px;
@@ -70,30 +70,37 @@
 		padding:10px;
 		overflow:scroll;
 	}
+
 	table{
 		width: 100%;
 		border: 2px solid #ffffff;
 		border-collapse: collapse;
 		background: #566788;
 	}
+
 	th, td{
 		border: 2px solid #ffffff;
 		padding: 10px;
 	}
+
 	th{
 		background: #323c50;
 		text-align: center;
 		color: #ffffff;
 	}
+
 	td{
 		color: #efefef;
 	}
+
 	</style>
+
 	<script>
 	var current='';
 	var select_el;
 	var select_no;
 	var dialog_detail;
+
 	$(window).ready( function() {
 		dialog_detail = $("#dialog_detail").dialog({
 			width:'700px',
@@ -126,7 +133,6 @@
 			html+='<button type="button" onclick="javascript:view_solveProblem();">Solve it</button></div>'
 			$(dialog_detail).html(html);
 		});
-
 	});
 
 function view_solveProblem(){

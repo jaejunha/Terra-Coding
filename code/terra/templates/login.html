@@ -10,14 +10,14 @@
 	<title>::T - HUB::</title>
 	<script type="text/javascript">
 			$(window).resize(function (){
-			{% if error is None %}
+			{% if error == None %}
 			login_move('');
 			{% else %}
 			login_move('error');
 			{% endif %}
 		});
 	    $(window).ready( function() {
-				{% if error is None %}
+				{% if error == None %}
 				login_move('');
 				login_set();
 				{% else %}
@@ -31,11 +31,11 @@
 		<img  src="{% static 'img/Logo.png' %}">
 		<a style="position:relative;color:#ffffff;font-size:50pt;top:-15px;left:10px;">T-HUB</a>
 	</div>
-	{% if error is None %}
+	{% if error == None %}
 	<div id="simple"></div>
 	{% endif %}
 	<div id="simple_base"></div>
-	{% if error is None %}
+	{% if error == None %}
 	<div id="login">
 	{% else %}
   <div id="login_error">
@@ -48,7 +48,7 @@
                         <br><input id="pwd" type="password" placeholder="please enter Password" name="pwd">
                         <br><input id="check" type="image" src="{% static 'img/login.png' %}"  onClick="login_init();">
 			<br>
-			{%if error is None %}
+			{%if error == None %}
                        <font id="msg">To use our web service, must login</font>
         		{% else %}
                         <font id="msg_error">{{ error }}</font>

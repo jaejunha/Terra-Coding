@@ -581,7 +581,7 @@ def make_file_info(_fileType, _fileName, _fileDate, _filter):
 	for i in range(0, MAX):
 		if _fileType[i] == '-': # case of file
 			extension = os.path.splitext(_fileName[i])[1].lower()
-			if extension == '.class':
+			if extension == '.class' or extension == '.properties':
 				continue
 			row.append(extension)
 		else: # case of directory or other things
@@ -685,7 +685,6 @@ def replace_psuedo_syntax_to_db_syntax(request, _data):
 
 	return _data
 
-'''
 def start_wetty_server():
 	print '[WETTY] thread running.....'
 	execute_command = "node wetty/app.js | tee /dev/null | head"
@@ -693,7 +692,17 @@ def start_wetty_server():
 	print 'Running wetty-----...... [%s]' % result
 	return
 
+def start_sonar_server():
+	print '[SONAR] thread running.....'
+	execute_command = "/root/Desktop/SONAR/sonarqube-5.2/bin/linux-x86-64/sonar.sh start"
+	result = os.popen(execute_command).read()
+	print 'Running Sonar-----...... [%s]' % result
+	return
+
+t2 = threading.Thread(target=start_sonar_server, args=())
+t2.daemon = True
+t2.start()
+
 t1 = threading.Thread(target=start_wetty_server, args=())
 t1.daemon = True
 t1.start()
-'''

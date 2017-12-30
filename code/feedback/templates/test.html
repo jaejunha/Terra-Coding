@@ -3,12 +3,15 @@
 <html lang="en">
 {% load staticfiles %}
 <head>
+	<title>::T - HUB::</title>
+
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 	<link rel="stylesheet" href="{% static 'package/sweet/jquery.sweet-modal.min.css' %}" />
+
 	<script src="{% static 'package/sweet/jquery.sweet-modal.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
-	<title>::T - HUB::</title>
+	<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+
 	<style>
 
 	#darkBut {
@@ -20,20 +23,19 @@
 		padding:5px 15px;
 		background: #555555;
 		border:0 none;
-		cursor:pointer;
+		cursor: pointer;
 	}
 
 	#left{
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                width:250px;
-                margin-top:120px;
-
-                display:inline-block;
-                line-height: 1px;
-        }
+		width:250px;
+		height: 100%;
+    top: 0;
+    left: 0;
+    margin-top:120px;
+		line-height: 1px;
+		position: absolute;
+    display:inline-block;
+  }
 
 	#left .title{
 		width: 250px;
@@ -53,29 +55,29 @@
 	}
 
 	#left .box:nth-of-type(2){
-                background: rgb(228, 233, 236);
-        }
+	  background: rgb(228, 233, 236);
+  }
 
 	#left .box div:nth-child(1){
-		background-color:#555555;
-		width:10px;
-		height:50px;
+		background-color: #555555;
+		width: 10px;
+		height: 50px;
 	}
 
-	#left .box:nth-of-type(2) div:nth-child(1){ 
-                background-color:#555555; 
-                width:10px; 
-                height:50px; 
-                opacity:0; 
-        } 
+	#left .box:nth-of-type(2) div:nth-child(1){
+    background-color: #555555;
+    width: 10px;
+    height: 50px;
+    opacity: 0;
+  }
 
 	#left .box div:nth-child(2){
-		text-align:center;
-		position:relative;
-		width:240px;
-		height:0px;
+		text-align: center;
+		position: relative;
+		width: 240px;
+		height: 0px;
 		top: -25px;
-		left:10px;
+		left: 10px;
 	}
 
 	#left div a{
@@ -85,30 +87,31 @@
 	}
 
 	#middle{
-                position: absolute;
-                width: auto;
-                height: auto;
-                top: 0px;
-                left: 0px;
-                bottom: 0px;
-                right: 0px;
-                margin-top:120px;
-                margin-left: 250px;
+    position: absolute;
+    width: auto;
+    height: auto;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    margin-top:120px;
+    margin-left: 250px;
 		padding: 10px;
 		overflow: auto;
-        }
+	}
 	</style>
+
 	<script>
-	$(window).resize(function (){
-  		$('#frame').css('width',$('#middle').width());
-  		$('#frame').css('height',$(document).height()+200);
-	});
-	$(window).ready( function() {
- 		 $('#frame').css('width',$('#middle').width());
-  		$('#frame').css('height',$(document).height()+200);
-	});
-	
+		$(window).resize(function (){
+	  		$('#frame').css('width',$('#middle').width());
+	  		$('#frame').css('height',$(document).height()+200);
+		});
+		$(window).ready( function() {
+	 		 $('#frame').css('width',$('#middle').width());
+	  		$('#frame').css('height',$(document).height()+200);
+		});
 	</script>
+
 	</head>
 
 <body>
@@ -123,11 +126,11 @@
 			</div>
 			<br>
 			<div class="box 1">
-                        <div></div>
-                                <div>
-                                        <a>Test</a>
-                                </div>
-                        </div>
+        <div></div>
+          <div>
+	          <a>Test</a>
+          </div>
+        </div>
 			<br>
 		</div>
 	<div id="middle">

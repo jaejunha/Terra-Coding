@@ -2,9 +2,10 @@
 <html lang="en">
 {% load staticfiles %}
 <head>
+	<title>::T - HUB::</title>
+
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/T-HUB.png' %}"/>
 
-	<title>::T - HUB::</title>
 	<style>
 
 	#directName, #date{
@@ -44,24 +45,23 @@
 	}
 
 	#left{
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                width:250px;
-                margin-top:120px;
-
-                display:inline-block;
-                line-height: 1px;
-        }
+		width: 250px;
+		height: 100%;
+		top: 0;
+		left: 0;
+		margin-top: 120px;
+		line-height: 1px;
+		position: absolute;
+		display: inline-block;
+  }
 
 	#left .title{
 		width: 250px;
-		display:table-cell;
-		vertical-align:middle;
-		font-size:25pt;
-		height:80px;
-		text-align:center;
+		display: table-cell;
+		vertical-align: middle;
+		font-size: 25pt;
+		height: 80px;
+		text-align: center;
 	}
 
 	#left .box{
@@ -71,11 +71,11 @@
 		height:50px;
 		background-color: #ffffff;
 	}
-	
+
 	#left .box:nth-of-type(3){
-                background: rgb(228, 233, 236); 
+                background: rgb(228, 233, 236);
         }
-	
+
 	#left .box div:nth-child(1){
 		background-color:#555555;
 		width:10px;
@@ -322,7 +322,7 @@
                         </table>
                 </div>
                 {% endif %}
-	
+
                 {% endif %}
 
 </div>
